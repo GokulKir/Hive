@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "86575262147",
+    "project_id": "hive-app-6592d",
+    "storage_bucket": "hive-app-6592d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:86575262147:android:ae22e9408958610a3a7576",
+        "android_client_info": {
+          "package_name": "com.freelance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "86575262147-mkok5lbe6ddodmqna5vh63n8q5mbsu41.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.freelance",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "86575262147-5ek6sbcsva6bi38al4h641sa731s0aja.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBA0IYGCAsdgNOtV06GlKOlEUIAX9NAZdo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "86575262147-5ek6sbcsva6bi38al4h641sa731s0aja.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
