@@ -20,6 +20,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
 import {useManualQuery , useQuery} from 'graphql-hooks'
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
+import SkeletonLoaderFreelancersList from '../../Components/SkeletonLoaderFreelancersList'
 const {height, width} = Dimensions.get('window')
 
 
@@ -109,7 +111,7 @@ export default function Home ({navigation , props}) {
       setDatas(data)
     }
 
-  },[])
+  })
   useEffect(() =>{
 console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
 
@@ -373,6 +375,9 @@ console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
                   marginTop: 20,
                 }}></View>
 
+               
+                 
+
               <View style={{marginLeft: 20, marginTop: 30}}>
                 <Text
                   style={{
@@ -389,18 +394,17 @@ console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
 
           
      
-    
-   
-             
+    {loading ? <SkeletonLoaderFreelancersList/> : null }
             
-               
- 
+          
 
 {Datas?.freelancerList?.freelancers.map((obj , i)=>{
   return (
 
+        
 
-              <TouchableOpacity key={i} style={{flexDirection: 'row'}}>
+             
+              <TouchableOpacity  key={i} style={{flexDirection: 'row' , marginTop:hp('1%')}}>
                 <View
                   style={{
                     width: '100%',
@@ -475,85 +479,16 @@ console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
                   </View>
                 </View>
               </TouchableOpacity>
-
-
-       
+                    
+                                
+                    
 )
+                    
 })}
 
+ 
 
-
-              <TouchableOpacity style={{flexDirection: 'row'}}>
-                <View
-                  style={{
-                    width: '100%',
-                    height: height * 0.094,
-                    marginTop: 10,
-                    flexDirection: 'row',
-                  }}>
-                  <View
-                    style={{
-                      width: 56,
-                      height: 56,
-                      backgroundColor: '#DDDDDD',
-                      borderRadius: 100,
-                      marginLeft: 20,
-                    }}>
-                    <Image
-                      style={{width: 17, height: 17}}
-                      source={require('../../assets/Dot1.png')}
-                    />
-                  </View>
-
-                  <View
-                    style={{
-                      marginLeft: 14,
-                      marginTop: 6,
-                      width: 122,
-                      height: 58,
-                    }}>
-                    <Text style={{fontSize: width * 0.042, color: 'black'}}>
-                      Hawkins W
-                    </Text>
-                    <View style={{flexDirection: 'row'}}>
-                      <Image
-                        style={{
-                          marginTop: 7,
-                          marginLeft: 2,
-                          width: 15,
-                          height: 15,
-                        }}
-                        source={require('../../assets/Rate.png')}
-                      />
-                      <Text
-                        style={{marginLeft: 10, marginTop: 5, marginTop: 5}}>
-                        4.5
-                      </Text>
-                      <Text
-                        style={{marginLeft: 10, marginTop: 5, color: 'grey'}}>
-                        (9 867)
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View style={{marginLeft: wp('15%'), marginTop: 8}}>
-                    <Text style={{color: 'grey'}}>Starting from</Text>
-                    <Text
-                      style={{
-                        color: 'black',
-                        marginTop: 5,
-                        fontSize: 15,
-                        fontWeight: 'bold',
-                      }}>
-                      $1,151.54 /hr
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-
-
-
-
+           
 
               <View style={{alignItems: 'center', marginTop: 10}}>
                 <TouchableOpacity
@@ -715,6 +650,8 @@ console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
                         </View>
                       </TouchableOpacity>
                     </View>
+
+                    
 
                     <View
                       style={{
