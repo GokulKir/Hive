@@ -14,6 +14,11 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> b969e1dad89f9e22d03835a5a95e91bbca4ad7a7
 export default function MangeTasks ({navigation}) {
   ;``
   return (

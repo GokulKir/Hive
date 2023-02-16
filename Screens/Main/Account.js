@@ -13,6 +13,10 @@ const {height, width} = Dimensions.get('window')
 import auth from '@react-native-firebase/auth'
 import firebase from '@react-native-firebase/app'
 import firestore from '@react-native-firebase/firestore'
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen'
 const user = firebase.auth().currentUser
 
 export default function Account ({navigation}) {
@@ -39,7 +43,7 @@ export default function Account ({navigation}) {
       <ScrollView>
         <View style={{alignItems: 'center', marginTop: 90}}>
           {/* <Image style={{width:64 , height:63}} source={{uri : user.photoURL}}/> */}
-          <View
+          {/* <View
             style={{
               width: width * 0.24,
               height: height * 0.06,
@@ -58,10 +62,20 @@ export default function Account ({navigation}) {
                 source={require('../../assets/Dot.png')}
               />
             </ImageBackground>
-          </View>
+          </View> */}
 
           <View style={styles.SecondLayer}>
-            <View style={{alignItems: 'center'}}>
+            <Image
+              style={{
+                width:wp('22%'),
+                height: hp('11%'),
+                borderRadius: 50,
+                marginTop: -40,
+                alignSelf: 'center'
+              }}
+              source={{uri: user.photoURL}}
+            />
+            {/* <View style={{alignItems: 'center'}}>
               <View
                 style={{
                   width: width * 0.24,
@@ -79,7 +93,7 @@ export default function Account ({navigation}) {
                   }}
                   source={{uri: user.photoURL}}></ImageBackground>
               </View>
-            </View>
+            </View> */}
           </View>
         </View>
 

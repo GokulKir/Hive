@@ -20,6 +20,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
 import {useManualQuery , useQuery} from 'graphql-hooks'
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
+import SkeletonLoaderFreelancersList from '../../Components/SkeletonLoaderFreelancersList'
 const {height, width} = Dimensions.get('window')
 
 
@@ -94,6 +96,7 @@ export default function Home ({navigation , props}) {
     //   setData1(response)
     //    console.log(+data1);
     // })
+<<<<<<< HEAD
 
     // console.log("data:    ",data);
 
@@ -110,6 +113,24 @@ export default function Home ({navigation , props}) {
     }
 
   },[])
+=======
+
+    // console.log("data:    ",data);
+
+    if( data?.freelancerList?.freelancers){
+      
+
+    }
+  
+    // console.log("loading       :  ",loading);
+    if(!loading){
+      // Alert.alert("alert",JSON.stringify(data))
+      // console.log("loading completed", data)
+      setDatas(data)
+    }
+
+  })
+>>>>>>> b969e1dad89f9e22d03835a5a95e91bbca4ad7a7
   useEffect(() =>{
 console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
 
@@ -373,6 +394,9 @@ console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
                   marginTop: 20,
                 }}></View>
 
+               
+                 
+
               <View style={{marginLeft: 20, marginTop: 30}}>
                 <Text
                   style={{
@@ -385,6 +409,7 @@ console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
               </View>
 
            
+<<<<<<< HEAD
 
 
           
@@ -401,6 +426,23 @@ console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
 
 
               <TouchableOpacity key={i} style={{flexDirection: 'row'}}>
+=======
+
+
+          
+     
+    {loading ? <SkeletonLoaderFreelancersList/> : null }
+            
+          
+
+{Datas?.freelancerList?.freelancers.map((obj , i)=>{
+  return (
+
+        
+
+             
+              <TouchableOpacity  key={i} style={{flexDirection: 'row' , marginTop:hp('1%')}}>
+>>>>>>> b969e1dad89f9e22d03835a5a95e91bbca4ad7a7
                 <View
                   style={{
                     width: '100%',
@@ -475,8 +517,16 @@ console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
                   </View>
                 </View>
               </TouchableOpacity>
+                    
+                                
+                    
+)
+                    
+})}
 
+ 
 
+<<<<<<< HEAD
        
 )
 })}
@@ -554,6 +604,9 @@ console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
 
 
 
+=======
+           
+>>>>>>> b969e1dad89f9e22d03835a5a95e91bbca4ad7a7
 
               <View style={{alignItems: 'center', marginTop: 10}}>
                 <TouchableOpacity
@@ -715,6 +768,8 @@ console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
                         </View>
                       </TouchableOpacity>
                     </View>
+
+                    
 
                     <View
                       style={{

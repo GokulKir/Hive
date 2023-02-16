@@ -12,11 +12,26 @@ const {height, width} = Dimensions.get('window')
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 import firebase from '@react-native-firebase/app'
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin'
 
 export default function DrawerContent ({navigation}) {
   const [firstname, setFirstName] = useState()
   const [lastname, setLastName] = useState()
   const user = firebase.auth().currentUser
+
+  const signOut = async () => {
+    try {
+      await GoogleSignin.signOut()
+      navigation.navigate('Signup')
+      console.log('User signed out successfully')
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   useEffect(() => {
     // firestore().collection(user.email).get().then(querySnapshot => {
@@ -360,6 +375,7 @@ export default function DrawerContent ({navigation}) {
 
             <View style={{flexDirection: 'row', marginTop: 10}}>
               <TouchableOpacity
+                onPress={signOut}
                 style={{marginLeft: 20, marginTop: 15, flexDirection: 'row'}}>
                 <Image
                   style={{width: 22, height: 24, marginTop: 2}}
