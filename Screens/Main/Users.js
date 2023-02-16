@@ -8,19 +8,18 @@ import {
   Dimensions,
   ImageBackground,
   ActivityIndicator,
+  FlatList,
+  RefreshControl,
 } from 'react-native'
 import {useManualQuery, useQuery} from 'graphql-hooks'
 import React, {useCallback, useMemo, useRef, useState, useEffect} from 'react'
 const {height, width} = Dimensions.get('window')
-import BottomSheet from '@gorhom/bottom-sheet'
-import SkeletonLoader from 'react-native-skeleton-loader'
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
-
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
+import SkeletonLoaderFreelancersList from '../../Components/SkeletonLoaderFreelancersList'
+import BottomSheet from 'react-native-bottom-sheet';
 
 const FREELANCE_LISTING = `
 
@@ -50,6 +49,24 @@ query Freelancers {
 `
 
 export default function UseFree ({navigation}) {
+  const bottomSheetRef = useRef();
+  const [Loading , setLoding] = useState(loading)
+  const onRefres = () =>{
+
+    if (Loading === true) {
+
+      setLoding(true)
+
+      console.log(true);
+      
+    } else {
+      setLoding(false)
+
+      console.log(false);
+
+    }
+
+  }
   const bottomSheetRef = useRef(null)
   const snapPoints = useMemo(() => ['25%', '50%'], [])
   const [Datas, setDatas] = useState([])
@@ -104,74 +121,62 @@ export default function UseFree ({navigation}) {
   return (
     <View style={styles.container}>
       {loading ? (
+        <SkeletonLoaderFreelancersList />
+      ) : (
 
-        <View>
-          {Datas?.freelancerList?.freelancers.map((obj,i)=>{
-            return(
-              <View key={i}>
-              <SkeletonPlaceholder  borderRadius={4}>
-              <SkeletonPlaceholder.Item flexDirection="row" alignItems="center">
-                <SkeletonPlaceholder.Item marginLeft={16} width={60} height={60} borderRadius={50} />
-                <SkeletonPlaceholder.Item marginLeft={40}>
-                  <SkeletonPlaceholder.Item width={140} height={20} />
-                  <SkeletonPlaceholder.Item marginTop={7} width={80} height={20} />
-                </SkeletonPlaceholder.Item>
-              </SkeletonPlaceholder.Item>
-            </SkeletonPlaceholder>
-            </View>
-            )
-            
-          })}
+
 
      
-    
-     </View>
-      
-      ) : (
-        <ScrollView>
-          <View style={{}}>
-            <View
-              style={{
-                width: '100%',
-                height: 75,
-                flexDirection: 'row',
-                marginLeft: 10,
-              }}>
-              <Text
-                style={{
-                  fontSize: width * 0.034,
-                  color: 'black',
-                  marginLeft: width * 0.063,
-                  marginTop: 20,
-                  fontWeight: 'bold',
-                }}>
-                29 search results(s) found
-              </Text>
+   <View>
 
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Filter')}
-                style={{
-                  width: 40,
-                  height: 40,
-                  backgroundColor: '#DDDDDD',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 100,
-                  marginLeft: wp('12%'),
-                  marginTop: 14,
-                }}>
-                <Image
-                  style={{width: 16, height: 16}}
-                  source={require('../../assets/Fil.png')}
-                />
-              </TouchableOpacity>
-            </View>
+        <View
+          style={{
+            width: '100%',
+            height: 55,
+            flexDirection: 'row',
+            marginLeft: 10,
+          }}>
+          <Text
+            style={{
+              fontSize: width * 0.048,
+              color: 'black',
+              marginLeft: width * 0.083,
+              marginTop: 20,
+              fontWeight: 'bold',
+            }}>
+            29 search results(s) found
+          </Text>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Filter')}
+            style={{
+              width: 40,
+              height: 40,
+              backgroundColor: '#DDDDDD',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 100,
+              marginLeft: wp('12%'),
+              marginTop: 14,
+            }}>
+            <Image
+              style={{width: 16, height: 16}}
+              source={require('../../assets/Fil.png')}
+            />
+          </TouchableOpacity>
+
           </View>
+       
 
-          {Datas?.freelancerList?.freelancers.map((obj, i) => {
+
+        <FlatList
+          data={Datas?.freelancerList?.freelancers}
+          keyExtractor={item => item._id}
+          refreshing={true}
+          onRefresh={onRefres}
+          renderItem={({item}) => {
             return (
               <TouchableOpacity
-                key={i}
                 onPress={() => navigation.navigate('Drawer3')}
                 style={{flexDirection: 'row'}}>
                 <View
@@ -192,8 +197,8 @@ export default function UseFree ({navigation}) {
                     <ImageBackground
                       style={{width: '100%', height: '100%'}}
                       imageStyle={{borderRadius: 100}}
-                      source={{uri: obj.profileImg}}>
-                      {obj.isActivated ? (
+                      source={{uri: item.profileImg}}>
+                      {item.isActivated ? (
                         <Image
                           style={{width: 17, height: 17}}
                           source={require('../../assets/Dot.png')}
@@ -215,7 +220,7 @@ export default function UseFree ({navigation}) {
                       height: 58,
                     }}>
                     <Text style={{fontSize: 16, color: 'black'}}>
-                      {obj.username}
+                      {item.username}
                     </Text>
                     <View style={{flexDirection: 'row'}}>
                       <Image
@@ -229,7 +234,7 @@ export default function UseFree ({navigation}) {
                       />
                       <Text
                         style={{marginLeft: 10, marginTop: 5, marginTop: 5}}>
-                        {obj.rating}
+                        {item.rating}
                       </Text>
                       <Text
                         style={{marginLeft: 10, marginTop: 5, color: 'grey'}}>
@@ -247,14 +252,15 @@ export default function UseFree ({navigation}) {
                         fontSize: 15,
                         fontWeight: 'bold',
                       }}>
-                      {obj.hourlyRate}
+                      {item.hourlyRate}
                     </Text>
                   </View>
                 </View>
               </TouchableOpacity>
             )
-          })}
-        </ScrollView>
+          }}
+        />
+        </View>
       )}
     </View>
   )
