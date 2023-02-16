@@ -128,10 +128,25 @@ const FREELANCER_LIST = `query Categories{
   }
 }
 `
-const SIGNUP_USER = `mutation UserRegister($displayName: String!, $confirmPassword: String!, $password: String!, $username: String!, $email: String!) {
-  userRegister(displayName: $displayName, confirmPassword: $confirmPassword, password: $password, username: $username, email: $email) {
+
+const Integrate = `mutation {
+  userRegister(
+    displayName: "string"
+    email: "string"
+    username: "string"
+    password: "string"
+    confirmPassword: "string"
+  ) {
     success
     msg
+  }
+}`
+
+
+const SIGNUP_USER = `mutation UserRegister($displayName: String, $email: String, $username: String, $password: String, $confirmPassword: String) {
+  userRegister(displayName: $displayName, email: $email, username: $username, password: $password, confirmPassword: $confirmPassword) {
+    msg
+    success
   }
 }
   `
@@ -194,7 +209,9 @@ export default function Signup ({navigation}) {
         password: password,
         confirmPassword: password,
       },
+      
     })
+    console.log(data);
 
 
     
@@ -203,21 +220,18 @@ export default function Signup ({navigation}) {
       console.log(error);
      
     } else {
-      const { token,success,msg } = data.userRegister
+      let response : any = await registerUser({ variables : data});
+      
      
-      client.setHeader('Authorization', `Bearer ${token}`)
-        if(success) {
-           console.log(success);
-           navigation.navigate('MyDrawer')
-        } else if(msg) {
-          console.log(msg);
-          Alert.alert(msg)
-        } else if (token) {
-          console.log(token);
-          Alert.alert(token)
-          
 
-        }
+      console.log("msg >>>>>>>>>",response);
+        if(response?.data?.userRegister?.success) {
+           console.log("success");
+           navigation.navigate('MyDrawer')
+        } else if(response?.data?.userRegister?.msg) {
+          console.log(response?.data?.userRegister?.msg);
+          Alert.alert(response?.data?.userRegister?.msg);
+        } 
       // console.log({success,msg,token});
       
       // your code to handle token in browser and login redirection
