@@ -128,10 +128,25 @@ const FREELANCER_LIST = `query Categories{
   }
 }
 `
-const SIGNUP_USER = `mutation UserRegister($displayName: String!, $confirmPassword: String!, $password: String!, $username: String!, $email: String!) {
-  userRegister(displayName: $displayName, confirmPassword: $confirmPassword, password: $password, username: $username, email: $email) {
+
+const Integrate = `mutation {
+  userRegister(
+    displayName: "string"
+    email: "string"
+    username: "string"
+    password: "string"
+    confirmPassword: "string"
+  ) {
     success
     msg
+  }
+}`
+
+
+const SIGNUP_USER = `mutation UserRegister($displayName: String, $email: String, $username: String, $password: String, $confirmPassword: String) {
+  userRegister(displayName: $displayName, email: $email, username: $username, password: $password, confirmPassword: $confirmPassword) {
+    msg
+    success
   }
 }
   `

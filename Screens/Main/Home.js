@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   Dimensions,
+  Alert
 } from 'react-native'
 import React, {useCallback, useMemo, useRef, useState , useEffect} from 'react'
 import LoginB from '.././UserLogin/LoginB'
@@ -26,32 +27,27 @@ const {height, width} = Dimensions.get('window')
 
 const FREELANCE_LISTING = `
 
-
-{
-  freelancerList(pageNumber: 1, limit: 1, category: "string", allUsers: true) {
-    success
-    msg
+query Freelancers {
+  freelancerList {
     freelancers {
       _id
-      username
-      firstName
-      lastName
-      profileImg
-      country
-      rating
-      description
-      tagline
       city
-      jobSuccess
-      hourlyRate
-      isProfileVerified
-      position
+      country
+      description
       englishLevel
-      joined
+      firstName
+      hourlyRate
       isActivated
+      isProfileVerified
+      jobSuccess
+      joined
+      lastName
+      position
+      profileImg
+      rating
+      tagline
+      username
     }
-    totalPages
-    totalCount
   }
 }
 `;
@@ -59,17 +55,23 @@ const FREELANCE_LISTING = `
 //Freelance api graph Ql//
 
 export default function Home ({navigation , props}) {
-  const [freeLancerList] = useManualQuery(FREELANCE_LISTING)
 
  
+  const {  loading, error, data } = useQuery(FREELANCE_LISTING);
 
 
+
+  
+  // console.log('++++++++++', data)
+
+
+   
 
 
 
   const user = firebase.auth().currentUser
   const [isSelected, setSelection] = useState(false)
-  const [data1 , setData1] = useState([])
+  const [Datas , setDatas] = useState([])
   const bottomSheetRef = useRef(null)
   const snapPoints = useMemo(() => ['55%', '78%'], [])
 
@@ -87,11 +89,31 @@ export default function Home ({navigation , props}) {
 
   useEffect(() =>{
 
-    freeLancerList({variables: {}}).then(response => {
-      console.log('frelncer list response', response)
-    })
+    // freeLancerList({variables: {}}).then(response => {
+    //   console.log('frelncer list response', response)
+    //   setData1(response)
+    //    console.log(+data1);
+    // })
 
-  })
+    // console.log("data:    ",data);
+
+    if( data?.freelancerList?.freelancers){
+      
+
+    }
+  
+    // console.log("loading       :  ",loading);
+    if(!loading){
+      // Alert.alert("alert",JSON.stringify(data))
+      // console.log("loading completed", data)
+      setDatas(data)
+    }
+
+  },[])
+  useEffect(() =>{
+console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
+
+  },[Datas])
 //Calling API //
 
   return (
@@ -363,14 +385,22 @@ export default function Home ({navigation , props}) {
               </View>
 
            
+
+
+          
+     
+    
+   
              
+            
+               
+ 
+
+{Datas?.freelancerList?.freelancers.map((obj , i)=>{
+  return (
 
 
-        
-                
-
-
-              <TouchableOpacity style={{flexDirection: 'row'}}>
+              <TouchableOpacity key={i} style={{flexDirection: 'row'}}>
                 <View
                   style={{
                     width: '100%',
@@ -378,6 +408,8 @@ export default function Home ({navigation , props}) {
                     marginTop: 10,
                     flexDirection: 'row',
                   }}>
+
+           
                   <View
                     style={{
                       width: 56,
@@ -386,10 +418,16 @@ export default function Home ({navigation , props}) {
                       borderRadius: 100,
                       marginLeft: 20,
                     }}>
+
+{ obj.isActivated ? 
                     <Image
                       style={{width: 17, height: 17}}
                       source={require('../../assets/Dot.png')}
-                    />
+                    /> :  <Image
+                    style={{width: 17, height: 17}}
+                    source={require('../../assets/Dot1.png')}
+                  />
+}
                   </View>
 
                   <View
@@ -400,7 +438,7 @@ export default function Home ({navigation , props}) {
                       height: 58,
                     }}>
                     <Text style={{fontSize: width * 0.042, color: 'black'}}>
-                      Jackson T
+                  {obj.username}
                     </Text>
                     <View style={{flexDirection: 'row'}}>
                       <Image
@@ -439,6 +477,9 @@ export default function Home ({navigation , props}) {
               </TouchableOpacity>
 
 
+       
+)
+})}
 
 
 
@@ -509,7 +550,6 @@ export default function Home ({navigation , props}) {
                   </View>
                 </View>
               </TouchableOpacity>
-
 
 
 
