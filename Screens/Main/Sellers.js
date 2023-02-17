@@ -16,6 +16,7 @@ import {
 } from 'react-native-responsive-screen'
 import { useManualQuery, useQuery } from 'graphql-hooks'
 import { SELLERS_LIST } from '../../GraphQl/Query'
+import SkeletonLoaderFreelancersList from '../../Components/SkeletonLoaderFreelancersList'
 
 
 export default function Sellers({ navigation }) {
@@ -26,7 +27,7 @@ export default function Sellers({ navigation }) {
 
   useEffect(() => {
     setSellers(data?.freelancerList?.freelancers)
-    console.log("=========", data?.freelancerList?.freelancers);
+    // console.log("=========", error);
   }, [loading])
 
   const renderItems = ({ item }) => (
@@ -90,7 +91,7 @@ export default function Sellers({ navigation }) {
                 marginTop: 5,
                 fontSize: 12,
               }}>
-            {item.rating}
+              {item.rating}
             </Text>
             <Text
               style={{
@@ -99,7 +100,7 @@ export default function Sellers({ navigation }) {
                 color: 'grey',
                 fontSize: 12,
               }}>
-              (11 072) 
+              (11 072)
             </Text>
             <Image
               style={{
@@ -137,11 +138,17 @@ export default function Sellers({ navigation }) {
 
   return (
     <View style={styles.container}>
+      {loading ?
+      <View style={{marginTop:-50}}>
+        <SkeletonLoaderFreelancersList />
+      </View>
+        :
         <FlatList
           data={sellers}
           renderItem={renderItems}
           keyExtractor={item => item._id}
         />
+      }
     </View>
   )
 }

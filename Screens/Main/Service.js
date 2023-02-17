@@ -12,6 +12,12 @@ import {
 } from 'react-native'
 import { useManualQuery, useQuery } from 'graphql-hooks'
 import { SERVICE_LIST } from '../../GraphQl/Query'
+import SkeletonLoderServiesList from '../../Components/SkeletonLoderServiesList'
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen'
 
 export default function Service({ navigation }) {
   const { loading, error, data } = useQuery(SERVICE_LIST);
@@ -73,7 +79,7 @@ export default function Service({ navigation }) {
           </View>
         </View>
       </View>
-      <View style={{ flexDirection: 'row',left:22 }}>
+      <View style={{ flexDirection: 'row', left: 22 }}>
         <Image
           style={{ marginTop: 6, marginLeft: 1, width: 12, height: 12 }}
           source={require('../../assets/Rate.png')}
@@ -112,7 +118,7 @@ export default function Service({ navigation }) {
           backgroundColor: '#EF4444',
           marginTop: 15,
           borderRadius: 5,
-          alignSelf:'center',
+          alignSelf: 'center',
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
@@ -128,11 +134,17 @@ export default function Service({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={services}
-        renderItem={renderItems}
-        keyExtractor={item => item._id}
-      />
+      {loading ?
+        <SkeletonLoderServiesList/>
+        
+        :
+
+        <FlatList
+          data={services}
+          renderItem={renderItems}
+          keyExtractor={item => item._id}
+        />
+      }
     </View>
   )
 }

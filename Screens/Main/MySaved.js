@@ -7,7 +7,7 @@ import {
   Text,
   Image,
 } from 'react-native'
-import Sellerce from './Sellerce'
+import Sellers from './Sellers'
 import Service from './Service'
 import {useManualQuery , useQuery} from 'graphql-hooks'
 
@@ -72,7 +72,6 @@ export default function MySaved ({navigation}) {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
         <View
           style={{
             width: '100%',
@@ -123,14 +122,11 @@ export default function MySaved ({navigation}) {
           </TouchableOpacity>
         </View>
 
-        <ScrollView>
           {selectedTab == 0 ? (
-            <Sellerce />
+            <Sellers />
           ) : selectedTab == 1 ? (
             <Service />
           ) : null}
-        </ScrollView>
-      </ScrollView>
     </View>
   )
 }
