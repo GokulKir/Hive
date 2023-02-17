@@ -8,22 +8,22 @@ import {
   TouchableOpacity,
   TextInput,
   Dimensions,
-  Alert
+  Alert,
 } from 'react-native'
-import React, {useCallback, useMemo, useRef, useState , useEffect} from 'react'
+import React, {useCallback, useMemo, useRef, useState, useEffect} from 'react'
 import LoginB from '.././UserLogin/LoginB'
 import auth from '@react-native-firebase/auth'
 import firebase from '@react-native-firebase/app'
 import BottomSheet from '@gorhom/bottom-sheet'
+import ServiesHome from './ServiesHome'
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
-import {useManualQuery , useQuery} from 'graphql-hooks'
+import {useManualQuery, useQuery} from 'graphql-hooks'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import SkeletonLoaderFreelancersList from '../../Components/SkeletonLoaderFreelancersList'
 const {height, width} = Dimensions.get('window')
-
 
 //Freelance api graph Ql//
 
@@ -52,28 +52,18 @@ query Freelancers {
     }
   }
 }
-`;
+`
 
 //Freelance api graph Ql//
 
-export default function Home ({navigation , props}) {
+export default function Home ({navigation, props}) {
+  const {loading, error, data} = useQuery(FREELANCE_LISTING)
 
- 
-  const {  loading, error, data } = useQuery(FREELANCE_LISTING);
-
-
-
-  
   // console.log('++++++++++', data)
-
-
-   
-
-
 
   const user = firebase.auth().currentUser
   const [isSelected, setSelection] = useState(false)
-  const [Datas , setDatas] = useState([])
+  const [Datas, setDatas] = useState([])
   const bottomSheetRef = useRef(null)
   const snapPoints = useMemo(() => ['55%', '78%'], [])
 
@@ -83,14 +73,9 @@ export default function Home ({navigation , props}) {
     console.log('handleSheetChanges', index)
   }, [])
 
- //Calling API //
+  //Calling API //
 
-
-
-  
-
-  useEffect(() =>{
-
+  useEffect(() => {
     // freeLancerList({variables: {}}).then(response => {
     //   console.log('frelncer list response', response)
     //   setData1(response)
@@ -99,24 +84,20 @@ export default function Home ({navigation , props}) {
 
     // console.log("data:    ",data);
 
-    if( data?.freelancerList?.freelancers){
-      
-
+    if (data?.freelancerList?.freelancers) {
     }
-  
+
     // console.log("loading       :  ",loading);
-    if(!loading){
+    if (!loading) {
       // Alert.alert("alert",JSON.stringify(data))
       // console.log("loading completed", data)
       setDatas(data)
     }
-
   })
-  useEffect(() =>{
-console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
-
-  },[Datas])
-//Calling API //
+  useEffect(() => {
+    console.log('Data>>>>>>', Datas?.freelancerList?.freelancers)
+  }, [Datas])
+  //Calling API //
 
   return (
     <View style={styles.container}>
@@ -250,8 +231,6 @@ console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
                   }}>
                   Explore all
                 </Text>
-
-
               </TouchableOpacity>
             </View>
 
@@ -375,9 +354,6 @@ console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
                   marginTop: 20,
                 }}></View>
 
-               
-                 
-
               <View style={{marginLeft: 20, marginTop: 30}}>
                 <Text
                   style={{
@@ -389,106 +365,96 @@ console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
                 </Text>
               </View>
 
-           
+              {loading ? <SkeletonLoaderFreelancersList /> : null}
 
-
-          
-     
-    {loading ? <SkeletonLoaderFreelancersList/> : null }
-            
-          
-
-{Datas?.freelancerList?.freelancers.map((obj , i)=>{
-  return (
-
-        
-
-             
-              <TouchableOpacity  key={i} style={{flexDirection: 'row' , marginTop:hp('1%')}}>
-                <View
-                  style={{
-                    width: '100%',
-                    height: height * 0.094,
-                    marginTop: 10,
-                    flexDirection: 'row',
-                  }}>
-
-           
-                  <View
-                    style={{
-                      width: 56,
-                      height: 56,
-                      backgroundColor: '#DDDDDD',
-                      borderRadius: 100,
-                      marginLeft: 20,
-                    }}>
-
-{ obj.isActivated ? 
-                    <Image
-                      style={{width: 17, height: 17}}
-                      source={require('../../assets/Dot.png')}
-                    /> :  <Image
-                    style={{width: 17, height: 17}}
-                    source={require('../../assets/Dot1.png')}
-                  />
-}
-                  </View>
-
-                  <View
-                    style={{
-                      marginLeft: 14,
-                      marginTop: 6,
-                      width: 122,
-                      height: 58,
-                    }}>
-                    <Text style={{fontSize: width * 0.042, color: 'black'}}>
-                  {obj.username}
-                    </Text>
-                    <View style={{flexDirection: 'row'}}>
-                      <Image
-                        style={{
-                          marginTop: 7,
-                          marginLeft: 2,
-                          width: 15,
-                          height: 15,
-                        }}
-                        source={require('../../assets/Rate.png')}
-                      />
-                      <Text
-                        style={{marginLeft: 10, marginTop: 5, marginTop: 5}}>
-                        4.5
-                      </Text>
-                      <Text
-                        style={{marginLeft: 10, marginTop: 5, color: 'grey'}}>
-                        (10 619)
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View style={{marginLeft: wp('15%'), marginTop: 8}}>
-                    <Text style={{color: 'grey'}}>Starting from</Text>
-                    <Text
+              {Datas?.freelancerList?.freelancers.map((obj, i) => {
+                return (
+                  <TouchableOpacity
+                    key={i}
+                    style={{flexDirection: 'row', marginTop: hp('1%')}}>
+                    <View
                       style={{
-                        color: 'black',
-                        marginTop: 5,
-                        fontSize: 15,
-                        fontWeight: 'bold',
+                        width: '100%',
+                        height: height * 0.094,
+                        marginTop: 10,
+                        flexDirection: 'row',
                       }}>
-                      $479.30 /hr
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-                    
-                                
-                    
-)
-                    
-})}
+                      <View
+                        style={{
+                          width: 56,
+                          height: 56,
+                          backgroundColor: '#DDDDDD',
+                          borderRadius: 100,
+                          marginLeft: 20,
+                        }}>
+                        {obj.isActivated ? (
+                          <Image
+                            style={{width: 17, height: 17}}
+                            source={require('../../assets/Dot.png')}
+                          />
+                        ) : (
+                          <Image
+                            style={{width: 17, height: 17}}
+                            source={require('../../assets/Dot1.png')}
+                          />
+                        )}
+                      </View>
 
- 
+                      <View
+                        style={{
+                          marginLeft: 14,
+                          marginTop: 6,
+                          width: 122,
+                          height: 58,
+                        }}>
+                        <Text style={{fontSize: width * 0.042, color: 'black'}}>
+                          {obj.username}
+                        </Text>
+                        <View style={{flexDirection: 'row'}}>
+                          <Image
+                            style={{
+                              marginTop: 7,
+                              marginLeft: 2,
+                              width: 15,
+                              height: 15,
+                            }}
+                            source={require('../../assets/Rate.png')}
+                          />
+                          <Text
+                            style={{
+                              marginLeft: 10,
+                              marginTop: 5,
+                              marginTop: 5,
+                            }}>
+                            4.5
+                          </Text>
+                          <Text
+                            style={{
+                              marginLeft: 10,
+                              marginTop: 5,
+                              color: 'grey',
+                            }}>
+                            (10 619)
+                          </Text>
+                        </View>
+                      </View>
 
-           
+                      <View style={{marginLeft: wp('15%'), marginTop: 8}}>
+                        <Text style={{color: 'grey'}}>Starting from</Text>
+                        <Text
+                          style={{
+                            color: 'black',
+                            marginTop: 5,
+                            fontSize: 15,
+                            fontWeight: 'bold',
+                          }}>
+                          $479.30 /hr
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                )
+              })}
 
               <View style={{alignItems: 'center', marginTop: 10}}>
                 <TouchableOpacity
@@ -525,133 +491,10 @@ console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
               </View>
 
               <View>
-                <ScrollView
-                  horizontal={true}
-                  showsVerticalScrollIndicator={false}
-                  showsHorizontalScrollIndicator={false}>
+                
                   <View style={{flexDirection: 'row'}}>
-                    <View
-                      style={{
-                        width: 204,
-                        height: 276,
-                        backgroundColor: '#fff',
-                        marginTop: 30,
-                        marginLeft: 25,
-                      }}>
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate('TaskD')}>
-                        <View
-                          style={{
-                            height: 126,
-                            width: '100%',
-                            backgroundColor: '#DDDDDD',
-                            borderRadius: 5,
-                          }}>
-                          <Image
-                            style={{width: 75, height: 23}}
-                            source={require('../../assets/Feat.png')}
-                          />
-                        </View>
-
-                        <View>
-                          <Text style={{color: '#1DA1F2', marginTop: 20}}>
-                            Nora Carlson
-                          </Text>
-                          <Text style={{color: 'black'}}>
-                            <Text
-                              style={{
-                                fontSize: 18,
-                                color: 'black',
-                                fontWeight: 'bold',
-                                marginTop: 8,
-                              }}>
-                              I will write rest API in{' '}
-                            </Text>
-                            <View>
-                              <Text
-                                style={{
-                                  fontSize: 18,
-                                  color: 'black',
-                                  fontWeight: 'bold',
-                                  marginTop: 8,
-                                }}>
-                                react native{' '}
-                              </Text>
-                            </View>
-                          </Text>
-                        </View>
-
-                        <View style={{flexDirection: 'row'}}>
-                          <Image
-                            style={{
-                              marginTop: 7,
-                              marginLeft: 2,
-                              width: 15,
-                              height: 15,
-                            }}
-                            source={require('../../assets/Rate.png')}
-                          />
-                          <Text
-                            style={{
-                              color: 'black',
-                              fontSize: 15,
-                              marginLeft: 10,
-                              marginTop: 3,
-                            }}>
-                            4.5
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              marginLeft: 10,
-                              marginTop: 3,
-                            }}>
-                            (1,287)
-                          </Text>
-                          <Image
-                            style={{
-                              width: 20,
-                              height: 15,
-                              marginLeft: 10,
-                              marginTop: 6,
-                            }}
-                            source={require('../../assets/Ey.png')}
-                          />
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              marginLeft: 10,
-                              marginTop: 3,
-                            }}>
-                            3,466
-                          </Text>
-                        </View>
-
-                        <View style={{flexDirection: 'row'}}>
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              marginLeft: 5,
-                              marginTop: 12,
-                            }}>
-                            From :
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              marginLeft: 5,
-                              marginTop: 12,
-                              color: 'black',
-                              fontSize: 15,
-                              fontWeight: 'bold',
-                            }}>
-                            $90.19
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-
-                    
+               
+                  <ServiesHome/>
 
                     <View
                       style={{
@@ -661,385 +504,12 @@ console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
                         marginTop: 30,
                         marginLeft: 25,
                       }}>
-                      <TouchableOpacity>
-                        <View
-                          style={{
-                            height: 126,
-                            width: '100%',
-                            backgroundColor: '#DDDDDD',
-                            borderRadius: 5,
-                          }}>
-                          <Image
-                            style={{width: 75, height: 23}}
-                            source={require('../../assets/Feat.png')}
-                          />
-                        </View>
-
-                        <View>
-                          <Text style={{color: '#1DA1F2', marginTop: 20}}>
-                            Nora Carlson
-                          </Text>
-                          <Text style={{color: 'black'}}>
-                            <Text
-                              style={{
-                                fontSize: 18,
-                                color: 'black',
-                                fontWeight: 'bold',
-                                marginTop: 8,
-                              }}>
-                              I will write rest API in{' '}
-                            </Text>
-                            <View>
-                              <Text
-                                style={{
-                                  fontSize: 18,
-                                  color: 'black',
-                                  fontWeight: 'bold',
-                                  marginTop: 8,
-                                }}>
-                                react native{' '}
-                              </Text>
-                            </View>
-                          </Text>
-                        </View>
-
-                        <View style={{flexDirection: 'row'}}>
-                          <Image
-                            style={{
-                              marginTop: 7,
-                              marginLeft: 2,
-                              width: 15,
-                              height: 15,
-                            }}
-                            source={require('../../assets/Rate.png')}
-                          />
-                          <Text
-                            style={{
-                              color: 'black',
-                              fontSize: 15,
-                              marginLeft: 10,
-                              marginTop: 3,
-                            }}>
-                            4.5
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              marginLeft: 10,
-                              marginTop: 3,
-                            }}>
-                            (1,287)
-                          </Text>
-                          <Image
-                            style={{
-                              width: 20,
-                              height: 15,
-                              marginLeft: 10,
-                              marginTop: 6,
-                            }}
-                            source={require('../../assets/Ey.png')}
-                          />
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              marginLeft: 10,
-                              marginTop: 3,
-                            }}>
-                            3,466
-                          </Text>
-                        </View>
-
-                        <View style={{flexDirection: 'row'}}>
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              marginLeft: 5,
-                              marginTop: 12,
-                            }}>
-                            From :
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              marginLeft: 5,
-                              marginTop: 12,
-                              color: 'black',
-                              fontSize: 15,
-                              fontWeight: 'bold',
-                            }}>
-                            $90.19
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-
-                    <View
-                      style={{
-                        width: 204,
-                        height: 276,
-                        backgroundColor: '#fff',
-                        marginTop: 30,
-                        marginLeft: 25,
-                      }}>
-                      <TouchableOpacity>
-                        <View
-                          style={{
-                            height: 126,
-                            width: '100%',
-                            backgroundColor: '#DDDDDD',
-                            borderRadius: 5,
-                          }}>
-                          <Image
-                            style={{width: 75, height: 23}}
-                            source={require('../../assets/Feat.png')}
-                          />
-                        </View>
-
-                        <View>
-                          <Text style={{color: '#1DA1F2', marginTop: 20}}>
-                            Nora Carlson
-                          </Text>
-                          <Text style={{color: 'black'}}>
-                            <Text
-                              style={{
-                                fontSize: 18,
-                                color: 'black',
-                                fontWeight: 'bold',
-                                marginTop: 8,
-                              }}>
-                              I will write rest API in{' '}
-                            </Text>
-                            <View>
-                              <Text
-                                style={{
-                                  fontSize: 18,
-                                  color: 'black',
-                                  fontWeight: 'bold',
-                                  marginTop: 8,
-                                }}>
-                                react native{' '}
-                              </Text>
-                            </View>
-                          </Text>
-                        </View>
-
-                        <View style={{flexDirection: 'row'}}>
-                          <Image
-                            style={{
-                              marginTop: 7,
-                              marginLeft: 2,
-                              width: 15,
-                              height: 15,
-                            }}
-                            source={require('../../assets/Rate.png')}
-                          />
-                          <Text
-                            style={{
-                              color: 'black',
-                              fontSize: 15,
-                              marginLeft: 10,
-                              marginTop: 3,
-                            }}>
-                            4.5
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              marginLeft: 10,
-                              marginTop: 3,
-                            }}>
-                            (1,287)
-                          </Text>
-                          <Image
-                            style={{
-                              width: 20,
-                              height: 15,
-                              marginLeft: 10,
-                              marginTop: 6,
-                            }}
-                            source={require('../../assets/Ey.png')}
-                          />
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              marginLeft: 10,
-                              marginTop: 3,
-                            }}>
-                            3,466
-                          </Text>
-                        </View>
-
-                        <View style={{flexDirection: 'row'}}>
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              marginLeft: 5,
-                              marginTop: 12,
-                            }}>
-                            From :
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              marginLeft: 5,
-                              marginTop: 12,
-                              color: 'black',
-                              fontSize: 15,
-                              fontWeight: 'bold',
-                            }}>
-                            $90.19
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-
-                    <View
-                      style={{
-                        width: 204,
-                        height: 276,
-                        backgroundColor: '#fff',
-                        marginTop: 30,
-                        marginLeft: 25,
-                      }}>
-                      <TouchableOpacity>
-                        <View
-                          style={{
-                            height: 126,
-                            width: '100%',
-                            backgroundColor: '#DDDDDD',
-                            borderRadius: 5,
-                          }}>
-                          <Image
-                            style={{width: 75, height: 23}}
-                            source={require('../../assets/Feat.png')}
-                          />
-                        </View>
-
-                        <View>
-                          <Text style={{color: '#1DA1F2', marginTop: 20}}>
-                            Nora Carlson
-                          </Text>
-                          <Text style={{color: 'black'}}>
-                            <Text
-                              style={{
-                                fontSize: 18,
-                                color: 'black',
-                                fontWeight: 'bold',
-                                marginTop: 8,
-                              }}>
-                              I will write rest API in{' '}
-                            </Text>
-                            <View>
-                              <Text
-                                style={{
-                                  fontSize: 18,
-                                  color: 'black',
-                                  fontWeight: 'bold',
-                                  marginTop: 8,
-                                }}>
-                                react native{' '}
-                              </Text>
-                            </View>
-                          </Text>
-                        </View>
-
-                        <View style={{flexDirection: 'row'}}>
-                          <Image
-                            style={{
-                              marginTop: 7,
-                              marginLeft: 2,
-                              width: 15,
-                              height: 15,
-                            }}
-                            source={require('../../assets/Rate.png')}
-                          />
-                          <Text
-                            style={{
-                              color: 'black',
-                              fontSize: 15,
-                              marginLeft: 10,
-                              marginTop: 3,
-                            }}>
-                            4.5
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              marginLeft: 10,
-                              marginTop: 3,
-                            }}>
-                            (1,287)
-                          </Text>
-                          <Image
-                            style={{
-                              width: 20,
-                              height: 15,
-                              marginLeft: 10,
-                              marginTop: 6,
-                            }}
-                            source={require('../../assets/Ey.png')}
-                          />
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              marginLeft: 10,
-                              marginTop: 3,
-                            }}>
-                            3,466
-                          </Text>
-                        </View>
-
-                        <View style={{flexDirection: 'row'}}>
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              marginLeft: 5,
-                              marginTop: 12,
-                            }}>
-                            From :
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 15,
-                              marginLeft: 5,
-                              marginTop: 12,
-                              color: 'black',
-                              fontSize: 15,
-                              fontWeight: 'bold',
-                            }}>
-                            $90.19
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-
                       <View style={{alignItems: 'center', marginTop: 10}}>
-                        <TouchableOpacity
-                          onPress={() => navigation.navigate('Drawer8')}
-                          style={{
-                            width: '90%',
-                            height: 45,
-                            backgroundColor: '#F7F7F7',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'row',
-                          }}>
-                          <Text
-                            style={{
-                              color: '#C89D67',
-                              fontSize: 16,
-                              marginLeft: 10,
-                            }}>
-                            Explore all freelancers
-                          </Text>
-                          <Image
-                            style={{width: 15, height: 15, marginLeft: 15}}
-                            source={require('../../assets/AB.png')}
-                          />
-                        </TouchableOpacity>
+
                       </View>
                     </View>
                   </View>
-                </ScrollView>
+              
                 <View style={{alignItems: 'center', marginTop: 30}}>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('Drawer8')}
@@ -1063,7 +533,11 @@ console.log("Data>>>>>>",Datas?.freelancerList?.freelancers);
                 </View>
               </View>
               <View
-                style={{alignItems: 'center', width: '90%', height: 105}}></View>
+                style={{
+                  alignItems: 'center',
+                  width: '90%',
+                  height: 0,
+                }}></View>
             </View>
           </View>
         </ScrollView>
