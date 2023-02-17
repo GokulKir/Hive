@@ -6599,11 +6599,6 @@
   "resolved" "https://registry.npmjs.org/react-loading-skeleton/-/react-loading-skeleton-3.1.1.tgz"
   "version" "3.1.1"
 
-"react-native-bottom-sheet@^1.0.3":
-  "integrity" "sha512-FG02lkWYVS5HyqzsQF8edsfWkbjHa01hd8g/eNqrc+sBH1fCoi8GZTS8trHMsLdSGY2lZajb7MYSpM2Ltb3ZsA=="
-  "resolved" "https://registry.npmjs.org/react-native-bottom-sheet/-/react-native-bottom-sheet-1.0.3.tgz"
-  "version" "1.0.3"
-
 "react-native-codegen@^0.69.2":
   "integrity" "sha512-yPcgMHD4mqLbckqnWjFBaxomDnBREfRjDi2G/WxNyPBQLD+PXUEmZTkDx6QoOXN+Bl2SkpnNOSsLE2+/RUHoPw=="
   "resolved" "https://registry.npmjs.org/react-native-codegen/-/react-native-codegen-0.69.2.tgz"
@@ -6648,6 +6643,11 @@
     "@callstack/react-theme-provider" "^3.0.8"
     "color" "^3.1.2"
     "use-event-callback" "^0.1.0"
+
+"react-native-raw-bottom-sheet@^2.2.0":
+  "integrity" "sha512-qL4JKIqvbcVxbkKzeh51hjV7suoJN3ouxzvLmOg0FBUV1yiJAfEbacjQdtRCI6+OU5pyGFBIifLsTXcFDwHggg=="
+  "resolved" "https://registry.npmjs.org/react-native-raw-bottom-sheet/-/react-native-raw-bottom-sheet-2.2.0.tgz"
+  "version" "2.2.0"
 
 "react-native-reanimated@*", "react-native-reanimated@^2.14.1", "react-native-reanimated@>= 1.0.0", "react-native-reanimated@>=2.2.0", "react-native-reanimated@~2.12.0":
   "integrity" "sha512-o5fAcfYqgRENguVd1Xxd7PPwBgmqTA9yzrIlUk/I0iHeV+5lRLjYwya+Oz3muefUQoQk9hlVyEvZeEdwClC5AQ=="
@@ -6713,7 +6713,7 @@
     "prop-types" "^15.7.2"
     "yargs" "^16.1.1"
 
-"react-native@*", "react-native@>= 0.62", "react-native@>=0.29.0", "react-native@>=0.35", "react-native@>=0.50.1", "react-native@>=0.57", "react-native@0.69.7", "react-native@0.70.5":
+"react-native@*", "react-native@>= 0.62", "react-native@>=0.35", "react-native@>=0.50.1", "react-native@>=0.57", "react-native@0.69.7", "react-native@0.70.5":
   "integrity" "sha512-T3z2utgRcE/+mMML3Wg4vvpnFoGWJcqWskq+8vdFS4ASM1zYg5Hab5vPlKZp9uncD8weYiGsYwkWXzrvZrsayQ=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.69.7.tgz"
   "version" "0.69.7"
@@ -6774,7 +6774,7 @@
     "react-shallow-renderer" "^16.13.1"
     "scheduler" "^0.21.0"
 
-"react@*", "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.14.0", "react@^16.8.0", "react@^16.8.0 || ^17 || ^18", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17.0.0 || ^18.0.0", "react@^18.0.0", "react@>=0.14.8", "react@>=14.5.0", "react@>=16", "react@>=16.3.0", "react@>=16.8", "react@>=16.8.0", "react@>=17.0.0", "react@18.0.0", "react@18.1.0":
+"react@*", "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.14.0", "react@^16.8.0", "react@^16.8.0 || ^17 || ^18", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17.0.0 || ^18.0.0", "react@^18.0.0", "react@>=0.14.8", "react@>=16", "react@>=16.3.0", "react@>=16.8", "react@>=16.8.0", "react@>=17.0.0", "react@18.0.0", "react@18.1.0":
   "integrity" "sha512-x+VL6wbT4JRVPm7EGxXhZ8w8LTROaxPXOqhlGyVSrv0sB1jkyFGgXxJ8LVoPRLvPR6/CIZGFmfzqUa2NYeMr2A=="
   "resolved" "https://registry.npmjs.org/react/-/react-18.0.0.tgz"
   "version" "18.0.0"
