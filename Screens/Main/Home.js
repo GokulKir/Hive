@@ -77,17 +77,6 @@ export default function Home ({navigation , props}) {
   const bottomSheetRef = useRef(null)
   const snapPoints = useMemo(() => ['55%', '78%'], [])
 
-  //callbacks
-
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index)
-  }, [])
-
- //Calling API //
-
-
-
-  
 
   useEffect(() =>{
 

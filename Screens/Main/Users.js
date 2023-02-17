@@ -19,7 +19,6 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
 import SkeletonLoaderFreelancersList from '../../Components/SkeletonLoaderFreelancersList'
-import BottomSheet from 'react-native-bottom-sheet';
 
 const FREELANCE_LISTING = `
 
@@ -49,7 +48,6 @@ query Freelancers {
 `
 
 export default function UseFree ({navigation}) {
-  const bottomSheetRef = useRef();
   const [Loading , setLoding] = useState(loading)
   const onRefres = () =>{
 
@@ -67,7 +65,6 @@ export default function UseFree ({navigation}) {
     }
 
   }
-  const bottomSheetRef = useRef(null)
   const snapPoints = useMemo(() => ['25%', '50%'], [])
   const [Datas, setDatas] = useState([])
 
@@ -102,21 +99,7 @@ export default function UseFree ({navigation}) {
     console.log('Data>>>>>>', Datas?.freelancerList?.freelancers)
   }, [Datas])
 
-  const BottomSheetOp = () => {
-    return (
-      <View style={{flex: 1}}>
-        <BottomSheet
-          ref={bottomSheetRef}
-          index={1}
-          snapPoints={snapPoints}
-          onChange={handleSheetChanges}>
-          <View style={{width: '100%', height: 156, backgroundColor: 'black'}}>
-            <Text>Awesome 🎉</Text>
-          </View>
-        </BottomSheet>
-      </View>
-    )
-  }
+ 
 
   return (
     <View style={styles.container}>

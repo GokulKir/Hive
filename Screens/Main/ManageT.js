@@ -13,11 +13,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
-
-
-
 export default function MangeTasks ({navigation}) {
-  ;``
   return (
     <View style={styles.container}>
       <ScrollView>

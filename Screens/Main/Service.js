@@ -1,4 +1,4 @@
-import React , {useState , useEffect} from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   View,
   StyleSheet,
@@ -7,201 +7,143 @@ import {
   ScrollView,
   Text,
   Image,
-  ActivityIndicator ,
+  FlatList,
   ImageBackground
 } from 'react-native'
+import { useManualQuery, useQuery } from 'graphql-hooks'
+import { SERVICE_LIST } from '../../GraphQl/Query'
+import SkeletonLoderServiesList from '../../Components/SkeletonLoderServiesList'
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
-import {useManualQuery , useQuery} from 'graphql-hooks'
 
+export default function Service({ navigation }) {
+  const { loading, error, data } = useQuery(SERVICE_LIST);
 
+  const [services, setServices] = useState([])
 
-const SERVIECE_LIST = `
-query GetFreelancerDetails($pageNumber: Int, $limit: Int, $category: String) {
-  serviceList(pageNumber: $pageNumber, limit: $limit, category: $category) {
-    msg
-    services {
-      _id
-      owner {
-        _id
-        city
-        country
-        description
-        englishLevel
-        firstName
-        hourlyRate
-        isActivated
-        isProfileVerified
-        jobSuccess
-        joined
-        lastName
-        position
-        profileImg
-        rating
-        tagline
-        username
-      }
-    }
-  }
-}
-`
+  useEffect(() => {
+    setServices(data?.serviceList?.services)
+  }, [loading])
 
+  const renderItems = ({ item }) => (
+    <TouchableOpacity style={{ marginBottom: 20 }}>
+      <View style={{ alignItems: 'center' }}>
+        <ImageBackground
+          source={{ uri: item.images && item.images.length ? item.images[0] : "https://global-uploads.webflow.com/6236f2260b45449819d1988e/6261573ce87ee639f635e64e_placeholder.png" }}
+          // source={{ uri: "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8&w=1000&q=80" }}
+          style={{ width: '95%', height: 134, alignSelf: 'center', left: 10 }}>
+          <Image
+            style={{ width: 80, height: 25 }}
+            source={require('../../assets/Label.png')}
+          />
+        </ImageBackground>
 
-export default function Service ({navigation}) {
-  const [Datas , setDatas] =  useState([])
-  const {  loading, error, data } = useQuery(SERVIECE_LIST);
+        <View style={{ marginLeft: 5 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text
+              style={{
+                color: '#1DA1F2',
+                fontWeight: 'normal',
+                fontSize: 12,
+                marginTop: 10,
+              }}>
+              {item.slug}
+            </Text>
+            <Text style={{ marginLeft: 0, marginTop: 10 }}>
+              From
+            </Text>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text
+              style={{
+                color: 'black',
+                fontWeight: 'normal',
+                fontSize: 16,
+                marginTop: 10,
+                width: "80%"
+              }}>
 
-  useEffect(() =>{
-    console.log(error);
-  
-    if( data?.serviceList?.services?.owner){
-        
-  
-    }
-  
-    
-    if(!loading){
-     
-      setDatas(data)
-    }
-    console.log(data);
-   })
-  
-   useEffect(() =>{
-    console.log("Servies Data>>>>>",Datas?.serviceList?.services);
-    
-      },[Datas])
+              {item?.owner?.description}
+            </Text>
+            <Text
+              style={{
+                fontSize: 15,
+                marginTop: 10,
+                color: 'black',
+              }}>
+              ${item.price}
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View style={{ flexDirection: 'row', left: 22 }}>
+        <Image
+          style={{ marginTop: 6, marginLeft: 1, width: 12, height: 12 }}
+          source={require('../../assets/Rate.png')}
+        />
+        <Text
+          style={{
+            marginLeft: 4,
+            marginTop: 3,
+            marginTop: 5,
+            fontSize: 12,
+          }}>
+          {item.rating}
+        </Text>
+        <Text
+          style={{
+            marginLeft: 8,
+            marginTop: 4,
+            color: 'grey',
+            fontSize: 12,
+          }}>
+          (11 072)
+        </Text>
+        <Image
+          style={{ height: 9, width: 12, marginTop: 8, marginLeft: 9 }}
+          source={require('../../assets/Ey.png')}
+        />
+        <Text style={{ marginLeft: 4, marginTop: 3, fontSize: 12 }}>
+          2,658
+        </Text>
+      </View>
+
+      <TouchableOpacity
+        style={{
+          width: '90%',
+          height: 45,
+          backgroundColor: '#EF4444',
+          marginTop: 15,
+          borderRadius: 5,
+          alignSelf: 'center',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Image source={require('../../assets/Love.png')} />
+        <Text style={{ color: '#fff', marginLeft: 10 }}>
+          Remove from saved items
+        </Text>
+      </TouchableOpacity>
+    </TouchableOpacity>
+  )
 
 
   return (
     <View style={styles.container}>
-
-    {loading ?  
- 
-     
-  <View>
-  <ActivityIndicator size={40} color="#C89D67" style={{marginTop:hp('40%')}} />
- </View>
-
-
-      :
-      <ScrollView>
-        <View style={{width: '100%', height: '100%', backgroundColor: '#fff'}}>
-          <View>
-
-         { Datas?.serviceList?.services.map((obj , i)=>{
-          return (
-       
-            
-            <TouchableOpacity key={i} style={{alignItems: 'center', marginTop: 10}}>
-              <View
-                style={{width: '90%', height: 134, backgroundColor: '#DDDDDD'}}>
-                <Image
-                  style={{width: 80, height: 25}}
-                  source={require('../../assets/Label.png')}
-                />
-              </View>
-
-              <View style={{marginLeft: 5}}>
-                <View style={{flexDirection: 'row'}}>
-                  <Text
-                    style={{
-                      color: '#1DA1F2',
-                      fontWeight: 'normal',
-                      fontSize: wp('3.5%'),
-                      marginRight: 90,
-                      marginTop: 10,
-                    }}>
-                    Programming, WordPress, WP setup
-                  </Text>
-                  <Text style={{marginLeft: 0, marginTop: 10, marginRight: 10}}>
-                    From
-                  </Text>
-                </View>
-                <View style={{flexDirection: 'row'}}>
-                  <View style={{width:wp('70%')}}>
-                  <Text
-                    style={{
-                      color: 'black',
-                      fontWeight: 'bold',
-                      fontSize: wp('3.5%'),
-                      marginRight: wp('7%'),
-                      marginTop: 4,
-                    }}>
-                   {obj?.owner?.description}
-                  </Text>
-                  </View>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      marginTop: 10,
-                      marginLeft: wp('0%'),
-                      color: 'black',
-                      marginLeft:wp('8%')
-                    }}>
-                   {obj?.owner?.hourlyRate}
-                  </Text>
-                </View>
-              </View>
-
-              <View style={{flexDirection: 'row', marginRight: 215 , marginTop:2}}>
-                <Image
-                  style={{marginTop: 8, marginLeft: 1, width: 12, height: 12}}
-                  source={require('../../assets/Rate.png')}
-                />
-                <Text
-                  style={{
-                    marginLeft: 4,
-                    marginTop: 3,
-                    marginTop: 5,
-                    fontSize: 12,
-                  }}>
-                {obj?.owner?.rating}
-                </Text>
-                <Text
-                  style={{
-                    marginLeft: 8,
-                    marginTop: 4,
-                    color: 'grey',
-                    fontSize: 12,
-                  }}>
-                  (11 072)
-                </Text>
-                <Image
-                  style={{height: 9, width: 12, marginTop: 8, marginLeft: 9}}
-                  source={require('../../assets/Ey.png')}
-                />
-                <Text style={{marginLeft: 4, marginTop: 3, fontSize: 12}}>
-                  2,658
-                </Text>
-              </View>
-
-              <TouchableOpacity
-                style={{
-                  width: '90%',
-                  height: 45,
-                  backgroundColor: '#EF4444',
-                  marginTop: 15,
-                  borderRadius: 5,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Image source={require('../../assets/Love.png')} />
-                <Text style={{color: '#fff', marginLeft: 10}}>
-                  Remove from saved items
-                </Text>
-              </TouchableOpacity>
-            </TouchableOpacity>
-                 
-          )
-        })}
+      {loading ?
+        <SkeletonLoderServiesList/>
         
-          </View>
-        </View>
-      </ScrollView>
+        :
+
+        <FlatList
+          data={services}
+          renderItem={renderItems}
+          keyExtractor={item => item._id}
+        />
       }
     </View>
   )
