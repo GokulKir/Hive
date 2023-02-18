@@ -34,6 +34,7 @@ export default function DrawerContent ({navigation}) {
   }
 
   useEffect(() => {
+    // console.log("---",user);
     // firestore().collection(user.email).get().then(querySnapshot => {
     //   console.log('Total users: ', querySnapshot.size);
     //   querySnapshot.forEach(documentSnapshot => {
@@ -44,7 +45,7 @@ export default function DrawerContent ({navigation}) {
     //     setLastName(Data.Lastname)
     //   });
     // });
-  })
+  },[])
   return (
     <View style={styles.container}>
       <View>
@@ -77,7 +78,7 @@ export default function DrawerContent ({navigation}) {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                {/* <Image style={{width:'100%' , height:'100%' , borderRadius:100}} source={{uri : user.photoURL}}/> */}
+                <Image style={{width:'100%' , height:'100%' , borderRadius:100}} source={{uri : user && user.photoURL ? user.photoURL : "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80" }}/>
               </View>
             </View>
 
@@ -90,7 +91,7 @@ export default function DrawerContent ({navigation}) {
                     marginLeft: 14,
                     fontSize: 18,
                     fontWeight: 'bold',
-                  }}></Text>
+                  }}>{user && user.displayName}</Text>
 
                 {/* // <Text style={{marginTop:15 , color:'black' , marginLeft:14 , fontSize:18 , fontWeight:'bold'}}>{user.displayName}</Text>  */}
               </TouchableOpacity>
