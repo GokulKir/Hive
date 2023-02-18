@@ -18,7 +18,7 @@ const SkeltonPlaceholderHome = () => {
 
       <FlatList  data={count}  
       horizontal={true}
-       keyExtractor={item => item.id}
+       keyExtractor={item => item.key}
        renderItem={({item})=>{
 
         return (

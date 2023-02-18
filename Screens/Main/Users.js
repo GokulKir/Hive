@@ -19,11 +19,6 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
 import SkeletonLoaderFreelancersList from '../../Components/SkeletonLoaderFreelancersList'
-<<<<<<< HEAD
-import Animated from 'react-native-reanimated';
-import BottomSheet from 'reanimated-bottom-sheet';
-=======
->>>>>>> main
 
 const FREELANCE_LISTING = `
 
@@ -53,10 +48,6 @@ query Freelancers {
 `
 
 export default function UseFree ({navigation}) {
-<<<<<<< HEAD
-
-=======
->>>>>>> main
   const [Loading , setLoding] = useState(loading)
   const onRefres = () =>{
 
@@ -74,13 +65,9 @@ export default function UseFree ({navigation}) {
     }
 
   }
-<<<<<<< HEAD
-
-=======
->>>>>>> main
   const snapPoints = useMemo(() => ['25%', '50%'], [])
   const [Datas, setDatas] = useState([])
-  const sheetRef = React.useRef(null);
+
   const {loading, error, data} = useQuery(FREELANCE_LISTING)
 
   //callbacks

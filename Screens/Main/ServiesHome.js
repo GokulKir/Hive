@@ -70,7 +70,7 @@ const ServiesHome = () => {
     <View>
 
 
-   {data ?  
+   { loading ?  
 
 
 <SkeltonPlaceholderHome/>
@@ -82,7 +82,7 @@ const ServiesHome = () => {
         horizontal={true}
         data={CategoryData}
         keyExtractor={item => item._id}
-        renderItem={({}) => {
+        renderItem={({item}) => {
           return (
             <TouchableOpacity style={{marginLeft: wp('5%')}}>
               <View
@@ -105,20 +105,21 @@ const ServiesHome = () => {
                   style={{
                     color: '#1DA1F2',
                     marginTop: 10,
-                    marginLeft: wp('6%'),
+                    marginLeft: wp('2%'),
                   }}>
-                  Nora Carlson
+                  {item?.owner?.username}
                 </Text>
 
-                <View style={{marginLeft: wp('5%'), marginTop: 8}}>
-                  <Text
+                <View style={{marginLeft: wp('1%'), marginTop: 8}}>
+                  <Text 
+                  numberOfLines={2}
                     style={{
                       color: 'black',
                       fontSize: wp('4%'),
                       fontWeight: 'normal',
                       width: hp('20%'),
                     }}>
-                    I will write rest API in
+                    {item?.owner?.description}
                   </Text>
                   <Text
                     style={{
@@ -126,8 +127,8 @@ const ServiesHome = () => {
                       fontSize: wp('4%'),
                       fontWeight: 'normal',
                     }}>
-                    {' '}
-                    react native
+                  
+                   
                   </Text>
                 </View>
 
@@ -149,13 +150,13 @@ const ServiesHome = () => {
               <View
                 style={{
                   flexDirection: 'row',
-                  marginLeft: wp('4%'),
+                  marginLeft: wp('1%'),
                   marginTop: -24,
                 }}>
                 <Image
                   style={{
                     marginTop: 5,
-                    marginLeft: 2,
+                    marginLeft: 1,
                     width: wp('3%'),
                     height: hp('1.8%'),
                   }}
@@ -168,7 +169,7 @@ const ServiesHome = () => {
                     marginLeft: 10,
                     marginTop: 3,
                   }}>
-                  4.5
+                 {item?.owner?.rating}
                 </Text>
                 <Text
                   style={{
@@ -190,7 +191,7 @@ const ServiesHome = () => {
                 <Text
                   style={{
                     fontSize: wp('3%'),
-                    marginLeft: 10,
+                    marginLeft: 8,
                     marginTop: 3,
                   }}>
                   3,466
@@ -201,7 +202,7 @@ const ServiesHome = () => {
                 <Text
                   style={{
                     fontSize: 15,
-                    marginLeft: wp('6%'),
+                    marginLeft: wp('1%'),
                     marginTop: 12,
                   }}>
                   From :
@@ -209,13 +210,13 @@ const ServiesHome = () => {
                 <Text
                   style={{
                     fontSize: 15,
-                    marginLeft: 5,
+                    marginLeft: 1,
                     marginTop: 12,
                     color: 'black',
                     fontSize: 15,
                     fontWeight: 'bold',
                   }}>
-                  $90.19
+                  {item?.owner?.hourlyRate}
                 </Text>
               </View>
             </TouchableOpacity>
