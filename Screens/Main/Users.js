@@ -160,7 +160,7 @@ export default function UseFree ({navigation}) {
           renderItem={({item}) => {
             return (
               <TouchableOpacity
-                onPress={() => navigation.navigate('Drawer3')}
+                onPress={() => navigation.navigate('AccountScreen')}
                 style={{flexDirection: 'row'}}>
                 <View
                   style={{

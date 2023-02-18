@@ -29,7 +29,7 @@ export default function TaskD ({navigation}) {
           elevation: 5,
           flexDirection: 'row',
         }}>
-        <TouchableOpacity onPress={() => navigation.navigate('MyDrawer')}>
+        <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
           <Image
             style={{width: 30, height: 30, marginLeft: 20, marginTop: 16}}
             source={require('../../assets/Side.png')}

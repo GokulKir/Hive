@@ -57,7 +57,7 @@ export default function Login ({navigation}) {
       client.setHeader('Authorization', `Bearer ${token}`)
         if(success) {
            console.log(success);
-           navigation.navigate('MyDrawer')
+           navigation.navigate('HomeScreen')
         } else if(msg) {
           console.log(msg);
           Alert.alert(msg)
@@ -84,7 +84,7 @@ export default function Login ({navigation}) {
         .signInWithEmailAndPassword(email, password)
         .then(res => {
           console.log('User created')
-          navigation.navigate('MyDrawer')
+          navigation.navigate('HomeScreen')
 
           Alert.alert(
             //Title
@@ -116,7 +116,7 @@ export default function Login ({navigation}) {
 
     user_sign_in
       .then(user => {
-        navigation.navigate('MyDrawer')
+        navigation.navigate('HomeScreen')
         console.log(user)
       })
       .catch(error => {
@@ -137,7 +137,7 @@ export default function Login ({navigation}) {
         },
       })
       console.log('Login Successfully' + LOGIN)
-      navigation.navigate('MyDrawer')
+      navigation.navigate('HomeScreen')
     } catch (error) {
       console.log(error)
     }

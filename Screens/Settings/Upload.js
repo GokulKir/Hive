@@ -175,7 +175,7 @@ export default function Upload ({navigation}) {
        
 
        <View style={{alignItems:'center' , }}>
-<TouchableOpacity onPress={() => navigation.navigate('Drawer8')} style={{width:324 , height:40 , backgroundColor:'#C89D67' , borderRadius:5 , alignItems:'center' , justifyContent:'center' , marginTop:30}}>
+<TouchableOpacity onPress={() => navigation.navigate('FreelancersScreen')} style={{width:324 , height:40 , backgroundColor:'#C89D67' , borderRadius:5 , alignItems:'center' , justifyContent:'center' , marginTop:30}}>
  <Text style={{fontSize:17 , color:'#fff' , fontWeight:'normal'}}>Save & update</Text>
 </TouchableOpacity>
     </View>
