@@ -16,6 +16,9 @@ import {
 } from 'react-native-responsive-screen'
 import auth from '@react-native-firebase/auth'
 import firebase from '@react-native-firebase/app'
+import ImagePicker from 'react-native-image-picker';
+
+
 
 export default function Dashboard ({navigation}) {
   // const user = firebase.auth().currentUser;
