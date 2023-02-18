@@ -51,7 +51,7 @@ export default function SignupB ({navigation}) {
 
     user_sign_in
       .then(user => {
-        navigation.navigate('MyDrawer')
+        navigation.navigate('HomeScreen')
         console.log(user)
       })
       .catch(error => {
@@ -73,7 +73,7 @@ export default function SignupB ({navigation}) {
 
     //      console.log("User added to database");
     //      Alert.alert('User successfully ')
-    //           navigation.navigate('MyDrawer')
+    //           navigation.navigate('HomeScreen')
 
     // setPhoto(userInfo.photo)
     // setName(userInfo.name)
@@ -204,7 +204,7 @@ export default function SignupB ({navigation}) {
               console.log('user data added to the DB!')
             })
 
-          navigation.navigate('MyDrawer')
+          navigation.navigate('HomeScreen')
         })
         .catch(error => {
           console.log('Signed error' + error)

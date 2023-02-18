@@ -12,7 +12,7 @@ export default function Logo1({navigation}) {
     <View>
      <View  style={{ flexDirection:'row'}}>
       <Text style={{color:'black' , fontSize:21 , marginLeft:width * 0.17  , marginTop:5 , fontWeight:'bold' }}>Dashboard</Text>
-      <TouchableOpacity onPress={()=> navigation.navigate('Drawer2')}>
+      <TouchableOpacity onPress={()=> navigation.navigate('ProfileScreen')}>
       <View style={{width:40 , height:40 , backgroundColor:'#DDDDDD' , marginLeft:width * 0.69 , borderRadius:100}}>
       {/* <Image style={{width:'100%' , height:'100%' , borderRadius:100}} source={{uri: user.photoURL}}/> */}
       </View>

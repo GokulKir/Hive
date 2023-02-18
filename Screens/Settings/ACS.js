@@ -71,7 +71,7 @@ export default function ACS ({navigation}) {
 
           <View style={{alignItems: 'center', marginTop: 0}}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Drawer7')}
+              onPress={() => navigation.navigate('ACS')}
               style={{
                 width: 324,
                 height: 40,
@@ -161,7 +161,7 @@ export default function ACS ({navigation}) {
 
               <View style={{alignItems: 'center', marginTop: 30}}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Drawer7')}
+                  onPress={() => navigation.navigate('ACS')}
                   style={{
                     width: 324,
                     height: 40,

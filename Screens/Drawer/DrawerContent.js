@@ -83,7 +83,7 @@ export default function DrawerContent ({navigation}) {
             </View>
 
             <View style={{width: 190, height: 123, marginTop: 20}}>
-              <TouchableOpacity onPress={() => navigation.navigate('Drawer3')}>
+              <TouchableOpacity onPress={() => navigation.navigate('AccountScreen')}>
                 <Text
                   style={{
                     marginTop: 15,
@@ -112,7 +112,7 @@ export default function DrawerContent ({navigation}) {
           <View>
             <View style={{flexDirection: 'row'}}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('Drawer1')}
+                onPress={() => navigation.navigate('Dashboard')}
                 style={{marginLeft: 23, marginTop: 15, flexDirection: 'row'}}>
                 <Image
                   style={{width: 16, height: 20, marginTop: 3}}
@@ -153,7 +153,7 @@ export default function DrawerContent ({navigation}) {
 
             <View style={{flexDirection: 'row', marginTop: 10}}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('Drawer9')}
+                onPress={() => navigation.navigate('ManageT')}
                 style={{marginLeft: 20, marginTop: 15, flexDirection: 'row'}}>
                 <Image
                   style={{width: 21, height: 19, marginTop: 3}}
@@ -180,7 +180,7 @@ export default function DrawerContent ({navigation}) {
 
             <View style={{flexDirection: 'row', marginTop: 10}}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('Drawer10')}
+                onPress={() => navigation.navigate('Users')}
                 style={{marginLeft: 20, marginTop: 15, flexDirection: 'row'}}>
                 <Image
                   style={{width: 21, height: 20, marginTop: 3}}
@@ -222,7 +222,7 @@ export default function DrawerContent ({navigation}) {
                   }}></View>
 
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Drawer6')}>
+                  onPress={() => navigation.navigate('MySavedScreen')}>
                   <Text
                     style={{
                       color: 'black',
@@ -325,7 +325,7 @@ export default function DrawerContent ({navigation}) {
                   }}></View>
 
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Drawer7')}>
+                  onPress={() => navigation.navigate('ACS')}>
                   <Text
                     style={{
                       color: 'grey',
@@ -342,7 +342,7 @@ export default function DrawerContent ({navigation}) {
 
             <View style={{flexDirection: 'row', marginTop: 10}}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('Drawer5')}
+                onPress={() => navigation.navigate('InvoiceScreen')}
                 style={{marginLeft: 20, marginTop: 10, flexDirection: 'row'}}>
                 <Image
                   style={{width: 21, height: 23, marginTop: 2}}
@@ -362,7 +362,7 @@ export default function DrawerContent ({navigation}) {
 
             <View style={{flexDirection: 'row', marginTop: 10}}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('Drawer6')}
+                onPress={() => navigation.navigate('MySavedScreen')}
                 style={{marginLeft: 20, marginTop: 15, flexDirection: 'row'}}>
                 <Image
                   style={{width: 23, height: 20, marginTop: 2}}

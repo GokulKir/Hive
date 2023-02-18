@@ -680,7 +680,7 @@ export default function TaskDetail ({navigation}) {
 
               <View style={{alignItems: 'center'}}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Drawer8')}
+                  onPress={() => navigation.navigate('FreelancersScreen')}
                   style={{
                     width: 324,
                     height: 40,
