@@ -228,6 +228,7 @@ const Drawer4 = route => {
 }
 
 const Drawer3 = route => {
+  const data="hgjhfjf"
   return (
     <Drawer.Navigator
       screenOptions={{

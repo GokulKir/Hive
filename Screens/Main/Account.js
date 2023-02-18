@@ -19,10 +19,13 @@ import {
 } from 'react-native-responsive-screen'
 const user = firebase.auth().currentUser
 
-export default function Account ({navigation}) {
+export default function Account (route) {
   const [firstname, setFirstName] = useState()
   const [lastname, setLastName] = useState()
+
+
   useEffect(() => {
+  
     firestore()
       .collection(user.email)
       .get()
@@ -37,7 +40,7 @@ export default function Account ({navigation}) {
           setLastName(Data.Lastname)
         })
       })
-  })
+  }, [])
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -67,11 +70,11 @@ export default function Account ({navigation}) {
           <View style={styles.SecondLayer}>
             <Image
               style={{
-                width:wp('22%'),
+                width: wp('22%'),
                 height: hp('11%'),
                 borderRadius: 50,
                 marginTop: -40,
-                alignSelf: 'center'
+                alignSelf: 'center',
               }}
               source={{uri: user.photoURL}}
             />
