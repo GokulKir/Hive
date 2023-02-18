@@ -188,7 +188,7 @@ export default function Signup ({navigation}) {
     })
     
     console.log('registerUserResponse', regUserResponse)
-    navigation.navigate('MyDrawer')
+    navigation.navigate('HomeScreen')
   }
   useEffect(() => {
     
@@ -227,7 +227,7 @@ export default function Signup ({navigation}) {
       console.log("msg >>>>>>>>>",response);
         if(response?.data?.userRegister?.success) {
            console.log("success");
-           navigation.navigate('MyDrawer')
+           navigation.navigate('HomeScreen')
         } else if(response?.data?.userRegister?.msg) {
           console.log(response?.data?.userRegister?.msg);
           Alert.alert(response?.data?.userRegister?.msg);
@@ -259,7 +259,7 @@ export default function Signup ({navigation}) {
 
     user_sign_in
       .then(user => {
-        navigation.navigate('MyDrawer')
+        navigation.navigate('HomeScreen')
         console.log(user)
       })
       .catch(error => {
@@ -365,7 +365,7 @@ export default function Signup ({navigation}) {
               console.log('user data added to the DB!')
             })
 
-          navigation.navigate('MyDrawer')
+          navigation.navigate('HomeScreen')
         })
         .catch(error => {
           console.log('Signed error' + error)

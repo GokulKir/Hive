@@ -1,7 +1,7 @@
 import * as React from 'react'
-import {NavigationContainer} from '@react-navigation/native'
-import {createStackNavigator} from '@react-navigation/stack'
-import {createDrawerNavigator} from '@react-navigation/drawer'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+import { createDrawerNavigator } from '@react-navigation/drawer'
 
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
@@ -58,364 +58,248 @@ import Filter2 from './Screens/Filter/Filter2'
 import Users from './Screens/Main/Users'
 //Order Screen ui
 import Order from './Screens/Order/Order'
+import {View} from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const MyDrawer = route => {
+
+
+const MyStack = (props) => {
+
+  function BackButtonAndDrawer({ navigation }) {
+
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        {/* <StatusBar
+          backgroundColor={AppStyles.Colors.screensHeaderColor}
+        /> */}
+        <Icon name="menu" size={30} style={{ marginLeft: 10 }}
+          color={"#000"}
+          backgroundColor="black" onPress={() =>
+            navigation.openDrawer()} />
+      
+      </View >
+    )
+  }
   return (
-    <Drawer.Navigator
-      screenOptions={{
-        headerTintColor: '#fff',
-      }}
-      drawerContent={({...props}) => {
-        return <DrawerContent {...props} route={route}></DrawerContent>
-      }}>
-      <Drawer.Screen
-        name='Home'
+    <Stack.Navigator>
+      <Stack.Screen
+        name='Splash'
+        component={Splash}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='Login'
+        component={Login}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='Signup'
+        component={Signup}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='HomeScreen'
         component={Home}
         options={{
+          headerLeft: () => (
+            <View style={{ flexDirection: 'row' }}>
+            {/* <StatusBar
+              backgroundColor={AppStyles.Colors.screensHeaderColor}
+            /> */}
+            <Icon name="menu" size={30} style={{ marginLeft: 10 }}
+              color={"#fff"}
+              backgroundColor="black" onPress={() =>
+                props.navigation.openDrawer()} />
+          
+          </View >
+          ),
           headerTitle: props => <Logo {...props} />,
-          headerStyle: {backgroundColor: '#1D1D1B'},
+          headerStyle: { backgroundColor: '#1D1D1B' },
         }}
       />
-    </Drawer.Navigator>
-  )
-}
-
-const Drawer10 = route => {
-  return (
-    <Drawer.Navigator
-      screenOptions={{
-        headerTintColor: 'black',
-      }}
-      drawerContent={({...props}) => {
-        return <DrawerContent {...props} route={route}></DrawerContent>
-      }}>
-      <Drawer.Screen
-        name='Users'
-        component={Users}
-        options={{
-          headerTitle: props => <Logo3 {...props} />,
-          headerStyle: {backgroundColor: '#fff'},
-        }}
+      <Stack.Screen
+        name='Password'
+        component={Password}
+        options={{ headerShown: false }}
       />
-    </Drawer.Navigator>
-  )
-}
-
-const Drawer9 = route => {
-  return (
-    <Drawer.Navigator
-      screenOptions={{
-        headerTintColor: 'black',
-      }}
-      drawerContent={({...props}) => {
-        return <DrawerContent {...props} route={route}></DrawerContent>
-      }}>
-      <Drawer.Screen
-        name='ManageT'
-        component={ManageT}
-        options={{
-          headerTitle: props => <Logo8 {...props} />,
-          headerStyle: {backgroundColor: '#fff'},
-        }}
-      />
-    </Drawer.Navigator>
-  )
-}
-
-const Drawer8 = route => {
-  return (
-    <Drawer.Navigator
-      screenOptions={{
-        headerTintColor: 'black',
-      }}
-      drawerContent={({...props}) => {
-        return <DrawerContent {...props} route={route}></DrawerContent>
-      }}>
-      <Drawer.Screen
-        name='Freelancers'
-        component={Freelancers}
-        options={{
-          headerTitle: props => <Logo3 {...props} />,
-          headerStyle: {backgroundColor: '#DDDDDD'},
-        }}
-      />
-    </Drawer.Navigator>
-  )
-}
-
-const Drawer7 = route => {
-  return (
-    <Drawer.Navigator
-      screenOptions={{
-        headerTintColor: 'black',
-      }}
-      drawerContent={({...props}) => {
-        return <DrawerContent {...props} route={route}></DrawerContent>
-      }}>
-      <Drawer.Screen
-        name='ACS'
-        component={ACS}
-        options={{
-          headerTitle: props => <Logo7 {...props} />,
-          headerStyle: {backgroundColor: '#F7F7F7'},
-        }}
-      />
-    </Drawer.Navigator>
-  )
-}
-
-const Drawer6 = route => {
-  return (
-    <Drawer.Navigator
-      screenOptions={{
-        headerTintColor: 'black',
-      }}
-      drawerContent={({...props}) => {
-        return <DrawerContent {...props} route={route}></DrawerContent>
-      }}>
-      <Drawer.Screen
-        name='MySaved'
-        component={MySaved}
-        options={{
-          headerTitle: props => <Logo6 {...props} />,
-          headerStyle: {backgroundColor: '#F7F7F7'},
-        }}
-      />
-    </Drawer.Navigator>
-  )
-}
-
-const Drawer5 = route => {
-  return (
-    <Drawer.Navigator
-      screenOptions={{
-        headerTintColor: 'black',
-      }}
-      drawerContent={({...props}) => {
-        return <DrawerContent {...props} route={route}></DrawerContent>
-      }}>
-      <Drawer.Screen
-        name='Invoice'
-        component={Invoice}
-        options={{
-          headerTitle: props => <Logo5 {...props} />,
-          headerStyle: {backgroundColor: '#fff'},
-        }}
-      />
-    </Drawer.Navigator>
-  )
-}
-
-const Drawer4 = route => {
-  return (
-    <Drawer.Navigator
-      screenOptions={{
-        headerTintColor: 'black',
-      }}
-      drawerContent={({...props}) => {
-        return <DrawerContent {...props} route={route}></DrawerContent>
-      }}>
-      <Drawer.Screen
-        name='Upload'
-        component={Upload}
-        options={{
-          headerTitle: props => <Logo4 {...props} />,
-          headerStyle: {backgroundColor: '#DDDDDD'},
-        }}
-      />
-    </Drawer.Navigator>
-  )
-}
-
-const Drawer3 = route => {
-  const data="hgjhfjf"
-  return (
-    <Drawer.Navigator
-      screenOptions={{
-        headerTintColor: 'black',
-      }}
-      drawerContent={({...props}) => {
-        return <DrawerContent {...props} route={route}></DrawerContent>
-      }}>
-      <Drawer.Screen
-        name='Account'
-        component={Account}
-        options={{
-          headerTitle: props => <Logo3 {...props} />,
-          headerStyle: {backgroundColor: '#fff'},
-        }}
-      />
-    </Drawer.Navigator>
-  )
-}
-
-const Drawer2 = route => {
-  return (
-    <Drawer.Navigator
-      screenOptions={{
-        headerTintColor: 'black',
-      }}
-      drawerContent={({...props}) => {
-        return <DrawerContent {...props} route={route}></DrawerContent>
-      }}>
-      <Drawer.Screen
-        name='Profile'
-        component={Profile}
-        options={{
-          headerTitle: props => <Logo2 {...props} />,
-          headerStyle: {backgroundColor: '#fff'},
-        }}
-      />
-    </Drawer.Navigator>
-  )
-}
-
-const Drawer1 = route => {
-  return (
-    <Drawer.Navigator
-      screenOptions={{
-        headerTintColor: 'black',
-      }}
-      drawerContent={({...props}) => {
-        return <DrawerContent {...props} route={route}></DrawerContent>
-      }}>
-      <Drawer.Screen
+      <Stack.Screen
         name='Dashboard'
         component={Dashboard}
         options={{
+          headerLeft: () => (
+            <BackButtonAndDrawer {...props}/>
+           ),
           headerTitle: props => <Logo1 {...props} />,
-          headerStyle: {backgroundColor: '#fff'},
+          headerStyle: { backgroundColor: '#fff' },
         }}
       />
-    </Drawer.Navigator>
+      <Stack.Screen
+        name='ProfileScreen'
+        component={Profile}
+        options={{
+          headerLeft: () => (
+            <BackButtonAndDrawer {...props}/>
+           ),
+          headerTitle: props => <Logo2 {...props} />,
+          headerStyle: { backgroundColor: '#fff' },
+        }}
+      />
+      <Stack.Screen
+        name='AccountScreen'
+        component={Account}
+        options={{
+          headerLeft: () => (
+            <BackButtonAndDrawer {...props}/>
+           ),
+          headerTitle: props => <Logo3 {...props} />,
+          headerStyle: { backgroundColor: '#fff' },
+        }}
+      />
+      <Stack.Screen
+        name='UploadScreen'
+        component={Upload}
+        options={{
+          headerLeft: () => (
+            <BackButtonAndDrawer {...props}/>
+           ),
+          headerTitle: props => <Logo4 {...props} />,
+          headerStyle: { backgroundColor: '#DDDDDD' },
+        }}
+      />
+      <Stack.Screen
+        name='InvoiceScreen'
+        component={Invoice}
+        options={{
+          headerLeft: () => (
+            <BackButtonAndDrawer {...props}/>
+           ),
+          headerTitle: props => <Logo5 {...props} />,
+          headerStyle: { backgroundColor: '#fff' },
+        }}
+      />
+      <Stack.Screen
+        name='MySavedScreen'
+        component={MySaved}
+        options={{
+          headerLeft: () => (
+            <BackButtonAndDrawer {...props}/>
+           ),
+          headerTitle: props => <Logo6 {...props} />,
+          headerStyle: { backgroundColor: '#F7F7F7' },
+        }}
+      />
+      <Stack.Screen
+        name='ACS'
+        component={ACS}
+        options={{
+          headerLeft: () => (
+            <BackButtonAndDrawer {...props}/>
+           ),
+          headerTitle: props => <Logo7 {...props} />,
+          headerStyle: { backgroundColor: '#F7F7F7' },
+        }}
+      />
+      <Stack.Screen
+        name='FreelancersScreen'
+        component={Freelancers}
+        options={{
+          headerLeft: () => (
+            <BackButtonAndDrawer {...props}/>
+           ),
+          headerTitle: props => <Logo3 {...props} />,
+          headerStyle: { backgroundColor: '#DDDDDD' },
+        }}
+      />
+      <Stack.Screen
+        name='ManageT'
+        component={ManageT}
+        options={{
+          headerLeft: () => (
+            <BackButtonAndDrawer {...props}/>
+           ),
+          headerTitle: props => <Logo8 {...props} />,
+          headerStyle: { backgroundColor: '#fff' },
+        }}
+      />
+      <Stack.Screen
+        name='Users'
+        component={Users}
+        options={{
+          headerLeft: () => (
+            <BackButtonAndDrawer {...props}/>
+           ),
+          headerTitle: props => <Logo3 {...props} />,
+          headerStyle: { backgroundColor: '#fff' },
+        }}
+      />
+      <Stack.Screen
+        name='Edit'
+        component={Edit}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='Payout'
+        component={Payout}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='TaskD'
+        component={TaskD}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='TaskDetails'
+        component={TaskDetails}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='Filter'
+        component={Filter}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='Filter2'
+        component={Filter2}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='Order'
+        component={Order}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='LoginB'
+        component={LoginB}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='SignupB'
+        component={SignupB}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
   )
 }
 
-export default function App () {
+
+export default function App(route) {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name='Splash'
-          component={Splash}
-          options={{headerShown: false}}
+      <Drawer.Navigator
+        screenOptions={{
+          headerTintColor: 'black',
+        }}
+        drawerContent={({ ...props }) => {
+          return <DrawerContent {...props} route={route}></DrawerContent>
+        }}>
+        <Drawer.Screen
+          name='ALLSCREENS'
+          component={MyStack}
+          options={{
+            headerShown: false
+          }}
         />
-        <Stack.Screen
-          name='Login'
-          component={Login}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Signup'
-          component={Signup}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='MyDrawer'
-          component={MyDrawer}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Password'
-          component={Password}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Drawer1'
-          component={Drawer1}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Drawer2'
-          component={Drawer2}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Drawer3'
-          component={Drawer3}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Drawer4'
-          component={Drawer4}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Drawer5'
-          component={Drawer5}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Drawer6'
-          component={Drawer6}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Drawer7'
-          component={Drawer7}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Drawer8'
-          component={Drawer8}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Drawer9'
-          component={Drawer9}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Drawer10'
-          component={Drawer10}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Edit'
-          component={Edit}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Payout'
-          component={Payout}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='TaskD'
-          component={TaskD}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='TaskDetails'
-          component={TaskDetails}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Filter'
-          component={Filter}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Filter2'
-          component={Filter2}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='Order'
-          component={Order}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='LoginB'
-          component={LoginB}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name='SignupB'
-          component={SignupB}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
+      </Drawer.Navigator>
     </NavigationContainer>
   )
 }

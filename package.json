@@ -42,6 +42,7 @@
     "react-native-skeleton-loaders": "^1.4.0",
     "react-native-skeleton-placeholder": "^5.2.4",
     "react-native-uuid": "^2.0.1",
+    "react-native-vector-icons": "^9.2.0",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22"
   },
   "devDependencies": {

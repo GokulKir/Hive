@@ -25,7 +25,7 @@ export default function Password ({navigation}) {
             height: 325,
             backgroundColor: '#1D1D1B',
           }}>
-          <TouchableOpacity onPress={() => navigation.navigate('MyDrawer')}>
+          <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
             <Text
               style={{
                 color: '#d9dbd9',

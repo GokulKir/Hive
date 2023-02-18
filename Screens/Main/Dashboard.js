@@ -70,7 +70,7 @@ export default function Dashboard ({navigation}) {
                       fontWeight: '600',
                     }}></Text>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('Drawer2')}>
+                    onPress={() => navigation.navigate('ProfileScreen')}>
                     <Text
                       style={{
                         color: '#1DA1F2',

@@ -11,7 +11,7 @@ export default function Splash ({navigation}) {
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
           console.log('User email: ', user.email)
-          navigation.navigate('MyDrawer')
+          navigation.navigate('HomeScreen')
         } else {
           navigation.navigate('Login')
         }

@@ -32,7 +32,7 @@ export default function Sellers({ navigation }) {
 
   const renderItems = ({ item }) => (
     <TouchableOpacity
-      // onPress={() => navigation.navigate('Drawer2')}
+      // onPress={() => navigation.navigate('ProfileScreen')}
       style={{ flexDirection: 'row' }}>
       <View
         style={{

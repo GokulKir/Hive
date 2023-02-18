@@ -451,7 +451,7 @@ export default function Home ({navigation, props}) {
 
               <View style={{alignItems: 'center', marginTop: 10}}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Drawer10')}
+                  onPress={() => navigation.navigate('Users')}
                   style={{
                     width: '90%',
                     height: 45,
@@ -505,7 +505,7 @@ export default function Home ({navigation, props}) {
               
                 <View style={{alignItems: 'center', marginTop: 30}}>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('Drawer8')}
+                    onPress={() => navigation.navigate('FreelancersScreen')}
                     style={{
                       width: '90%',
                       height: 45,

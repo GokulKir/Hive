@@ -65,7 +65,7 @@ export default function Filter ({navigation}) {
                   Narrow your search
                 </Text>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Drawer3')}
+                  onPress={() => navigation.navigate('AccountScreen')}
                   style={{marginTop: 16, marginLeft: 98}}>
                   <Image
                     style={{width: 14, height: 14}}
@@ -365,7 +365,7 @@ export default function Filter ({navigation}) {
 
               <View style={{alignItems: 'center', marginTop: 30}}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('MyDrawer')}
+                  onPress={() => navigation.navigate('HomeScreen')}
                   style={{
                     width: '90%',
                     height: 45,
@@ -381,7 +381,7 @@ export default function Filter ({navigation}) {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('MyDrawer')}
+                  onPress={() => navigation.navigate('HomeScreen')}
                   style={{
                     width: '90%',
                     height: 45,
