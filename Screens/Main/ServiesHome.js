@@ -46,7 +46,7 @@ const SERVICE_LIST = `query ServiceList($category: String) {
   }
 }`
 
-const ServiesHome = () => {
+const ServiesHome = ({navigation}) => {
   const [CategoryData, setCategoryData] = useState([])
   const {loading, error, data} = useQuery(SERVICE_LIST)
 
@@ -84,7 +84,7 @@ const ServiesHome = () => {
         keyExtractor={item => item._id}
         renderItem={({item}) => {
           return (
-            <TouchableOpacity style={{marginLeft: wp('5%')}}>
+            <TouchableOpacity onPress={()=> navigation.navigate('TaskD')} style={{marginLeft: wp('5%')}}>
               <View
                 style={{
                   height: hp('19%'),
