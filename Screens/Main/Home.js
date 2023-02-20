@@ -23,7 +23,9 @@ import {
 import {useManualQuery, useQuery} from 'graphql-hooks'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import SkeletonLoaderFreelancersList from '../../Components/SkeletonLoaderFreelancersList'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 const {height, width} = Dimensions.get('window')
+
 
 //Freelance api graph Ql//
 
@@ -69,6 +71,7 @@ export default function Home ({navigation, props}) {
 
 
   useEffect(() => {
+    // AsyncStorage.removeItem('userSession')
     // freeLancerList({variables: {}}).then(response => {
     //   console.log('frelncer list response', response)
     //   setData1(response)
