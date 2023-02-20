@@ -19,14 +19,25 @@ import {
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 import {ClientContext, useMutation} from 'graphql-hooks'
+import { Snackbar } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const USER_LOGIN = `mutation UserLogin($email: String!, $password: String!) {
+
+const USER_LOGIN = `
+mutation UserLogin($email: String!, $password: String!) {
   userLogin(email: $email, password: $password) {
-    success
     msg
+    success
     token
+    userData {
+      profileImg
+      fullName
+      uid
+      email
+    }
   }
-}`
+}
+`
 
 export default function Login ({navigation}) {
   const client = useContext(ClientContext)
@@ -37,8 +48,10 @@ export default function Login ({navigation}) {
         '86575262147-5ek6sbcsva6bi38al4h641sa731s0aja.apps.googleusercontent.com',
     })
   }, [])
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('ajnash.aju323@gmail.com')
+  const [password, setPassword] = useState('12345678')
+  const [snackbarVisible, setSnackbarVisible] = useState(false)
+  const [snackBarError, setSnackBarError] = useState("")
 
   //SignIm user Api //
 
@@ -49,23 +62,31 @@ export default function Login ({navigation}) {
       variables: { email, password }
     })
     
+    console.log(data);
     if (error) {
       // your code to handle login error
       console.log(error);
     } else {
-      const { token,success,msg } = data.userLogin
+      const { token,success,msg,userData } = data.userLogin
       client.setHeader('Authorization', `Bearer ${token}`)
+      console.log(userData);
         if(success) {
-           console.log(success);
-           navigation.navigate('HomeScreen')
+          try{
+            AsyncStorage.setItem("userSession", JSON.stringify(userData));
+          }catch(err){
+
+          }finally{
+            navigation.navigate('HomeScreen')
+          }
+          //  navigation.navigate('HomeScreen')
         } else if(msg) {
           console.log(msg);
-          Alert.alert(msg)
+          // Alert.alert(msg)
+          setSnackBarError(msg)
+          setSnackbarVisible(true)
         } else if (token) {
           console.log(token);
           Alert.alert(token)
-          
-
         }
       // console.log({success,msg,token});
       
@@ -213,7 +234,7 @@ export default function Login ({navigation}) {
                 color: 'black',
                 fontSize: 15,
               }}
-              placeholder='Enter email or username'
+              placeholder='Enter email'
             />
           </View>
 
@@ -348,6 +369,16 @@ export default function Login ({navigation}) {
 
         <View style={{height: 25}}></View>
       </ScrollView>
+      <Snackbar
+          visible={snackbarVisible}
+          onDismiss={() => setSnackbarVisible(false)}
+          action={{
+            label: 'Dismiss',
+            onPress: () => { },
+          }}
+        >
+          {snackBarError}
+        </Snackbar>
     </View>
   )
 }

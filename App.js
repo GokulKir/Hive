@@ -60,6 +60,7 @@ import Users from './Screens/Main/Users'
 import Order from './Screens/Order/Order'
 import {View} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import SuccessLogin from './Screens/UserLogin/SuccessLogin'
 
 
 
@@ -275,6 +276,11 @@ const MyStack = (props) => {
       <Stack.Screen
         name='SignupB'
         component={SignupB}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='SuccessLogin'
+        component={SuccessLogin}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
