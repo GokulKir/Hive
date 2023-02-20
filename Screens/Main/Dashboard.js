@@ -8,7 +8,7 @@ import {
   Dimensions,
   ImageBackground,
 } from 'react-native'
-import React from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 const {height, width} = Dimensions.get('window')
 import {
   widthPercentageToDP as wp,
@@ -16,12 +16,90 @@ import {
 } from 'react-native-responsive-screen'
 import auth from '@react-native-firebase/auth'
 import firebase from '@react-native-firebase/app'
-import ImagePicker from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import Animated from 'react-native-reanimated'
+import BottomSheet from 'reanimated-bottom-sheet'
+import RBSheet from 'react-native-raw-bottom-sheet'
+import { useMutation } from 'graphql-hooks'
+
+
+const UPDATE_USER_MUTATION = `
+mutation UpdateProfile($profileImg: String) {
+  updateProfile(profileImg: $profileImg) {
+    msg
+    success
+  }
+}
+
+`
 
 
 
 export default function Dashboard ({navigation}) {
+
+  const user = firebase.auth().currentUser;
   // const user = firebase.auth().currentUser;
+  const [SheetOp, setSheetCl] = useState(false)
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const refRBSheet = useRef()
+
+
+  useEffect(()=>{
+    console.log(user.photoURL);
+  })
+
+
+
+  const ImageSelector = () => {
+    launchCamera({}, (response) => {
+      console.log(response?.assets?.[0]?.uri);
+      if (response.didCancel) {
+        console.log('User cancelled camera');
+      } else if (response.error) {
+        console.log('Camera Error: ', response.error);
+      } else {
+        console.log(response);
+        setSelectedImage(response?.assets?.[0]?.uri)
+        user.updateProfile({photoURL : selectedImage});
+      }
+
+      
+    });
+
+   
+    
+  }
+
+  const ImageLibrary = () =>{
+    launchImageLibrary({}, (response) => {
+      console.log(response?.assets?.[0]?.uri);
+      if (response.didCancel) {
+        console.log('User cancelled image library');
+      } else if (response.error) {
+        console.log('ImageLibrary Error: ', response.error);
+      } else {
+        console.log(response);
+        setSelectedImage(response?.assets?.[0]?.uri)
+        user.updateProfile({photoURL : selectedImage});
+      }
+    });
+
+   
+
+  }
+
+
+  const renderContent = () => (
+    <View
+      style={{
+        backgroundColor: 'white',
+        padding: 16,
+        height: 450,
+      }}>
+      <Text>Swipe down to close</Text>
+    </View>
+  )
 
   return (
     <View style={styles.container}>
@@ -48,8 +126,8 @@ export default function Dashboard ({navigation}) {
                     marginTop: 25,
                     borderRadius: 100,
                   }}>
-                  <ImageBackground
-                    style={{height: '100%', width: '100%', borderRadius: 100}}>
+                  <ImageBackground source={{uri:  user ? user.photoURL : selectedImage}}
+                    style={{height: '100%', width: '100%', borderRadius: 100 }}    imageStyle={{borderRadius:100}}>
                     <Image
                       style={{width: 17, height: 17}}
                       source={require('../../assets/Dot.png')}
@@ -71,7 +149,7 @@ export default function Dashboard ({navigation}) {
                       marginTop: 30,
                       marginLeft: 10,
                       fontWeight: '600',
-                    }}></Text>
+                    }}>{user.displayName}</Text>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('ProfileScreen')}>
                     <Text
@@ -98,7 +176,7 @@ export default function Dashboard ({navigation}) {
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => refRBSheet.current.open()}>
                     <Image
                       style={{width: 20, height: 17}}
                       source={require('../../assets/Cam.png')}
@@ -387,6 +465,88 @@ export default function Dashboard ({navigation}) {
           <View style={{height: 45}}></View>
         </ScrollView>
       </View>
+
+      <RBSheet
+        ref={refRBSheet}
+        closeOnDragDown={true}
+        closeOnPressMask={false}
+        customStyles={{
+          wrapper: {
+            backgroundColor: 'transparent',
+          },
+          draggableIcon: {
+            backgroundColor: '#000',
+          },
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginTop: hp('8%'),
+            marginLeft: wp('9%'),
+          }}>
+          <TouchableOpacity onPress={() =>  ImageSelector()}>
+            <View
+              style={{
+                width: 84,
+                height: 84,
+                borderWidth: 0.4,
+                borderColor: 'grey',
+                borderRadius: 5,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Image
+                style={{width: wp('12%'), height: hp('5%')}}
+                source={{
+                  uri: 'https://cdn-icons-png.flaticon.com/128/685/685655.png',
+                }}
+              />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={()=> ImageLibrary ()}>
+            <View
+              style={{
+                width: 84,
+                height: 84,
+                borderWidth: 0.4,
+                borderColor: 'grey',
+                borderRadius: 5,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginLeft: wp('10%'),
+              }}>
+              <Image
+                style={{width: wp('12%'), height: hp('5%')}}
+                source={{
+                  uri: 'https://cdn-icons-png.flaticon.com/128/685/685656.png',
+                }}
+              />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity>
+            <View
+              style={{
+                width: 84,
+                height: 84,
+                borderWidth: 0.4,
+                borderColor: 'grey',
+                borderRadius: 5,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginLeft: wp('10%'),
+              }}>
+              <Image
+                style={{width: wp('10%'), height: hp('4%')}}
+                source={{
+                  uri: 'https://cdn-icons-png.flaticon.com/128/2961/2961937.png',
+                }}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
+      </RBSheet>
     </View>
   )
 }

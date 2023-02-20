@@ -362,7 +362,7 @@ export default function Home ({navigation, props}) {
 
               {Datas?.freelancerList?.freelancers.map((obj, i) => {
                 return (
-                  <TouchableOpacity
+                  <TouchableOpacity 
                     key={i}
                     style={{flexDirection: 'row', marginTop: hp('1%')}}>
                     <View
