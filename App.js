@@ -1,4 +1,6 @@
-import * as React from 'react'
+import  React,{useEffect,useState} from 'react'
+import { View, TouchableOpacity } from 'react-native'
+import { Avatar } from 'react-native-paper'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createDrawerNavigator } from '@react-navigation/drawer'
@@ -58,13 +60,44 @@ import Filter2 from './Screens/Filter/Filter2'
 import Users from './Screens/Main/Users'
 //Order Screen ui
 import Order from './Screens/Order/Order'
-import {View} from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SuccessLogin from './Screens/UserLogin/SuccessLogin'
+import firebase from '@react-native-firebase/app'
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
-
+const user = firebase.auth().currentUser
 const MyStack = (props) => {
+
+  const[userImage,setUserImage]=useState()
+  
+useEffect(() => {
+ 
+  GoogleSignin.configure({
+    webClientId:
+      '86575262147-5ek6sbcsva6bi38al4h641sa731s0aja.apps.googleusercontent.com',
+  })
+}, [])
+
+  function ProfileImage({ navigation }) {
+    AsyncStorage.getItem('userSession', (err, result) => {
+      const sesData = JSON.parse(result);
+      setUserImage(`https://hive-dash.credot.dev/${sesData?.profileImg}`)
+      // console.log("---------------------------",`https://hive-dash.credot.dev/${sesData.profileImg}`);
+    })
+    return (
+      <TouchableOpacity onPress={() => {
+        navigation.navigate("ProfileScreen")
+      }}>
+        <Avatar.Image size={35} source={{ uri:firebase.auth().currentUser? firebase.auth().currentUser.photoURL : userImage  }} style={{ right: 10 }} />
+      </TouchableOpacity>
+    )
+  }
 
   function BackButtonAndDrawer({ navigation }) {
 
@@ -77,7 +110,7 @@ const MyStack = (props) => {
           color={"#000"}
           backgroundColor="black" onPress={() =>
             navigation.openDrawer()} />
-      
+
       </View >
     )
   }
@@ -104,18 +137,19 @@ const MyStack = (props) => {
         options={{
           headerLeft: () => (
             <View style={{ flexDirection: 'row' }}>
-            {/* <StatusBar
+              {/* <StatusBar
               backgroundColor={AppStyles.Colors.screensHeaderColor}
             /> */}
-            <Icon name="menu" size={30} style={{ marginLeft: 10 }}
-              color={"#fff"}
-              backgroundColor="black" onPress={() =>
-                props.navigation.openDrawer()} />
-          
-          </View >
+              <Icon name="menu" size={30} style={{ marginLeft: 10 }}
+                color={"#fff"}
+                backgroundColor="black" onPress={() =>
+                  props.navigation.openDrawer()} />
+
+            </View >
           ),
-          headerTitle: props => <Logo {...props} />,
+          // headerTitle: props => <Logo {...props} />,
           headerStyle: { backgroundColor: '#1D1D1B' },
+          headerRight: () => <ProfileImage {...props} />
         }}
       />
       <Stack.Screen
@@ -128,10 +162,11 @@ const MyStack = (props) => {
         component={Dashboard}
         options={{
           headerLeft: () => (
-            <BackButtonAndDrawer {...props}/>
-           ),
+            <BackButtonAndDrawer {...props} />
+          ),
           headerTitle: props => <Logo1 {...props} />,
-          headerStyle: { backgroundColor: '#fff' },
+          // headerStyle: { backgroundColor: '#fff' },
+          headerRight: () => <ProfileImage {...props} />
         }}
       />
       <Stack.Screen
@@ -139,10 +174,11 @@ const MyStack = (props) => {
         component={Profile}
         options={{
           headerLeft: () => (
-            <BackButtonAndDrawer {...props}/>
-           ),
+            <BackButtonAndDrawer {...props} />
+          ),
           headerTitle: props => <Logo2 {...props} />,
-          headerStyle: { backgroundColor: '#fff' },
+          // headerStyle: { backgroundColor: '#fff' },
+          headerRight: () => <ProfileImage {...props} />
         }}
       />
       <Stack.Screen
@@ -150,10 +186,11 @@ const MyStack = (props) => {
         component={Account}
         options={{
           headerLeft: () => (
-            <BackButtonAndDrawer {...props}/>
-           ),
+            <BackButtonAndDrawer {...props} />
+          ),
           headerTitle: props => <Logo3 {...props} />,
-          headerStyle: { backgroundColor: '#fff' },
+          // headerStyle: { backgroundColor: '#fff' },
+          headerRight: () => <ProfileImage {...props} />
         }}
       />
       <Stack.Screen
@@ -161,10 +198,11 @@ const MyStack = (props) => {
         component={Upload}
         options={{
           headerLeft: () => (
-            <BackButtonAndDrawer {...props}/>
-           ),
+            <BackButtonAndDrawer {...props} />
+          ),
           headerTitle: props => <Logo4 {...props} />,
-          headerStyle: { backgroundColor: '#DDDDDD' },
+          // headerStyle: { backgroundColor: '#DDDDDD' },
+          headerRight: () => <ProfileImage {...props} />
         }}
       />
       <Stack.Screen
@@ -172,10 +210,11 @@ const MyStack = (props) => {
         component={Invoice}
         options={{
           headerLeft: () => (
-            <BackButtonAndDrawer {...props}/>
-           ),
+            <BackButtonAndDrawer {...props} />
+          ),
           headerTitle: props => <Logo5 {...props} />,
-          headerStyle: { backgroundColor: '#fff' },
+          // headerStyle: { backgroundColor: '#fff' },
+          headerRight: () => <ProfileImage {...props} />
         }}
       />
       <Stack.Screen
@@ -183,10 +222,11 @@ const MyStack = (props) => {
         component={MySaved}
         options={{
           headerLeft: () => (
-            <BackButtonAndDrawer {...props}/>
-           ),
+            <BackButtonAndDrawer {...props} />
+          ),
           headerTitle: props => <Logo6 {...props} />,
-          headerStyle: { backgroundColor: '#F7F7F7' },
+          // headerStyle: { backgroundColor: '#F7F7F7' },
+          headerRight: () => <ProfileImage {...props} />
         }}
       />
       <Stack.Screen
@@ -194,10 +234,11 @@ const MyStack = (props) => {
         component={ACS}
         options={{
           headerLeft: () => (
-            <BackButtonAndDrawer {...props}/>
-           ),
+            <BackButtonAndDrawer {...props} />
+          ),
           headerTitle: props => <Logo7 {...props} />,
-          headerStyle: { backgroundColor: '#F7F7F7' },
+          // headerStyle: { backgroundColor: '#F7F7F7' },
+          headerRight: () => <ProfileImage {...props} />
         }}
       />
       <Stack.Screen
@@ -205,10 +246,11 @@ const MyStack = (props) => {
         component={Freelancers}
         options={{
           headerLeft: () => (
-            <BackButtonAndDrawer {...props}/>
-           ),
+            <BackButtonAndDrawer {...props} />
+          ),
           headerTitle: props => <Logo3 {...props} />,
-          headerStyle: { backgroundColor: '#DDDDDD' },
+          // headerStyle: { backgroundColor: '#DDDDDD' },
+          headerRight: () => <ProfileImage {...props} />
         }}
       />
       <Stack.Screen
@@ -216,10 +258,11 @@ const MyStack = (props) => {
         component={ManageT}
         options={{
           headerLeft: () => (
-            <BackButtonAndDrawer {...props}/>
-           ),
+            <BackButtonAndDrawer {...props} />
+          ),
           headerTitle: props => <Logo8 {...props} />,
-          headerStyle: { backgroundColor: '#fff' },
+          // headerStyle: { backgroundColor: '#fff' },
+          headerRight: () => <ProfileImage {...props} />
         }}
       />
       <Stack.Screen
@@ -227,10 +270,11 @@ const MyStack = (props) => {
         component={Users}
         options={{
           headerLeft: () => (
-            <BackButtonAndDrawer {...props}/>
-           ),
+            <BackButtonAndDrawer {...props} />
+          ),
           headerTitle: props => <Logo3 {...props} />,
-          headerStyle: { backgroundColor: '#fff' },
+          // headerStyle: { backgroundColor: '#fff' },
+          headerRight: () => <ProfileImage {...props} />
         }}
       />
       <Stack.Screen
