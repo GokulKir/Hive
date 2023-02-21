@@ -48,8 +48,10 @@ export default function Login ({navigation}) {
         '86575262147-5ek6sbcsva6bi38al4h641sa731s0aja.apps.googleusercontent.com',
     })
   }, [])
-  const [email, setEmail] = useState('ajnash.aju323@gmail.com')
-  const [password, setPassword] = useState('12345678')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  // const [email, setEmail] = useState('ajnash.aju323@gmail.com')
+  // const [password, setPassword] = useState('12345678')
   const [snackbarVisible, setSnackbarVisible] = useState(false)
   const [snackBarError, setSnackBarError] = useState("")
 
