@@ -9,8 +9,8 @@ import {
   TextInput,
   Alert,
 } from 'react-native'
-import React, {useState, useEffect , useContext} from 'react'
-const {width, height} = Dimensions.get('window')
+import React, { useState, useEffect, useContext } from 'react'
+const { width, height } = Dimensions.get('window')
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -18,7 +18,7 @@ import {
 } from '@react-native-google-signin/google-signin'
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
-import {ClientContext, useMutation} from 'graphql-hooks'
+import { ClientContext, useMutation } from 'graphql-hooks'
 import { Snackbar } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -39,7 +39,7 @@ mutation UserLogin($email: String!, $password: String!) {
 }
 `
 
-export default function Login ({navigation}) {
+export default function Login({ navigation }) {
   const client = useContext(ClientContext)
   const [LoginUser] = useMutation(USER_LOGIN)
   useEffect(() => {
@@ -49,7 +49,10 @@ export default function Login ({navigation}) {
     })
   }, [])
   const [email, setEmail] = useState('')
+  const [emailError, setEmailError] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  const [showFieldError, setShowFieldError] = useState('')
   // const [email, setEmail] = useState('ajnash.aju323@gmail.com')
   // const [password, setPassword] = useState('12345678')
   const [snackbarVisible, setSnackbarVisible] = useState(false)
@@ -57,46 +60,110 @@ export default function Login ({navigation}) {
 
   //SignIm user Api //
 
+ const validate = (text) => {
+    console.log(text);
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (reg.test(text) === false) {
+      console.log("Email is Not Correct");
+      return false;
+    }
+    else {
+      console.log("Email is Correct");
+      return true;
+    }
+  }
+
 
   const handleLogin = async () => {
-   console.log("email and passwrd",email, password)
-    const { data, error } = await LoginUser({
-      variables: { email, password }
-    })
-    
-    console.log(data);
-    if (error) {
-      // your code to handle login error
-      console.log(error);
-    } else {
-      const { token,success,msg,userData } = data.userLogin
-      client.setHeader('Authorization', `Bearer ${token}`)
-      console.log(userData);
-        if(success) {
-          try{
-            AsyncStorage.setItem("userSession", JSON.stringify(userData));
-          }catch(err){
+    if (email === "" || password === "") {
+      if (email === "") {
+        setEmailError("This field is required.")
+      }
+      if (password === "") {
+        setPasswordError("This field is required.")
+      }
+      setShowFieldError(true)
+    } else if(validate(email) && password.length >= 8) {
+      console.log("email and passwrd", email, password)
+      const { data, error } = await LoginUser({
+        variables: { email, password }
+      })
 
-          }finally{
+      console.log(data);
+      if (error) {
+        // your code to handle login error
+        console.log(error);
+      } else {
+        const { token, success, msg, userData } = data.userLogin
+        client.setHeader('Authorization', `Bearer ${token}`)
+        console.log(userData);
+        if (success) {
+          try {
+            AsyncStorage.setItem("userSession", JSON.stringify(userData));
+          } catch (err) {
+
+          } finally {
             navigation.navigate('HomeScreen')
           }
           //  navigation.navigate('HomeScreen')
-        } else if(msg) {
+        } else if (msg) {
           console.log(msg);
           // Alert.alert(msg)
+          setShowFieldError(true)
           setSnackBarError(msg)
           setSnackbarVisible(true)
         } else if (token) {
           console.log(token);
-          Alert.alert(token)
+          // Alert.alert(token)
         }
-      // console.log({success,msg,token});
-      
-      // your code to handle token in browser and login redirection
+        // console.log({success,msg,token});
+
+        // your code to handle token in browser and login redirection
+      }
+
+    }else{
+      console.log("error");
     }
+
+
+    //  console.log("email and passwrd",email, password)
+    // const { data, error } = await LoginUser({
+    //   variables: { email, password }
+    // })
+
+    // console.log(data);
+    // if (error) {
+    //   // your code to handle login error
+    //   console.log(error);
+    // } else {
+    //   const { token,success,msg,userData } = data.userLogin
+    //   client.setHeader('Authorization', `Bearer ${token}`)
+    //   console.log(userData);
+    //     if(success) {
+    //       try{
+    //         AsyncStorage.setItem("userSession", JSON.stringify(userData));
+    //       }catch(err){
+
+    //       }finally{
+    //         navigation.navigate('HomeScreen')
+    //       }
+    //       //  navigation.navigate('HomeScreen')
+    //     } else if(msg) {
+    //       console.log(msg);
+    //       // Alert.alert(msg)
+    //       setSnackBarError(msg)
+    //       setSnackbarVisible(true)
+    //     } else if (token) {
+    //       console.log(token);
+    //       Alert.alert(token)
+    //     }
+    //   // console.log({success,msg,token});
+
+    //   // your code to handle token in browser and login redirection
+    // }
   }
 
-  
+
   const SignIn = () => {
     if (email == '') {
       console.log('email is null')
@@ -131,7 +198,7 @@ export default function Login ({navigation}) {
   //Google Sign in  API //
 
   const LoginGoogle = async () => {
-    const {idToken} = await GoogleSignin.signIn()
+    const { idToken } = await GoogleSignin.signIn()
 
     const googleCredential = auth.GoogleAuthProvider.credential(idToken)
 
@@ -171,10 +238,10 @@ export default function Login ({navigation}) {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <View style={{width: '100%', height: 56, backgroundColor: '#1D1D1B'}}>
-          <View style={{marginLeft: width - 58, marginTop: 15}}>
+        <View style={{ width: '100%', height: 56, backgroundColor: '#1D1D1B' }}>
+          <View style={{ marginLeft: width - 58, marginTop: 15 }}>
             <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-              <Text style={{color: 'grey', marginTop: 3, fontSize: 15}}>
+              <Text style={{ color: 'grey', marginTop: 3, fontSize: 15 }}>
                 Skip
               </Text>
             </TouchableOpacity>
@@ -189,7 +256,7 @@ export default function Login ({navigation}) {
             alignItems: 'center',
           }}>
           <Image
-            style={{marginTop: 60, height: 46, width: 96}}
+            style={{ marginTop: 60, height: 46, width: 96 }}
             source={require('../../assets/Logo.png')}
           />
 
@@ -205,7 +272,7 @@ export default function Login ({navigation}) {
         </View>
 
         <View>
-          <View style={{marginLeft: 30, marginTop: 25}}>
+          <View style={{ marginLeft: 20, marginTop: 25 }}>
             <Text
               style={{
                 color: 'black',
@@ -217,7 +284,7 @@ export default function Login ({navigation}) {
           </View>
         </View>
 
-        <View style={{alignItems: 'center', marginTop: 30}}>
+        <View style={{ alignItems: 'center', marginTop: 30 }}>
           <View
             style={{
               alignItems: 'center',
@@ -227,7 +294,21 @@ export default function Login ({navigation}) {
               borderBottomWidth: 0.7,
             }}>
             <TextInput
-              onChangeText={setEmail}
+              onChangeText={(value) => {
+                setEmail(value)
+                let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+                if(value ===""){
+                  setEmailError("This field is required")
+                }else if (reg.test(value) === false) {
+                  setEmailError("Please enter a valid email address")
+                  console.log("Email is Not Correct");
+                  return false;
+                }
+                else {
+                  setEmailError("")
+                  console.log("Email is Correct");
+                }
+              }}
               style={{
                 width: '100%',
                 height: '100%',
@@ -240,6 +321,8 @@ export default function Login ({navigation}) {
             />
           </View>
 
+          <Text style={{ alignSelf: "baseline", left: 23, color: "red" }}>{showFieldError && emailError}</Text>
+
           <View
             style={{
               alignItems: 'center',
@@ -247,10 +330,20 @@ export default function Login ({navigation}) {
               height: 45,
               borderBottomColor: 'grey',
               borderBottomWidth: 0.7,
-              marginTop: 40,
+              marginTop: 10,
             }}>
             <TextInput
-              onChangeText={setPassword}
+              onChangeText={(value) => {
+                
+                setPassword(value)
+                if (value === "") {
+                  setPasswordError("This field is required")
+                } else if (value.length < 8) {
+                  setPasswordError("Please enter a value that contains at least 8 characters.")
+                } else {
+                  setPasswordError("")
+                }
+              }}
               style={{
                 width: '100%',
                 height: '100%',
@@ -261,9 +354,11 @@ export default function Login ({navigation}) {
               placeholder='Enter password'
             />
           </View>
+          <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && passwordError}</Text>
+
         </View>
 
-        <View style={{alignItems: 'center', marginTop: 25}}>
+        <View style={{ alignItems: 'center', marginTop: 25 }}>
           <TouchableOpacity
             onPress={() => handleLogin()}
             style={{
@@ -274,14 +369,14 @@ export default function Login ({navigation}) {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <Text style={{color: '#fff', fontSize: 15, fontWeight: '600'}}>
+            <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>
               Login now
             </Text>
           </TouchableOpacity>
         </View>
 
-        <View style={{alignItems: 'center', marginTop: 30}}>
-          <View style={{flexDirection: 'row'}}>
+        <View style={{ alignItems: 'center', marginTop: 30 }}>
+          <View style={{ flexDirection: 'row' }}>
             <View
               style={{
                 borderWidth: 0.4,
@@ -292,7 +387,7 @@ export default function Login ({navigation}) {
                 marginRight: 8,
               }}></View>
 
-            <Text style={{fontSize: 17, fontWeight: '600'}}>OR</Text>
+            <Text style={{ fontSize: 17, fontWeight: '600' }}>OR</Text>
 
             <View
               style={{
@@ -306,7 +401,7 @@ export default function Login ({navigation}) {
           </View>
         </View>
 
-        <View style={{alignItems: 'center', marginTop: 30}}>
+        <View style={{ alignItems: 'center', marginTop: 30 }}>
           <TouchableOpacity
             onPress={LoginGoogle}
             style={{
@@ -321,7 +416,7 @@ export default function Login ({navigation}) {
               flexDirection: 'row',
             }}>
             <Image
-              style={{width: 28, height: 28}}
+              style={{ width: 28, height: 28 }}
               source={require('../../assets/Google.png')}
             />
             <Text
@@ -337,9 +432,9 @@ export default function Login ({navigation}) {
           </TouchableOpacity>
         </View>
 
-        <View style={{alignItems: 'center'}}>
-          <View style={{width: '100%', height: 45, marginTop: 19}}>
-            <View style={{flexDirection: 'row'}}>
+        <View style={{ alignItems: 'center' }}>
+          <View style={{ width: '100%', height: 45, marginTop: 19 }}>
+            <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
                 <Text
                   style={{
@@ -369,18 +464,18 @@ export default function Login ({navigation}) {
           </View>
         </View>
 
-        <View style={{height: 25}}></View>
+        <View style={{ height: 25 }}></View>
       </ScrollView>
       <Snackbar
-          visible={snackbarVisible}
-          onDismiss={() => setSnackbarVisible(false)}
-          action={{
-            label: 'Dismiss',
-            onPress: () => { },
-          }}
-        >
-          {snackBarError}
-        </Snackbar>
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        action={{
+          label: 'Dismiss',
+          onPress: () => { },
+        }}
+      >
+        {snackBarError}
+      </Snackbar>
     </View>
   )
 }
