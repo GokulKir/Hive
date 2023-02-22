@@ -49,8 +49,8 @@ export default function Sellers({ navigation }) {
             borderRadius: 100,
             marginLeft: 20,
           }}>
-          <ImageBackground style={{ width: '100%', height: '100%', }} imageStyle={{ borderRadius: 100 }} source={{ uri: item.profileImg }} >
-            {/* {item.isActivated ?
+          <ImageBackground style={{ width: '100%', height: '100%', }} imageStyle={{ borderRadius: 100 }} source={{ uri: `https://hive-dash.credot.dev/${item.profileImg}` }} >
+            {item.isActivated ?
               <Image
                 style={{ width: 17, height: 17 }}
                 source={require('../../assets/Dot.png')}
@@ -60,7 +60,7 @@ export default function Sellers({ navigation }) {
                 source={require('../../assets/Dot1.png')}
               />
 
-            } */}
+            }
           </ImageBackground>
         </View>
 

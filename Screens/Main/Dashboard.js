@@ -8,15 +8,15 @@ import {
   Dimensions,
   ImageBackground,
 } from 'react-native'
-import React, {useState, useRef, useEffect} from 'react'
-const {height, width} = Dimensions.get('window')
+import React, { useState, useRef, useEffect } from 'react'
+const { height, width } = Dimensions.get('window')
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
 import auth from '@react-native-firebase/auth'
 import firebase from '@react-native-firebase/app'
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Animated from 'react-native-reanimated'
 import BottomSheet from 'reanimated-bottom-sheet'
 import RBSheet from 'react-native-raw-bottom-sheet'
@@ -24,7 +24,7 @@ import { useMutation } from 'graphql-hooks'
 
 
 
-const UPDATE_USER_PROFILE =` 
+const UPDATE_USER_PROFILE = ` 
 mutation UpdateProfile($profileImg: String) {
   updateProfile(profileImg: $profileImg) {
     msg
@@ -34,8 +34,8 @@ mutation UpdateProfile($profileImg: String) {
 `
 
 
-export default function Dashboard ({navigation}) {
-  const [updateProfile] = useMutation(UPDATE_USER_PROFILE )
+export default function Dashboard({ navigation }) {
+  const [updateProfile] = useMutation(UPDATE_USER_PROFILE)
 
   const user = firebase.auth().currentUser;
   // const user = firebase.auth().currentUser;
@@ -43,20 +43,20 @@ export default function Dashboard ({navigation}) {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const refRBSheet = useRef()
-  
 
-  const UPDATE_PROFILE = async ()=>{
 
-   
-  
+  const UPDATE_PROFILE = async () => {
+
+
+
     console.log(data);
 
   }
 
 
-  useEffect(()=>{
-    console.log(user.photoURL);
-  })
+  // useEffect(() => {
+  //   console.log(user.photoURL);
+  // })
 
 
 
@@ -70,20 +70,20 @@ export default function Dashboard ({navigation}) {
       } else {
         console.log(response);
         setSelectedImage(response?.assets?.[0]?.uri)
-        user.updateProfile({photoURL : selectedImage});
-       
-        
-      } 
+        user.updateProfile({ photoURL: selectedImage });
 
 
-      
+      }
+
+
+
     });
 
-   
-    
+
+
   }
 
-  const ImageLibrary = () =>{
+  const ImageLibrary = () => {
     launchImageLibrary({}, (response) => {
       console.log(response?.assets?.[0]?.uri);
       if (response.didCancel) {
@@ -93,11 +93,11 @@ export default function Dashboard ({navigation}) {
       } else {
         console.log(response);
         setSelectedImage(response?.assets?.[0]?.uri)
-        user.updateProfile({photoURL : selectedImage});
+        user.updateProfile({ photoURL: selectedImage });
       }
     });
 
-   
+
 
   }
 
@@ -115,7 +115,7 @@ export default function Dashboard ({navigation}) {
 
   return (
     <View style={styles.container}>
-      <View style={{alignItems: 'center'}}>
+      <View style={{ alignItems: 'center' }}>
         <ScrollView>
           <View>
             <View
@@ -128,7 +128,7 @@ export default function Dashboard ({navigation}) {
                 borderRadius: 8,
                 backgroundColor: '#fff',
               }}>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <View
                   style={{
                     width: width * 0.17,
@@ -139,15 +139,15 @@ export default function Dashboard ({navigation}) {
                     borderRadius: 100,
                   }}>
 
-                    {firebase.auth().currentUser ? 
-                  <ImageBackground source={{   uri:  user ? user.photoURL : selectedImage  }}
-                    style={{height: '100%', width: '100%', borderRadius: 100 }}    imageStyle={{borderRadius:100}}>
-                    <Image
-                      style={{width: 17, height: 17}}
-                      source={require('../../assets/Dot.png')}
-                    />
-                  </ImageBackground>
- : null}
+                  {firebase.auth().currentUser ?
+                    <ImageBackground source={{ uri: user ? user.photoURL : selectedImage }}
+                      style={{ height: '100%', width: '100%', borderRadius: 100 }} imageStyle={{ borderRadius: 100 }}>
+                      <Image
+                        style={{ width: 17, height: 17 }}
+                        source={require('../../assets/Dot.png')}
+                      />
+                    </ImageBackground>
+                    : null}
                 </View>
 
                 <View
@@ -157,7 +157,7 @@ export default function Dashboard ({navigation}) {
                     backgroundColor: '#fffff',
                     marginLeft: 5,
                   }}>
-                    {firebase.auth().currentUser ?
+                  {/* {firebase.auth().currentUser ?
                   <Text
                     style={{
                       color: 'black',
@@ -165,7 +165,7 @@ export default function Dashboard ({navigation}) {
                       marginTop: 30,
                       marginLeft: 10,
                       fontWeight: '600',
-                    }}>{user?.displayName}</Text>
+                    }}>{user.displayName}</Text>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('ProfileScreen')}>
                     <Text
@@ -178,7 +178,7 @@ export default function Dashboard ({navigation}) {
                       }}>
                       Update profile
                     </Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
 
                 <View
@@ -194,7 +194,7 @@ export default function Dashboard ({navigation}) {
                   }}>
                   <TouchableOpacity onPress={() => refRBSheet.current.open()}>
                     <Image
-                      style={{width: 20, height: 17}}
+                      style={{ width: 20, height: 17 }}
                       source={require('../../assets/Cam.png')}
                     />
                   </TouchableOpacity>
@@ -203,8 +203,8 @@ export default function Dashboard ({navigation}) {
             </View>
           </View>
 
-          <View style={{alignItems: 'center'}}>
-            <TouchableOpacity onPress={()=> navigation.navigate('Chat')}
+          <View style={{ alignItems: 'center' }}>
+            <TouchableOpacity onPress={() => navigation.navigate('Chat')}
               style={{
                 width: width * 0.93,
                 height: 75,
@@ -213,9 +213,9 @@ export default function Dashboard ({navigation}) {
                 marginTop: 20,
                 borderRadius: 10,
               }}>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <Image
-                  style={{width: 20, height: 20, marginLeft: 30, marginTop: 26}}
+                  style={{ width: 20, height: 20, marginLeft: 30, marginTop: 26 }}
                   source={require('../../assets/Mess.png')}
                 />
                 <Text
@@ -242,7 +242,7 @@ export default function Dashboard ({navigation}) {
             </TouchableOpacity>
           </View>
 
-          <View style={{alignItems: 'center'}}>
+          <View style={{ alignItems: 'center' }}>
             <TouchableOpacity
               style={{
                 width: width * 0.93,
@@ -252,7 +252,7 @@ export default function Dashboard ({navigation}) {
                 marginTop: 20,
                 borderRadius: 10,
               }}>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <View
                   style={{
                     width: width * 0.17,
@@ -268,7 +268,7 @@ export default function Dashboard ({navigation}) {
                 </View>
 
                 <View
-                  style={{width: '60%', height: 45, backgroundColor: '#fff'}}>
+                  style={{ width: '60%', height: 45, backgroundColor: '#fff' }}>
                   <Text
                     style={{
                       color: 'black',
@@ -291,9 +291,9 @@ export default function Dashboard ({navigation}) {
                   </Text>
                 </View>
 
-                <View style={{marginTop: 45}}>
+                <View style={{ marginTop: 45 }}>
                   <Image
-                    style={{width: 10, height: 17}}
+                    style={{ width: 10, height: 17 }}
                     source={require('../../assets/Ar2.png')}
                   />
                 </View>
@@ -301,7 +301,7 @@ export default function Dashboard ({navigation}) {
             </TouchableOpacity>
           </View>
 
-          <View style={{alignItems: 'center'}}>
+          <View style={{ alignItems: 'center' }}>
             <TouchableOpacity
               style={{
                 width: width * 0.93,
@@ -311,7 +311,7 @@ export default function Dashboard ({navigation}) {
                 marginTop: 20,
                 borderRadius: 10,
               }}>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <View
                   style={{
                     width: width * 0.17,
@@ -327,7 +327,7 @@ export default function Dashboard ({navigation}) {
                 </View>
 
                 <View
-                  style={{width: '60%', height: 45, backgroundColor: '#fff'}}>
+                  style={{ width: '60%', height: 45, backgroundColor: '#fff' }}>
                   <Text
                     style={{
                       color: 'black',
@@ -350,9 +350,9 @@ export default function Dashboard ({navigation}) {
                   </Text>
                 </View>
 
-                <View style={{marginTop: 45}}>
+                <View style={{ marginTop: 45 }}>
                   <Image
-                    style={{width: 10, height: 17}}
+                    style={{ width: 10, height: 17 }}
                     source={require('../../assets/Ar2.png')}
                   />
                 </View>
@@ -360,7 +360,7 @@ export default function Dashboard ({navigation}) {
             </TouchableOpacity>
           </View>
 
-          <View style={{alignItems: 'center'}}>
+          <View style={{ alignItems: 'center' }}>
             <TouchableOpacity
               style={{
                 width: width * 0.93,
@@ -370,7 +370,7 @@ export default function Dashboard ({navigation}) {
                 marginTop: 20,
                 borderRadius: 10,
               }}>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <View
                   style={{
                     width: width * 0.17,
@@ -386,7 +386,7 @@ export default function Dashboard ({navigation}) {
                 </View>
 
                 <View
-                  style={{width: '60%', height: 45, backgroundColor: '#fff'}}>
+                  style={{ width: '60%', height: 45, backgroundColor: '#fff' }}>
                   <Text
                     style={{
                       color: 'black',
@@ -409,9 +409,9 @@ export default function Dashboard ({navigation}) {
                   </Text>
                 </View>
 
-                <View style={{marginTop: 45}}>
+                <View style={{ marginTop: 45 }}>
                   <Image
-                    style={{width: 10, height: 17}}
+                    style={{ width: 10, height: 17 }}
                     source={require('../../assets/Ar2.png')}
                   />
                 </View>
@@ -419,7 +419,7 @@ export default function Dashboard ({navigation}) {
             </TouchableOpacity>
           </View>
 
-          <View style={{alignItems: 'center'}}>
+          <View style={{ alignItems: 'center' }}>
             <TouchableOpacity
               style={{
                 width: width * 0.93,
@@ -429,7 +429,7 @@ export default function Dashboard ({navigation}) {
                 marginTop: 20,
                 borderRadius: 10,
               }}>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <View
                   style={{
                     width: width * 0.17,
@@ -445,7 +445,7 @@ export default function Dashboard ({navigation}) {
                 </View>
 
                 <View
-                  style={{width: '60%', height: 45, backgroundColor: '#fff'}}>
+                  style={{ width: '60%', height: 45, backgroundColor: '#fff' }}>
                   <Text
                     style={{
                       color: 'black',
@@ -468,9 +468,9 @@ export default function Dashboard ({navigation}) {
                   </Text>
                 </View>
 
-                <View style={{marginTop: 45}}>
+                <View style={{ marginTop: 45 }}>
                   <Image
-                    style={{width: 10, height: 17}}
+                    style={{ width: 10, height: 17 }}
                     source={require('../../assets/Ar2.png')}
                   />
                 </View>
@@ -478,7 +478,7 @@ export default function Dashboard ({navigation}) {
             </TouchableOpacity>
           </View>
 
-          <View style={{height: 45}}></View>
+          <View style={{ height: 45 }}></View>
         </ScrollView>
       </View>
 
@@ -500,7 +500,7 @@ export default function Dashboard ({navigation}) {
             marginTop: hp('8%'),
             marginLeft: wp('9%'),
           }}>
-          <TouchableOpacity onPress={() =>  ImageSelector()}>
+          <TouchableOpacity onPress={() => ImageSelector()}>
             <View
               style={{
                 width: 84,
@@ -512,7 +512,7 @@ export default function Dashboard ({navigation}) {
                 justifyContent: 'center',
               }}>
               <Image
-                style={{width: wp('12%'), height: hp('5%')}}
+                style={{ width: wp('12%'), height: hp('5%') }}
                 source={{
                   uri: 'https://cdn-icons-png.flaticon.com/128/685/685655.png',
                 }}
@@ -520,7 +520,7 @@ export default function Dashboard ({navigation}) {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={()=> ImageLibrary ()}>
+          <TouchableOpacity onPress={() => ImageLibrary()}>
             <View
               style={{
                 width: 84,
@@ -533,7 +533,7 @@ export default function Dashboard ({navigation}) {
                 marginLeft: wp('10%'),
               }}>
               <Image
-                style={{width: wp('12%'), height: hp('5%')}}
+                style={{ width: wp('12%'), height: hp('5%') }}
                 source={{
                   uri: 'https://cdn-icons-png.flaticon.com/128/685/685656.png',
                 }}
@@ -554,7 +554,7 @@ export default function Dashboard ({navigation}) {
                 marginLeft: wp('10%'),
               }}>
               <Image
-                style={{width: wp('10%'), height: hp('4%')}}
+                style={{ width: wp('10%'), height: hp('4%') }}
                 source={{
                   uri: 'https://cdn-icons-png.flaticon.com/128/2961/2961937.png',
                 }}

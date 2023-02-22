@@ -32,7 +32,7 @@ export default function Service({ navigation }) {
     <TouchableOpacity style={{ marginBottom: 20 }}>
       <View style={{ alignItems: 'center' }}>
         <ImageBackground
-          source={{ uri: item.images && item.images.length ? item.images[0] : "https://global-uploads.webflow.com/6236f2260b45449819d1988e/6261573ce87ee639f635e64e_placeholder.png" }}
+          source={{ uri: item.images && item.images.length ? `https://hive-dash.credot.dev/${item.images[0]}` : "https://global-uploads.webflow.com/6236f2260b45449819d1988e/6261573ce87ee639f635e64e_placeholder.png" }}
           // source={{ uri: "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8&w=1000&q=80" }}
           style={{ width: '95%', height: 134, alignSelf: 'center', left: 10 }}>
           <Image
@@ -58,6 +58,7 @@ export default function Service({ navigation }) {
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text
+            numberOfLines={2}
               style={{
                 color: 'black',
                 fontWeight: 'normal',

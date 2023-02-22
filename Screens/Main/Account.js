@@ -26,20 +26,20 @@ export default function Account (route) {
 
   useEffect(() => {
   
-    firestore()
-      .collection(user.email)
-      .get()
-      .then(querySnapshot => {
-        console.log('Total users: ', querySnapshot.size)
+    // firestore()
+    //   .collection(user?.email)
+    //   .get()
+    //   .then(querySnapshot => {
+    //     console.log('Total users: ', querySnapshot.size)
 
-        querySnapshot.forEach(documentSnapshot => {
-          console.log('User ID: ', documentSnapshot.id, documentSnapshot.data())
-          Data = documentSnapshot.data()
-          console.log('USER : ' + Data)
-          setFirstName(Data.Firstname)
-          setLastName(Data.Lastname)
-        })
-      })
+    //     querySnapshot.forEach(documentSnapshot => {
+    //       console.log('User ID: ', documentSnapshot.id, documentSnapshot.data())
+    //       Data = documentSnapshot.data()
+    //       console.log('USER : ' + Data)
+    //       setFirstName(Data.Firstname)
+    //       setLastName(Data.Lastname)
+    //     })
+    //   })
   }, [])
   return (
     <View style={styles.container}>
@@ -68,7 +68,7 @@ export default function Account (route) {
           </View> */}
 
           <View style={styles.SecondLayer}>
-            <Image
+            {/* <Image
               style={{
                 width: wp('22%'),
                 height: hp('11%'),
@@ -76,8 +76,8 @@ export default function Account (route) {
                 marginTop: -40,
                 alignSelf: 'center',
               }}
-              source={{uri: user.photoURL}}
-            />
+              source={{uri: user?.photoURL}}
+            /> */}
             {/* <View style={{alignItems: 'center'}}>
               <View
                 style={{
@@ -124,7 +124,7 @@ export default function Account (route) {
                   fontSize: width * 0.04,
                   marginTop: 0,
                 }}>
-                {user.displayName}
+                {user?.displayName}
               </Text>
             )}
 
