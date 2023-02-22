@@ -8,6 +8,7 @@ import { GraphQLClient, ClientContext } from 'graphql-hooks'
 
 const client = new GraphQLClient({
   url: `https://hive-dash.credot.dev/graphql`
+ 
 })
 
 

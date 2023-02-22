@@ -10,7 +10,7 @@ import {
   Dimensions,
   Alert,
 } from 'react-native'
-import React, {useCallback, useMemo, useRef, useState, useEffect} from 'react'
+import React, {useCallback, useMemo, useRef, useState, useEffect,useContext} from 'react'
 import LoginB from '.././UserLogin/LoginB'
 import auth from '@react-native-firebase/auth'
 import firebase from '@react-native-firebase/app'
@@ -20,7 +20,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
-import {useManualQuery, useQuery} from 'graphql-hooks'
+import {useManualQuery, useQuery,ClientContext} from 'graphql-hooks'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import SkeletonLoaderFreelancersList from '../../Components/SkeletonLoaderFreelancersList'
 const {height, width} = Dimensions.get('window')
@@ -66,6 +66,10 @@ export default function Home ({navigation, props}) {
   const [Datas, setDatas] = useState([])
   const bottomSheetRef = useRef(null)
   const snapPoints = useMemo(() => ['55%', '78%'], [])
+
+  // const client = useContext(ClientContext)
+  // console.log(client);
+
 
 
   useEffect(() => {

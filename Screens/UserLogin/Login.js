@@ -30,6 +30,7 @@ const USER_LOGIN = `mutation UserLogin($email: String!, $password: String!) {
 
 export default function Login ({navigation}) {
   const client = useContext(ClientContext)
+  
   const [LoginUser] = useMutation(USER_LOGIN)
   useEffect(() => {
     GoogleSignin.configure({
@@ -54,7 +55,8 @@ export default function Login ({navigation}) {
       console.log(error);
     } else {
       const { token,success,msg } = data.userLogin
-      client.setHeader('Authorization', `Bearer ${token}`)
+      // client.setHeader('Authorization', `Bearer ${token}`)
+      client.setHeader('token', `${token}`)
         if(success) {
            console.log(success);
            navigation.navigate('HomeScreen')

@@ -23,19 +23,19 @@ import RBSheet from 'react-native-raw-bottom-sheet'
 import { useMutation } from 'graphql-hooks'
 
 
-const UPDATE_USER_MUTATION = `
+
+const UPDATE_USER_PROFILE =` 
 mutation UpdateProfile($profileImg: String) {
   updateProfile(profileImg: $profileImg) {
     msg
     success
   }
 }
-
 `
 
 
-
 export default function Dashboard ({navigation}) {
+  const [updateProfile] = useMutation(UPDATE_USER_PROFILE )
 
   const user = firebase.auth().currentUser;
   // const user = firebase.auth().currentUser;
@@ -43,6 +43,15 @@ export default function Dashboard ({navigation}) {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const refRBSheet = useRef()
+  
+
+  const UPDATE_PROFILE = async ()=>{
+
+   
+  
+    console.log(data);
+
+  }
 
 
   useEffect(()=>{
@@ -51,7 +60,7 @@ export default function Dashboard ({navigation}) {
 
 
 
-  const ImageSelector = () => {
+  const ImageSelector = async () => {
     launchCamera({}, (response) => {
       console.log(response?.assets?.[0]?.uri);
       if (response.didCancel) {
@@ -62,7 +71,10 @@ export default function Dashboard ({navigation}) {
         console.log(response);
         setSelectedImage(response?.assets?.[0]?.uri)
         user.updateProfile({photoURL : selectedImage});
-      }
+       
+        
+      } 
+
 
       
     });
@@ -126,13 +138,16 @@ export default function Dashboard ({navigation}) {
                     marginTop: 25,
                     borderRadius: 100,
                   }}>
-                  <ImageBackground source={{uri:  user ? user.photoURL : selectedImage}}
+
+                    {firebase.auth().currentUser ? 
+                  <ImageBackground source={{   uri:  user ? user.photoURL : selectedImage  }}
                     style={{height: '100%', width: '100%', borderRadius: 100 }}    imageStyle={{borderRadius:100}}>
                     <Image
                       style={{width: 17, height: 17}}
                       source={require('../../assets/Dot.png')}
                     />
                   </ImageBackground>
+ : null}
                 </View>
 
                 <View
@@ -142,6 +157,7 @@ export default function Dashboard ({navigation}) {
                     backgroundColor: '#fffff',
                     marginLeft: 5,
                   }}>
+                    {firebase.auth().currentUser ?
                   <Text
                     style={{
                       color: 'black',
@@ -149,7 +165,10 @@ export default function Dashboard ({navigation}) {
                       marginTop: 30,
                       marginLeft: 10,
                       fontWeight: '600',
-                    }}>{user.displayName}</Text>
+                    }}>{user.displayName}</Text> 
+                    : null
+                  
+                  } 
                   <TouchableOpacity
                     onPress={() => navigation.navigate('ProfileScreen')}>
                     <Text
@@ -188,7 +207,7 @@ export default function Dashboard ({navigation}) {
           </View>
 
           <View style={{alignItems: 'center'}}>
-            <TouchableOpacity
+            <TouchableOpacity onPress={()=> navigation.navigate('Chat')}
               style={{
                 width: width * 0.93,
                 height: 75,
