@@ -5,6 +5,8 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 
+
+
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
 
@@ -29,6 +31,7 @@ import Logo5 from './Head/Logo5'
 import Logo6 from './Head/Logo6'
 import Logo7 from './Head/Logo7'
 import Logo8 from './Head/Logo8'
+import Logo9 from './Head/Logo9'
 //Drawer Screen ui
 import DrawerContent from './Screens/Drawer/DrawerContent'
 //Profile Settings ui
@@ -61,6 +64,8 @@ import Users from './Screens/Main/Users'
 //Order Screen ui
 import Order from './Screens/Order/Order'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+//Chat page ui //
+import Chat from './Screens/Messages/Chat' ;
 import SuccessLogin from './Screens/UserLogin/SuccessLogin'
 import firebase from '@react-native-firebase/app'
 import {
@@ -322,6 +327,17 @@ useEffect(() => {
         component={SignupB}
         options={{ headerShown: false }}
       />
+      <Stack.Screen 
+       name="Chat"
+       component={Chat}
+       options={{
+        headerLeft: () => (
+          <BackButtonAndDrawer {...props}/>
+         ),
+        headerTitle: props => <Logo9 {...props} />,
+        headerStyle: { backgroundColor: '#fff' },
+      }}
+       />
       <Stack.Screen
         name='SuccessLogin'
         component={SuccessLogin}

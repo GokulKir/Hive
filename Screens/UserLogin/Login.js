@@ -8,10 +8,10 @@ import {
   Image,
   TextInput,
   Alert,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native'
-import React, { useState, useEffect, useContext } from 'react'
-const { width, height } = Dimensions.get('window')
+import React, {useState, useEffect, useContext} from 'react'
+const {width, height} = Dimensions.get('window')
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -19,10 +19,9 @@ import {
 } from '@react-native-google-signin/google-signin'
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
-import { ClientContext, useMutation } from 'graphql-hooks'
-import { Snackbar, IconButton } from 'react-native-paper';
+import {ClientContext, useMutation} from 'graphql-hooks'
+import {Snackbar, IconButton} from 'react-native-paper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
 
 const USER_LOGIN = `
 mutation UserLogin($email: String!, $password: String!) {
@@ -40,8 +39,9 @@ mutation UserLogin($email: String!, $password: String!) {
 }
 `
 
-export default function Login({ navigation }) {
+export default function Login ({navigation}) {
   const client = useContext(ClientContext)
+
   const [LoginUser] = useMutation(USER_LOGIN)
   useEffect(() => {
     GoogleSignin.configure({
@@ -59,54 +59,52 @@ export default function Login({ navigation }) {
   // const [email, setEmail] = useState('ajnash.aju323@gmail.com')
   // const [password, setPassword] = useState('12345678')
   const [snackbarVisible, setSnackbarVisible] = useState(false)
-  const [snackBarError, setSnackBarError] = useState("")
+  const [snackBarError, setSnackBarError] = useState('')
 
   //SignIm user Api //
 
-  const validate = (text) => {
-    console.log(text);
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+  const validate = text => {
+    console.log(text)
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/
     if (reg.test(text) === false) {
-      console.log("Email is Not Correct");
-      return false;
-    }
-    else {
-      console.log("Email is Correct");
-      return true;
+      console.log('Email is Not Correct')
+      return false
+    } else {
+      console.log('Email is Correct')
+      return true
     }
   }
 
-
   const handleLogin = async () => {
-    if (email === "" || password === "") {
-      if (email === "") {
-        setEmailError("This field is required.")
+    if (email === '' || password === '') {
+      if (email === '') {
+        setEmailError('This field is required.')
       }
-      if (password === "") {
-        setPasswordError("This field is required.")
+      if (password === '') {
+        setPasswordError('This field is required.')
       }
       setShowFieldError(true)
     } else if (validate(email) && password.length >= 8) {
       setIsSignInLoader(true)
-      console.log("email and passwrd", email, password)
-      const { data, error } = await LoginUser({
-        variables: { email, password }
+      console.log('email and passwrd', email, password)
+      const {data, error} = await LoginUser({
+        variables: {email, password},
       })
 
-      console.log(data);
+      console.log(data)
       if (error) {
         // your code to handle login error
-        console.log(error);
+        console.log(error)
         setIsSignInLoader(false)
       } else {
-        const { token, success, msg, userData } = data.userLogin
-        client.setHeader('Authorization', `Bearer ${token}`)
-        console.log(userData);
+        const {token, success, msg, userData} = data.userLogin
+        // client.setHeader('Authorization', `Bearer ${token}`)
+        client.setHeader('token', `${token}`)
+        console.log(userData)
         if (success) {
           try {
-            AsyncStorage.setItem("userSession", JSON.stringify(userData));
+            AsyncStorage.setItem('userSession', JSON.stringify(userData))
           } catch (err) {
-
           } finally {
             setIsSignInLoader(false)
             navigation.navigate('HomeScreen')
@@ -114,26 +112,24 @@ export default function Login({ navigation }) {
           //  navigation.navigate('HomeScreen')
         } else if (msg) {
           setIsSignInLoader(false)
-          console.log(msg);
+          console.log(msg)
           // Alert.alert(msg)
           setShowFieldError(true)
           setSnackBarError(msg)
           setSnackbarVisible(true)
         } else if (token) {
           setIsSignInLoader(false)
-          console.log(token);
+          console.log(token)
           // Alert.alert(token)
         }
         // console.log({success,msg,token});
 
         // your code to handle token in browser and login redirection
       }
-
     } else {
       setShowFieldError(true)
-      console.log("error");
+      console.log('error')
     }
-
 
     //  console.log("email and passwrd",email, password)
     // const { data, error } = await LoginUser({
@@ -172,7 +168,6 @@ export default function Login({ navigation }) {
     // }
   }
 
-
   const SignIn = () => {
     if (email == '') {
       console.log('email is null')
@@ -207,7 +202,7 @@ export default function Login({ navigation }) {
   //Google Sign in  API //
 
   const LoginGoogle = async () => {
-    const { idToken } = await GoogleSignin.signIn()
+    const {idToken} = await GoogleSignin.signIn()
 
     const googleCredential = auth.GoogleAuthProvider.credential(idToken)
 
@@ -247,10 +242,10 @@ export default function Login({ navigation }) {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <View style={{ width: '100%', height: 56, backgroundColor: '#1D1D1B' }}>
-          <View style={{ marginLeft: width - 58, marginTop: 15 }}>
+        <View style={{width: '100%', height: 56, backgroundColor: '#1D1D1B'}}>
+          <View style={{marginLeft: width - 58, marginTop: 15}}>
             <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-              <Text style={{ color: 'grey', marginTop: 3, fontSize: 15 }}>
+              <Text style={{color: 'grey', marginTop: 3, fontSize: 15}}>
                 Skip
               </Text>
             </TouchableOpacity>
@@ -265,7 +260,7 @@ export default function Login({ navigation }) {
             alignItems: 'center',
           }}>
           <Image
-            style={{ marginTop: 60, height: 46, width: 96 }}
+            style={{marginTop: 60, height: 46, width: 96}}
             source={require('../../assets/Logo.png')}
           />
 
@@ -281,7 +276,7 @@ export default function Login({ navigation }) {
         </View>
 
         <View>
-          <View style={{ marginLeft: 20, marginTop: 25 }}>
+          <View style={{marginLeft: 20, marginTop: 25}}>
             <Text
               style={{
                 color: 'black',
@@ -293,7 +288,7 @@ export default function Login({ navigation }) {
           </View>
         </View>
 
-        <View style={{ alignItems: 'center', marginTop: 30 }}>
+        <View style={{alignItems: 'center', marginTop: 30}}>
           <View
             style={{
               alignItems: 'center',
@@ -303,19 +298,18 @@ export default function Login({ navigation }) {
               borderBottomWidth: 0.7,
             }}>
             <TextInput
-              onChangeText={(value) => {
+              onChangeText={value => {
                 setEmail(value)
-                let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-                if (value === "") {
-                  setEmailError("This field is required")
+                let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/
+                if (value === '') {
+                  setEmailError('This field is required')
                 } else if (reg.test(value) === false) {
-                  setEmailError("Please enter a valid email address")
-                  console.log("Email is Not Correct");
-                  return false;
-                }
-                else {
-                  setEmailError("")
-                  console.log("Email is Correct");
+                  setEmailError('Please enter a valid email address')
+                  console.log('Email is Not Correct')
+                  return false
+                } else {
+                  setEmailError('')
+                  console.log('Email is Correct')
                 }
               }}
               style={{
@@ -330,7 +324,9 @@ export default function Login({ navigation }) {
             />
           </View>
 
-          <Text style={{ alignSelf: "baseline", left: 23, color: "red" }}>{showFieldError && emailError}</Text>
+          <Text style={{alignSelf: 'baseline', left: 23, color: 'red'}}>
+            {showFieldError && emailError}
+          </Text>
 
           <View
             style={{
@@ -340,18 +336,19 @@ export default function Login({ navigation }) {
               borderBottomColor: 'grey',
               borderBottomWidth: 0.7,
               marginTop: 10,
-              flexDirection:'row'
+              flexDirection: 'row',
             }}>
             <TextInput
-              onChangeText={(value) => {
-
+              onChangeText={value => {
                 setPassword(value)
-                if (value === "") {
-                  setPasswordError("This field is required")
+                if (value === '') {
+                  setPasswordError('This field is required')
                 } else if (value.length < 8) {
-                  setPasswordError("Please enter a value that contains at least 8 characters.")
+                  setPasswordError(
+                    'Please enter a value that contains at least 8 characters.',
+                  )
                 } else {
-                  setPasswordError("")
+                  setPasswordError('')
                 }
               }}
               style={{
@@ -360,20 +357,36 @@ export default function Login({ navigation }) {
                 fontWeight: '700',
                 color: 'black',
                 fontSize: 15,
-                flex:1
+                flex: 1,
               }}
               secureTextEntry={showPassword}
               placeholder='Enter password'
             />
             <IconButton
-              icon={showPassword ?"eye" : "eye-off" }
+              icon={showPassword ? 'eye' : 'eye-off'}
               // iconColor={MD3Colors.error50}
               size={20}
               onPress={() => setShowPassword(!showPassword)}
             />
           </View>
-          <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && passwordError}</Text>
-          <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{snackbarVisible && snackBarError}</Text>
+          <Text
+            style={{
+              alignSelf: 'baseline',
+              left: 23,
+              color: 'red',
+              width: '90%',
+            }}>
+            {showFieldError && passwordError}
+          </Text>
+          <Text
+            style={{
+              alignSelf: 'baseline',
+              left: 23,
+              color: 'red',
+              width: '90%',
+            }}>
+            {snackbarVisible && snackBarError}
+          </Text>
         </View>
         {/* <Snackbar
         visible={snackbarVisible}
@@ -386,31 +399,33 @@ export default function Login({ navigation }) {
         {snackBarError}
       </Snackbar> */}
 
-        <View style={{ alignItems: 'center', marginTop: 15 }}>
+        <View style={{alignItems: 'center', marginTop: 15}}>
           <TouchableOpacity
             disabled={isSignInLoader}
             onPress={() => handleLogin()}
-            style={[{
-              width: '90%',
-              height: 45,
-              backgroundColor: '#C89D67',
-              borderRadius: 5,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }, isSignInLoader && { opacity: 0.7 }]}>
-            {
-              isSignInLoader ?
-                < ActivityIndicator size={"large"} color={"#fff"} />
-                :
-                <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>
-                  Login now
-                </Text>
-            }
+            style={[
+              {
+                width: '90%',
+                height: 45,
+                backgroundColor: '#C89D67',
+                borderRadius: 5,
+                alignItems: 'center',
+                justifyContent: 'center',
+              },
+              isSignInLoader && {opacity: 0.7},
+            ]}>
+            {isSignInLoader ? (
+              <ActivityIndicator size={'large'} color={'#fff'} />
+            ) : (
+              <Text style={{color: '#fff', fontSize: 15, fontWeight: '600'}}>
+                Login now
+              </Text>
+            )}
           </TouchableOpacity>
         </View>
 
-        <View style={{ alignItems: 'center', marginTop: 30 }}>
-          <View style={{ flexDirection: 'row' }}>
+        <View style={{alignItems: 'center', marginTop: 30}}>
+          <View style={{flexDirection: 'row'}}>
             <View
               style={{
                 borderWidth: 0.4,
@@ -421,7 +436,7 @@ export default function Login({ navigation }) {
                 marginRight: 8,
               }}></View>
 
-            <Text style={{ fontSize: 17, fontWeight: '600' }}>OR</Text>
+            <Text style={{fontSize: 17, fontWeight: '600'}}>OR</Text>
 
             <View
               style={{
@@ -435,7 +450,7 @@ export default function Login({ navigation }) {
           </View>
         </View>
 
-        <View style={{ alignItems: 'center', marginTop: 30 }}>
+        <View style={{alignItems: 'center', marginTop: 30}}>
           <TouchableOpacity
             onPress={LoginGoogle}
             style={{
@@ -450,7 +465,7 @@ export default function Login({ navigation }) {
               flexDirection: 'row',
             }}>
             <Image
-              style={{ width: 28, height: 28 }}
+              style={{width: 28, height: 28}}
               source={require('../../assets/Google.png')}
             />
             <Text
@@ -466,9 +481,9 @@ export default function Login({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <View style={{ alignItems: 'center' }}>
-          <View style={{ width: '100%', height: 45, marginTop: 19 }}>
-            <View style={{ flexDirection: 'row' }}>
+        <View style={{alignItems: 'center'}}>
+          <View style={{width: '100%', height: 45, marginTop: 19}}>
+            <View style={{flexDirection: 'row'}}>
               <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
                 <Text
                   style={{
@@ -498,7 +513,7 @@ export default function Login({ navigation }) {
           </View>
         </View>
 
-        <View style={{ height: 25 }}></View>
+        <View style={{height: 25}}></View>
       </ScrollView>
       {/* <Snackbar
         visible={snackbarVisible}
