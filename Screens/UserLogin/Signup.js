@@ -8,6 +8,7 @@ import {
   TextInput,
   Dimensions,
   Alert,
+  ActivityIndicator
 } from 'react-native'
 import React, { useState, useEffect, useContext } from 'react';
 import CheckBox from '@react-native-community/checkbox'
@@ -19,7 +20,7 @@ import {
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 import { useForm, Controller } from 'react-hook-form'
-import { Snackbar } from 'react-native-paper';
+import { Snackbar, IconButton } from 'react-native-paper';
 
 //uniq uid for user //
 import uuid from 'react-native-uuid'
@@ -58,7 +59,10 @@ const SIGNUP_USER = `mutation Mutation($email: String, $username: String, $passw
 export default function Signup({ navigation }) {
   const [freeLancerList] = useManualQuery(FREELANCER_LIST)
   const [registerUser] = useMutation(SIGNUP_USER)
+  const [isSignInLoader, setIsSignInLoader] = useState(false)
 
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [firstname, setFirstName] = useState('')
   const [showFieldError, setShowFieldError] = useState('')
   const [displayNameError, setDisplayNameError] = useState('')
@@ -107,7 +111,7 @@ export default function Signup({ navigation }) {
   //UID//
 
   const Sign_Up_Back = async () => {
-
+    setIsSignInLoader(true)
     let response: any = await registerUser({
       variables: {
         displayName: firstname,
@@ -119,6 +123,7 @@ export default function Signup({ navigation }) {
     });
 
     if (response?.data?.userRegister?.success) {
+      setIsSignInLoader(false)
       console.log("success---------------", response);
       // Alert.alert("Success", JSON.stringify(response?.data?.userRegister?.msg))
       Alert.alert('Success', response?.data?.userRegister?.msg, [
@@ -126,6 +131,7 @@ export default function Signup({ navigation }) {
       ]);
       //  navigation.navigate('HomeScreen')
     } else if (response?.data?.userRegister?.msg) {
+      setIsSignInLoader(false)
       console.log(response?.data?.userRegister?.msg);
       setSnackBarError(response?.data?.userRegister?.msg)
       setSnackbarVisible(true)
@@ -284,27 +290,27 @@ export default function Signup({ navigation }) {
   //Email && Password API //
 
   //Graph ql Backend api//
-  
- const validate = (text) => {
-  console.log(text);
-  let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-  if (reg.test(text) === false) {
-    console.log("Email is Not Correct");
-    return false;
+
+  const validate = (text) => {
+    console.log(text);
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (reg.test(text) === false) {
+      console.log("Email is Not Correct");
+      return false;
+    }
+    else {
+      console.log("Email is Correct");
+      return true;
+    }
   }
-  else {
-    console.log("Email is Correct");
-    return true;
-  }
-}
 
   const joinNowFunction = () => {
 
-    if(password !== confirmPassword){
+    if (password !== confirmPassword) {
       setShowFieldError(true)
     }
 
-    if (email === "" || password === "" || firstname=== "" || lastname === "" || confirmPassword === "") {
+    if (email === "" || password === "" || firstname === "" || lastname === "" || confirmPassword === "") {
       if (email === "") {
         setEmailError("This field is required.")
       }
@@ -321,7 +327,7 @@ export default function Signup({ navigation }) {
         setConfirmPasswordError("This field is required.")
       }
       setShowFieldError(true)
-    } else if(validate(email) && password.length >= 8 && firstname.length >= 3 && (/^[a-zA-Z]+$/.test(lastname) && lastname.length >= 3) && isSelected && (password === confirmPassword)){
+    } else if (validate(email) && password.length >= 8 && firstname.length >= 3 && (/^[a-zA-Z]+$/.test(lastname) && lastname.length >= 3) && isSelected && (password === confirmPassword)) {
       Sign_Up_Back()
     }
 
@@ -425,7 +431,7 @@ export default function Signup({ navigation }) {
 
           <View style={{ alignItems: 'center', marginTop: 10 }}>
             <TextInput
-              onChangeText={(value)=>{
+              onChangeText={(value) => {
                 setFirstName(value)
                 if (value === "") {
                   setDisplayNameError("This field is required")
@@ -448,17 +454,17 @@ export default function Signup({ navigation }) {
               placeholderColor='black'
               placeholder='Display Name *'
             />
-                      <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && displayNameError}</Text>
+            <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && displayNameError}</Text>
 
           </View>
 
           <View style={{ alignItems: 'center', marginTop: 10 }}>
             <TextInput
-              onChangeText={(value)=>{
+              onChangeText={(value) => {
                 setLastName(value)
                 if (value === "") {
                   setUserNameError("This field is required")
-                }else if(!/^[a-zA-Z]+$/.test(value)){
+                } else if (!/^[a-zA-Z]+$/.test(value)) {
                   setUserNameError("Only alphabets are accepted.")
                 } else if (value.length < 3) {
                   setUserNameError("Please enter a value that contains at least 3 characters.")
@@ -479,7 +485,7 @@ export default function Signup({ navigation }) {
               placeholderColor='black'
               placeholder='Username *'
             />
-                      <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && userNameError}</Text>
+            <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && userNameError}</Text>
 
           </View>
 
@@ -513,7 +519,7 @@ export default function Signup({ navigation }) {
               placeholderColor='black'
               placeholder='Email address *'
             />
-                      <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && emailError}</Text>
+            <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && emailError}</Text>
           </View>
 
           <View style={{ alignItems: 'center', marginTop: 10 }}>
@@ -538,22 +544,29 @@ export default function Signup({ navigation }) {
                 fontSize: 15,
                 fontWeight: '700',
               }}
+              secureTextEntry={showPassword}
               placeholderColor='black'
               placeholder='Password *'
             />
-          <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && passwordError}</Text>
-
+            <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && passwordError}</Text>
+            <IconButton
+            style={{alignSelf:'flex-end',marginTop:-60,right:10}}
+              icon={showPassword ?"eye" : "eye-off" }
+              // iconColor={MD3Colors.error50}
+              size={20}
+              onPress={() => setShowPassword(!showPassword)}
+            />
           </View>
 
-          <View style={{ alignItems: 'center', marginTop: 10 }}>
+          <View style={{ alignItems: 'center', marginTop: 20 }}>
             <TextInput
-              onChangeText={(value)=>{
+              onChangeText={(value) => {
                 setConfirmPassword(value)
                 if (value === "") {
                   setConfirmPasswordError("This field is required")
                 } else if (value === password) {
                   setConfirmPasswordError("")
-                }else{
+                } else {
                   setConfirmPasswordError("Passwords do not match")
                 }
               }}
@@ -567,16 +580,23 @@ export default function Signup({ navigation }) {
                 fontSize: 15,
                 fontWeight: '700',
               }}
+              secureTextEntry={showConfirmPassword}
               placeholderColor='black'
               placeholder='Confirm Password *'
             />
-                      <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && confirmPasswordError}</Text>
-
+            <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && confirmPasswordError}</Text>
+            <IconButton
+            style={{alignSelf:'flex-end',marginTop:-60,right:10}}
+              icon={showConfirmPassword ?"eye" : "eye-off" }
+              // iconColor={MD3Colors.error50}
+              size={20}
+              onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+            />
           </View>
 
         </View>
 
-        <View style={{ flexDirection: 'row', marginLeft: '5%', marginTop: 20 }}>
+        <View style={{ flexDirection: 'row', marginLeft: '5%', marginTop: 30 }}>
           <CheckBox
             disabled={false}
             value={isSelected}
@@ -613,18 +633,25 @@ export default function Signup({ navigation }) {
 
         <View style={{ alignItems: 'center', marginTop: 30 }}>
           <TouchableOpacity
+            disabled={isSignInLoader}
             onPress={() => joinNowFunction()}
-            style={{
+            style={[{
               width: '90%',
               height: 45,
               backgroundColor: '#C89D67',
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: 5,
-            }}>
-            <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>
-              Join now
-            </Text>
+            }, isSignInLoader && { opacity: 0.7 }]}>
+            {
+              isSignInLoader ?
+                < ActivityIndicator size={"large"} color={"#fff"} />
+                :
+                <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>
+                  Join now
+                </Text>
+            }
+
           </TouchableOpacity>
         </View>
 

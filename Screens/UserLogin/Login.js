@@ -8,6 +8,7 @@ import {
   Image,
   TextInput,
   Alert,
+  ActivityIndicator
 } from 'react-native'
 import React, { useState, useEffect, useContext } from 'react'
 const { width, height } = Dimensions.get('window')
@@ -19,7 +20,7 @@ import {
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 import { ClientContext, useMutation } from 'graphql-hooks'
-import { Snackbar } from 'react-native-paper';
+import { Snackbar, IconButton } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
@@ -48,6 +49,8 @@ export default function Login({ navigation }) {
         '86575262147-5ek6sbcsva6bi38al4h641sa731s0aja.apps.googleusercontent.com',
     })
   }, [])
+  const [showPassword, setShowPassword] = useState(false)
+  const [isSignInLoader, setIsSignInLoader] = useState(false)
   const [email, setEmail] = useState('')
   const [emailError, setEmailError] = useState('')
   const [password, setPassword] = useState('')
@@ -60,7 +63,7 @@ export default function Login({ navigation }) {
 
   //SignIm user Api //
 
- const validate = (text) => {
+  const validate = (text) => {
     console.log(text);
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (reg.test(text) === false) {
@@ -83,7 +86,8 @@ export default function Login({ navigation }) {
         setPasswordError("This field is required.")
       }
       setShowFieldError(true)
-    } else if(validate(email) && password.length >= 8) {
+    } else if (validate(email) && password.length >= 8) {
+      setIsSignInLoader(true)
       console.log("email and passwrd", email, password)
       const { data, error } = await LoginUser({
         variables: { email, password }
@@ -93,6 +97,7 @@ export default function Login({ navigation }) {
       if (error) {
         // your code to handle login error
         console.log(error);
+        setIsSignInLoader(false)
       } else {
         const { token, success, msg, userData } = data.userLogin
         client.setHeader('Authorization', `Bearer ${token}`)
@@ -103,16 +108,19 @@ export default function Login({ navigation }) {
           } catch (err) {
 
           } finally {
+            setIsSignInLoader(false)
             navigation.navigate('HomeScreen')
           }
           //  navigation.navigate('HomeScreen')
         } else if (msg) {
+          setIsSignInLoader(false)
           console.log(msg);
           // Alert.alert(msg)
           setShowFieldError(true)
           setSnackBarError(msg)
           setSnackbarVisible(true)
         } else if (token) {
+          setIsSignInLoader(false)
           console.log(token);
           // Alert.alert(token)
         }
@@ -121,7 +129,8 @@ export default function Login({ navigation }) {
         // your code to handle token in browser and login redirection
       }
 
-    }else{
+    } else {
+      setShowFieldError(true)
       console.log("error");
     }
 
@@ -297,9 +306,9 @@ export default function Login({ navigation }) {
               onChangeText={(value) => {
                 setEmail(value)
                 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-                if(value ===""){
+                if (value === "") {
                   setEmailError("This field is required")
-                }else if (reg.test(value) === false) {
+                } else if (reg.test(value) === false) {
                   setEmailError("Please enter a valid email address")
                   console.log("Email is Not Correct");
                   return false;
@@ -331,10 +340,11 @@ export default function Login({ navigation }) {
               borderBottomColor: 'grey',
               borderBottomWidth: 0.7,
               marginTop: 10,
+              flexDirection:'row'
             }}>
             <TextInput
               onChangeText={(value) => {
-                
+
                 setPassword(value)
                 if (value === "") {
                   setPasswordError("This field is required")
@@ -350,28 +360,52 @@ export default function Login({ navigation }) {
                 fontWeight: '700',
                 color: 'black',
                 fontSize: 15,
+                flex:1
               }}
+              secureTextEntry={showPassword}
               placeholder='Enter password'
+            />
+            <IconButton
+              icon={showPassword ?"eye" : "eye-off" }
+              // iconColor={MD3Colors.error50}
+              size={20}
+              onPress={() => setShowPassword(!showPassword)}
             />
           </View>
           <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && passwordError}</Text>
-
+          <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{snackbarVisible && snackBarError}</Text>
         </View>
+        {/* <Snackbar
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        action={{
+          label: 'Dismiss',
+          onPress: () => { },
+        }}
+      >
+        {snackBarError}
+      </Snackbar> */}
 
-        <View style={{ alignItems: 'center', marginTop: 25 }}>
+        <View style={{ alignItems: 'center', marginTop: 15 }}>
           <TouchableOpacity
+            disabled={isSignInLoader}
             onPress={() => handleLogin()}
-            style={{
+            style={[{
               width: '90%',
               height: 45,
               backgroundColor: '#C89D67',
               borderRadius: 5,
               alignItems: 'center',
               justifyContent: 'center',
-            }}>
-            <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>
-              Login now
-            </Text>
+            }, isSignInLoader && { opacity: 0.7 }]}>
+            {
+              isSignInLoader ?
+                < ActivityIndicator size={"large"} color={"#fff"} />
+                :
+                <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>
+                  Login now
+                </Text>
+            }
           </TouchableOpacity>
         </View>
 
@@ -466,7 +500,7 @@ export default function Login({ navigation }) {
 
         <View style={{ height: 25 }}></View>
       </ScrollView>
-      <Snackbar
+      {/* <Snackbar
         visible={snackbarVisible}
         onDismiss={() => setSnackbarVisible(false)}
         action={{
@@ -475,7 +509,7 @@ export default function Login({ navigation }) {
         }}
       >
         {snackBarError}
-      </Snackbar>
+      </Snackbar> */}
     </View>
   )
 }

@@ -149,7 +149,7 @@ export default function Dashboard ({navigation}) {
                       marginTop: 30,
                       marginLeft: 10,
                       fontWeight: '600',
-                    }}>{user.displayName}</Text>
+                    }}>{user?.displayName}</Text>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('ProfileScreen')}>
                     <Text
