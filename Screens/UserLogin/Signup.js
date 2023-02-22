@@ -1,88 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import {
   StyleSheet,
   Text,
@@ -93,8 +8,9 @@ import {
   TextInput,
   Dimensions,
   Alert,
+  ActivityIndicator
 } from 'react-native'
-import React, {useState, useEffect , useContext} from 'react' ;
+import React, { useState, useEffect, useContext } from 'react';
 import CheckBox from '@react-native-community/checkbox'
 import {
   GoogleSignin,
@@ -103,14 +19,15 @@ import {
 } from '@react-native-google-signin/google-signin'
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
-import {useForm, Controller} from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
+import { Snackbar, IconButton } from 'react-native-paper';
 
 //uniq uid for user //
 import uuid from 'react-native-uuid'
 //uniq uid for user //
 
-const {height, width} = Dimensions.get('window')
-import {useManualQuery, useMutation , ClientContext} from 'graphql-hooks'
+const { height, width } = Dimensions.get('window')
+import { useManualQuery, useMutation, ClientContext } from 'graphql-hooks'
 
 //Graph ql api //
 const FREELANCER_LIST = `query Categories{
@@ -129,39 +46,37 @@ const FREELANCER_LIST = `query Categories{
 }
 `
 
-const Integrate = `mutation {
-  userRegister(
-    displayName: "string"
-    email: "string"
-    username: "string"
-    password: "string"
-    confirmPassword: "string"
-  ) {
+const SIGNUP_USER = `mutation Mutation($email: String, $username: String, $password: String, $confirmPassword: String, $displayName: String) {
+  userRegister(email: $email, username: $username, password: $password, confirmPassword: $confirmPassword, displayName: $displayName) {
     success
     msg
-  }
-}`
-
-
-const SIGNUP_USER = `mutation UserRegister($displayName: String, $email: String, $username: String, $password: String, $confirmPassword: String) {
-  userRegister(displayName: $displayName, email: $email, username: $username, password: $password, confirmPassword: $confirmPassword) {
-    msg
-    success
   }
 }
   `
 
 //Graph ql api //
 
-export default function Signup ({navigation}) {
+export default function Signup({ navigation }) {
   const [freeLancerList] = useManualQuery(FREELANCER_LIST)
   const [registerUser] = useMutation(SIGNUP_USER)
+  const [isSignInLoader, setIsSignInLoader] = useState(false)
 
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [firstname, setFirstName] = useState('')
+  const [showFieldError, setShowFieldError] = useState('')
+  const [displayNameError, setDisplayNameError] = useState('')
   const [lastname, setLastName] = useState('')
+  const [userNameError, setUserNameError] = useState('')
   const [email, setEmail] = useState('')
+  const [emailError, setEmailError] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [confirmPasswordError, setConfirmPasswordError] = useState('')
   const [isSelected, setSelection] = useState(false)
+  const [snackbarVisible, setSnackbarVisible] = useState(false)
+  const [snackBarError, setSnackBarError] = useState("")
   const [photo, setPhoto] = useState('')
   const [name, setName] = useState('')
   const [id, setId] = useState('')
@@ -172,9 +87,10 @@ export default function Signup ({navigation}) {
       webClientId:
         '86575262147-5ek6sbcsva6bi38al4h641sa731s0aja.apps.googleusercontent.com',
     })
-  })
-  const myAsync=async()=>{
-    freeLancerList({variables: {}}).then(response => {
+  }, [])
+
+  const myAsync = async () => {
+    freeLancerList({ variables: {} }).then(response => {
       console.log('frelncer list response', response)
     })
     const regUserResponse = await registerUser({
@@ -183,75 +99,57 @@ export default function Signup ({navigation}) {
         email: email,
         username: lastname,
         password: password,
-        confirmPassword: password,
+        confirmPassword: confirmPassword,
       },
     })
-    
+
     console.log('registerUserResponse', regUserResponse)
     navigation.navigate('HomeScreen')
   }
-  useEffect(() => {
-    
-   
-  }, [])
   //UID//
   const UID = uuid.v4()
   //UID//
 
-   const Sign_Up_Back = async ()=>{
-
-   
-    const { data, error } = await registerUser({
+  const Sign_Up_Back = async () => {
+    setIsSignInLoader(true)
+    let response: any = await registerUser({
       variables: {
         displayName: firstname,
         email: email,
-        username: firstname,
+        username: lastname,
         password: password,
-        confirmPassword: password,
-      },
-      
-    })
-    console.log(data);
+        // confirmPassword: password,
+      }
+    });
 
-
-    
-    if (error) {
-      // your code to handle login error
-      console.log(error);
-     
-    } else {
-      let response : any = await registerUser({ variables : data});
-      
-     
-
-      console.log("msg >>>>>>>>>",response);
-        if(response?.data?.userRegister?.success) {
-           console.log("success");
-           navigation.navigate('HomeScreen')
-        } else if(response?.data?.userRegister?.msg) {
-          console.log(response?.data?.userRegister?.msg);
-          Alert.alert(response?.data?.userRegister?.msg);
-        } 
-      // console.log({success,msg,token});
-      
-      // your code to handle token in browser and login redirection
+    if (response?.data?.userRegister?.success) {
+      setIsSignInLoader(false)
+      console.log("success---------------", response);
+      // Alert.alert("Success", JSON.stringify(response?.data?.userRegister?.msg))
+      Alert.alert('Success', response?.data?.userRegister?.msg, [
+        { text: 'Login', onPress: () => navigation.navigate('Login') },
+      ]);
+      //  navigation.navigate('HomeScreen')
+    } else if (response?.data?.userRegister?.msg) {
+      setIsSignInLoader(false)
+      console.log(response?.data?.userRegister?.msg);
+      setSnackBarError(response?.data?.userRegister?.msg)
+      setSnackbarVisible(true)
+      // Alert.alert("Failed", JSON.stringify(response?.data?.userRegister?.msg));
     }
 
- 
-  
-
-   }
+  }
 
   //User details store database
 
-  const DB = () => {}
+  const DB = () => { }
 
   //User details store database
 
   //Google SignIn  Api
 
   const SignIn = async () => {
-    const {idToken} = await GoogleSignin.signIn()
+    const { idToken } = await GoogleSignin.signIn()
 
     const googleCredential = auth.GoogleAuthProvider.credential(idToken)
 
@@ -393,15 +291,74 @@ export default function Signup ({navigation}) {
 
   //Graph ql Backend api//
 
+  const validate = (text) => {
+    console.log(text);
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (reg.test(text) === false) {
+      console.log("Email is Not Correct");
+      return false;
+    }
+    else {
+      console.log("Email is Correct");
+      return true;
+    }
+  }
+
+  const joinNowFunction = () => {
+
+    if (password !== confirmPassword) {
+      setShowFieldError(true)
+    }
+
+    if (email === "" || password === "" || firstname === "" || lastname === "" || confirmPassword === "") {
+      if (email === "") {
+        setEmailError("This field is required.")
+      }
+      if (password === "") {
+        setPasswordError("This field is required.")
+      }
+      if (firstname === "") {
+        setDisplayNameError("This field is required.")
+      }
+      if (lastname === "") {
+        setUserNameError("This field is required.")
+      }
+      if (confirmPassword === "") {
+        setConfirmPasswordError("This field is required.")
+      }
+      setShowFieldError(true)
+    } else if (validate(email) && password.length >= 8 && firstname.length >= 3 && (/^[a-zA-Z]+$/.test(lastname) && lastname.length >= 3) && isSelected && (password === confirmPassword)) {
+      Sign_Up_Back()
+    }
+
+
+    // if (password !== confirmPassword) {
+    //   setSnackBarError("Password mismatch")
+    //   setSnackbarVisible(true)
+    // } else if (password === "") {
+    //   setSnackBarError("Password can't be empty")
+    //   setSnackbarVisible(true)
+    // } else if (!isSelected) {
+    //   setSnackBarError("Please agree the Terms & Conditions to continue")
+    //   setSnackbarVisible(true)
+    // } else {
+    // }
+  }
+
+  const showError = () => {
+    setSnackBarError("Please agree the Terms & Conditions to continue")
+    setSnackbarVisible(true)
+  }
+
   const SignUs = () => {
     try {
-      userRegister({variables: {email, password}})
-      console.dir(data, {depth: null})
+      userRegister({ variables: { email, password } })
+      console.dir(data, { depth: null })
       console.log('This error' + error)
       console.log('Loading' + loading)
     } catch (error) {
       console.error(error)
-    } 
+    }
   }
 
   //Graph ql Backend api//
@@ -429,7 +386,7 @@ export default function Signup ({navigation}) {
           </TouchableOpacity>
 
           <Image
-            style={{height: 45, width: 95, marginTop: 35}}
+            style={{ height: 45, width: 95, marginTop: 35 }}
             source={require('../../assets/Logo.png')}
           />
 
@@ -461,7 +418,7 @@ export default function Signup ({navigation}) {
         </View>
 
         <View>
-          <View style={{marginLeft: 20, marginTop: 20}}>
+          <View style={{ marginLeft: 20, marginTop: 10 }}>
             <Text
               style={{
                 color: 'black',
@@ -472,9 +429,18 @@ export default function Signup ({navigation}) {
             </Text>
           </View>
 
-          <View style={{alignItems: 'center', marginTop: 25}}>
+          <View style={{ alignItems: 'center', marginTop: 10 }}>
             <TextInput
-              onChangeText={setFirstName}
+              onChangeText={(value) => {
+                setFirstName(value)
+                if (value === "") {
+                  setDisplayNameError("This field is required")
+                } else if (value.length < 3) {
+                  setDisplayNameError("Please enter a value that contains at least 3 characters.")
+                } else {
+                  setDisplayNameError("")
+                }
+              }}
               style={{
                 width: width * 0.9,
                 height: 56,
@@ -486,13 +452,124 @@ export default function Signup ({navigation}) {
                 fontWeight: '700',
               }}
               placeholderColor='black'
-              placeholder='First name *'
+              placeholder='Display Name *'
+            />
+            <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && displayNameError}</Text>
+
+          </View>
+
+          <View style={{ alignItems: 'center', marginTop: 10 }}>
+            <TextInput
+              onChangeText={(value) => {
+                setLastName(value)
+                if (value === "") {
+                  setUserNameError("This field is required")
+                } else if (!/^[a-zA-Z]+$/.test(value)) {
+                  setUserNameError("Only alphabets are accepted.")
+                } else if (value.length < 3) {
+                  setUserNameError("Please enter a value that contains at least 3 characters.")
+                } else {
+                  setUserNameError("")
+                }
+              }}
+              style={{
+                width: width * 0.9,
+                height: 56,
+                color: 'black',
+                paddingTop: 20,
+                borderBottomColor: 'black',
+                borderBottomWidth: 0.5,
+                fontSize: 15,
+                fontWeight: '700',
+              }}
+              placeholderColor='black'
+              placeholder='Username *'
+            />
+            <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && userNameError}</Text>
+
+          </View>
+
+          <View style={{ alignItems: 'center', marginTop: 10 }}>
+            <TextInput
+              onChangeText={(value) => {
+                setEmail(value)
+                let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+                if (value === "") {
+                  setEmailError("This field is required")
+                } else if (reg.test(value) === false) {
+                  setEmailError("Please enter a valid email address")
+                  console.log("Email is Not Correct");
+                  return false;
+                }
+                else {
+                  setEmailError("")
+                  console.log("Email is Correct");
+                }
+              }}
+              style={{
+                width: width * 0.9,
+                height: 56,
+                color: 'black',
+                paddingTop: 20,
+                borderBottomColor: 'black',
+                borderBottomWidth: 0.5,
+                fontSize: 15,
+                fontWeight: '700',
+              }}
+              placeholderColor='black'
+              placeholder='Email address *'
+            />
+            <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && emailError}</Text>
+          </View>
+
+          <View style={{ alignItems: 'center', marginTop: 10 }}>
+            <TextInput
+              onChangeText={(value) => {
+                setPassword(value)
+                if (value === "") {
+                  setPasswordError("This field is required")
+                } else if (value.length < 8) {
+                  setPasswordError("Please enter a value that contains at least 8 characters.")
+                } else {
+                  setPasswordError("")
+                }
+              }}
+              style={{
+                width: width * 0.9,
+                height: 56,
+                color: 'black',
+                paddingTop: 20,
+                borderBottomColor: 'black',
+                borderBottomWidth: 0.5,
+                fontSize: 15,
+                fontWeight: '700',
+              }}
+              secureTextEntry={showPassword}
+              placeholderColor='black'
+              placeholder='Password *'
+            />
+            <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && passwordError}</Text>
+            <IconButton
+            style={{alignSelf:'flex-end',marginTop:-60,right:10}}
+              icon={showPassword ?"eye" : "eye-off" }
+              // iconColor={MD3Colors.error50}
+              size={20}
+              onPress={() => setShowPassword(!showPassword)}
             />
           </View>
 
-          <View style={{alignItems: 'center', marginTop: 20}}>
+          <View style={{ alignItems: 'center', marginTop: 20 }}>
             <TextInput
-              onChangeText={setLastName}
+              onChangeText={(value) => {
+                setConfirmPassword(value)
+                if (value === "") {
+                  setConfirmPasswordError("This field is required")
+                } else if (value === password) {
+                  setConfirmPasswordError("")
+                } else {
+                  setConfirmPasswordError("Passwords do not match")
+                }
+              }}
               style={{
                 width: width * 0.9,
                 height: 56,
@@ -503,67 +580,23 @@ export default function Signup ({navigation}) {
                 fontSize: 15,
                 fontWeight: '700',
               }}
+              secureTextEntry={showConfirmPassword}
               placeholderColor='black'
-              placeholder='Last name *'
+              placeholder='Confirm Password *'
+            />
+            <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && confirmPasswordError}</Text>
+            <IconButton
+            style={{alignSelf:'flex-end',marginTop:-60,right:10}}
+              icon={showConfirmPassword ?"eye" : "eye-off" }
+              // iconColor={MD3Colors.error50}
+              size={20}
+              onPress={() => setShowConfirmPassword(!showConfirmPassword)}
             />
           </View>
 
-          <View style={{alignItems: 'center', marginTop: 20}}>
-            <TextInput
-              onChangeText={setEmail}
-              style={{
-                width: width * 0.9,
-                height: 56,
-                color: 'black',
-                paddingTop: 20,
-                borderBottomColor: 'black',
-                borderBottomWidth: 0.5,
-                fontSize: 15,
-                fontWeight: '700',
-              }}
-              placeholderColor='black'
-              placeholder='Your email address *'
-            />
-          </View>
-
-          <View style={{alignItems: 'center', marginTop: 20}}>
-            <TextInput
-              onChangeText={setPassword}
-              style={{
-                width: width * 0.9,
-                height: 56,
-                color: 'black',
-                paddingTop: 20,
-                borderBottomColor: 'black',
-                borderBottomWidth: 0.5,
-                fontSize: 15,
-                fontWeight: '700',
-              }}
-              placeholderColor='black'
-              placeholder='Enter password *'
-            />
-          </View>
-
-          <View style={{alignItems: 'center', marginTop: 20}}>
-            <TextInput
-              onChangeText={setPassword}
-              style={{
-                width: width * 0.9,
-                height: 56,
-                color: 'black',
-                paddingTop: 20,
-                borderBottomColor: 'black',
-                borderBottomWidth: 0.5,
-                fontSize: 15,
-                fontWeight: '700',
-              }}
-              placeholderColor='black'
-              placeholder='Confirm password *'
-            />
-          </View>
         </View>
 
-        <View style={{flexDirection: 'row', marginLeft: '5%', marginTop: 20}}>
+        <View style={{ flexDirection: 'row', marginLeft: '5%', marginTop: 30 }}>
           <CheckBox
             disabled={false}
             value={isSelected}
@@ -571,7 +604,7 @@ export default function Signup ({navigation}) {
           />
 
           <Text
-            style={{color: 'grey', fontSize: 16, marginLeft: 8, marginTop: 5}}>
+            style={{ color: 'grey', fontSize: 16, marginLeft: 8, marginTop: 5 }}>
             I have read and agree to all{' '}
           </Text>
           <Text
@@ -595,26 +628,35 @@ export default function Signup ({navigation}) {
             conditions
           </Text>
         </View>
+        <Text style={{ alignSelf: "baseline", left: 23, color: "red", width: "90%" }}>{showFieldError && !isSelected && "Please agree the Terms & Conditiond to continue"} </Text>
 
-        <View style={{alignItems: 'center', marginTop: 30}}>
+
+        <View style={{ alignItems: 'center', marginTop: 30 }}>
           <TouchableOpacity
-            onPress={() =>  Sign_Up_Back()}
-            style={{
+            disabled={isSignInLoader}
+            onPress={() => joinNowFunction()}
+            style={[{
               width: '90%',
               height: 45,
               backgroundColor: '#C89D67',
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: 5,
-            }}>
-            <Text style={{color: '#fff', fontSize: 16, fontWeight: 'bold'}}>
-              Join now
-            </Text>
+            }, isSignInLoader && { opacity: 0.7 }]}>
+            {
+              isSignInLoader ?
+                < ActivityIndicator size={"large"} color={"#fff"} />
+                :
+                <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>
+                  Join now
+                </Text>
+            }
+
           </TouchableOpacity>
         </View>
 
-        <View style={{alignItems: 'center', marginTop: 30}}>
-          <View style={{flexDirection: 'row'}}>
+        <View style={{ alignItems: 'center', marginTop: 30 }}>
+          <View style={{ flexDirection: 'row' }}>
             <View
               style={{
                 borderWidth: 0.4,
@@ -625,7 +667,7 @@ export default function Signup ({navigation}) {
                 marginRight: 8,
               }}></View>
 
-            <Text style={{fontSize: 17, fontWeight: '600', color: 'grey'}}>
+            <Text style={{ fontSize: 17, fontWeight: '600', color: 'grey' }}>
               OR
             </Text>
 
@@ -641,7 +683,7 @@ export default function Signup ({navigation}) {
           </View>
         </View>
 
-        <View style={{alignItems: 'center', marginTop: 30}}>
+        <View style={{ alignItems: 'center', marginTop: 30 }}>
           <TouchableOpacity
             onPress={() => SignIn()}
             style={{
@@ -653,7 +695,7 @@ export default function Signup ({navigation}) {
               borderRadius: 2,
             }}>
             <Image
-              style={{width: 25, height: 25, marginTop: 10, marginLeft: 75}}
+              style={{ width: 25, height: 25, marginTop: 10, marginLeft: 75 }}
               source={require('../../assets/Google.png')}
             />
 
@@ -670,8 +712,9 @@ export default function Signup ({navigation}) {
           </TouchableOpacity>
         </View>
 
-        <View style={{marginLeft: 24, marginTop: 20}}>
+        <View style={{ marginLeft: 24, marginTop: 20 }}>
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            {/* <TouchableOpacity onPress={() => navigation.navigate('SuccessLogin')}> */}
             <Text
               style={{
                 color: '#C89D67',
@@ -683,8 +726,17 @@ export default function Signup ({navigation}) {
           </TouchableOpacity>
         </View>
 
-        <View style={{height: 45}}></View>
       </ScrollView>
+      <Snackbar
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        action={{
+          label: 'Dismiss',
+          onPress: () => { },
+        }}
+      >
+        {snackBarError}
+      </Snackbar>
     </View>
   )
 }

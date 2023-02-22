@@ -8,8 +8,9 @@ import {
   Image,
   TextInput,
   Alert,
+  ActivityIndicator,
 } from 'react-native'
-import React, {useState, useEffect , useContext} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 const {width, height} = Dimensions.get('window')
 import {
   GoogleSignin,
@@ -19,18 +20,28 @@ import {
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 import {ClientContext, useMutation} from 'graphql-hooks'
+import {Snackbar, IconButton} from 'react-native-paper'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const USER_LOGIN = `mutation UserLogin($email: String!, $password: String!) {
+const USER_LOGIN = `
+mutation UserLogin($email: String!, $password: String!) {
   userLogin(email: $email, password: $password) {
-    success
     msg
+    success
     token
+    userData {
+      profileImg
+      fullName
+      uid
+      email
+    }
   }
-}`
+}
+`
 
 export default function Login ({navigation}) {
   const client = useContext(ClientContext)
-  
+
   const [LoginUser] = useMutation(USER_LOGIN)
   useEffect(() => {
     GoogleSignin.configure({
@@ -38,44 +49,125 @@ export default function Login ({navigation}) {
         '86575262147-5ek6sbcsva6bi38al4h641sa731s0aja.apps.googleusercontent.com',
     })
   }, [])
+  const [showPassword, setShowPassword] = useState(false)
+  const [isSignInLoader, setIsSignInLoader] = useState(false)
   const [email, setEmail] = useState('')
+  const [emailError, setEmailError] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  const [showFieldError, setShowFieldError] = useState('')
+  // const [email, setEmail] = useState('ajnash.aju323@gmail.com')
+  // const [password, setPassword] = useState('12345678')
+  const [snackbarVisible, setSnackbarVisible] = useState(false)
+  const [snackBarError, setSnackBarError] = useState('')
 
   //SignIm user Api //
 
-
-  const handleLogin = async () => {
-   console.log("email and passwrd",email, password)
-    const { data, error } = await LoginUser({
-      variables: { email, password }
-    })
-    
-    if (error) {
-      // your code to handle login error
-      console.log(error);
+  const validate = text => {
+    console.log(text)
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/
+    if (reg.test(text) === false) {
+      console.log('Email is Not Correct')
+      return false
     } else {
-      const { token,success,msg } = data.userLogin
-      // client.setHeader('Authorization', `Bearer ${token}`)
-      client.setHeader('token', `${token}`)
-        if(success) {
-           console.log(success);
-           navigation.navigate('HomeScreen')
-        } else if(msg) {
-          console.log(msg);
-          Alert.alert(msg)
-        } else if (token) {
-          console.log(token);
-          Alert.alert(token)
-          
-
-        }
-      // console.log({success,msg,token});
-      
-      // your code to handle token in browser and login redirection
+      console.log('Email is Correct')
+      return true
     }
   }
 
-  
+  const handleLogin = async () => {
+    if (email === '' || password === '') {
+      if (email === '') {
+        setEmailError('This field is required.')
+      }
+      if (password === '') {
+        setPasswordError('This field is required.')
+      }
+      setShowFieldError(true)
+    } else if (validate(email) && password.length >= 8) {
+      setIsSignInLoader(true)
+      console.log('email and passwrd', email, password)
+      const {data, error} = await LoginUser({
+        variables: {email, password},
+      })
+
+      console.log(data)
+      if (error) {
+        // your code to handle login error
+        console.log(error)
+        setIsSignInLoader(false)
+      } else {
+        const {token, success, msg, userData} = data.userLogin
+        // client.setHeader('Authorization', `Bearer ${token}`)
+        client.setHeader('token', `${token}`)
+        console.log(userData)
+        if (success) {
+          try {
+            AsyncStorage.setItem('userSession', JSON.stringify(userData))
+          } catch (err) {
+          } finally {
+            setIsSignInLoader(false)
+            navigation.navigate('HomeScreen')
+          }
+          //  navigation.navigate('HomeScreen')
+        } else if (msg) {
+          setIsSignInLoader(false)
+          console.log(msg)
+          // Alert.alert(msg)
+          setShowFieldError(true)
+          setSnackBarError(msg)
+          setSnackbarVisible(true)
+        } else if (token) {
+          setIsSignInLoader(false)
+          console.log(token)
+          // Alert.alert(token)
+        }
+        // console.log({success,msg,token});
+
+        // your code to handle token in browser and login redirection
+      }
+    } else {
+      setShowFieldError(true)
+      console.log('error')
+    }
+
+    //  console.log("email and passwrd",email, password)
+    // const { data, error } = await LoginUser({
+    //   variables: { email, password }
+    // })
+
+    // console.log(data);
+    // if (error) {
+    //   // your code to handle login error
+    //   console.log(error);
+    // } else {
+    //   const { token,success,msg,userData } = data.userLogin
+    //   client.setHeader('Authorization', `Bearer ${token}`)
+    //   console.log(userData);
+    //     if(success) {
+    //       try{
+    //         AsyncStorage.setItem("userSession", JSON.stringify(userData));
+    //       }catch(err){
+
+    //       }finally{
+    //         navigation.navigate('HomeScreen')
+    //       }
+    //       //  navigation.navigate('HomeScreen')
+    //     } else if(msg) {
+    //       console.log(msg);
+    //       // Alert.alert(msg)
+    //       setSnackBarError(msg)
+    //       setSnackbarVisible(true)
+    //     } else if (token) {
+    //       console.log(token);
+    //       Alert.alert(token)
+    //     }
+    //   // console.log({success,msg,token});
+
+    //   // your code to handle token in browser and login redirection
+    // }
+  }
+
   const SignIn = () => {
     if (email == '') {
       console.log('email is null')
@@ -184,7 +276,7 @@ export default function Login ({navigation}) {
         </View>
 
         <View>
-          <View style={{marginLeft: 30, marginTop: 25}}>
+          <View style={{marginLeft: 20, marginTop: 25}}>
             <Text
               style={{
                 color: 'black',
@@ -206,7 +298,20 @@ export default function Login ({navigation}) {
               borderBottomWidth: 0.7,
             }}>
             <TextInput
-              onChangeText={setEmail}
+              onChangeText={value => {
+                setEmail(value)
+                let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/
+                if (value === '') {
+                  setEmailError('This field is required')
+                } else if (reg.test(value) === false) {
+                  setEmailError('Please enter a valid email address')
+                  console.log('Email is Not Correct')
+                  return false
+                } else {
+                  setEmailError('')
+                  console.log('Email is Correct')
+                }
+              }}
               style={{
                 width: '100%',
                 height: '100%',
@@ -215,9 +320,13 @@ export default function Login ({navigation}) {
                 color: 'black',
                 fontSize: 15,
               }}
-              placeholder='Enter email or username'
+              placeholder='Enter email'
             />
           </View>
+
+          <Text style={{alignSelf: 'baseline', left: 23, color: 'red'}}>
+            {showFieldError && emailError}
+          </Text>
 
           <View
             style={{
@@ -226,36 +335,92 @@ export default function Login ({navigation}) {
               height: 45,
               borderBottomColor: 'grey',
               borderBottomWidth: 0.7,
-              marginTop: 40,
+              marginTop: 10,
+              flexDirection: 'row',
             }}>
             <TextInput
-              onChangeText={setPassword}
+              onChangeText={value => {
+                setPassword(value)
+                if (value === '') {
+                  setPasswordError('This field is required')
+                } else if (value.length < 8) {
+                  setPasswordError(
+                    'Please enter a value that contains at least 8 characters.',
+                  )
+                } else {
+                  setPasswordError('')
+                }
+              }}
               style={{
                 width: '100%',
                 height: '100%',
                 fontWeight: '700',
                 color: 'black',
                 fontSize: 15,
+                flex: 1,
               }}
+              secureTextEntry={showPassword}
               placeholder='Enter password'
             />
+            <IconButton
+              icon={showPassword ? 'eye' : 'eye-off'}
+              // iconColor={MD3Colors.error50}
+              size={20}
+              onPress={() => setShowPassword(!showPassword)}
+            />
           </View>
-        </View>
-
-        <View style={{alignItems: 'center', marginTop: 25}}>
-          <TouchableOpacity
-            onPress={() => handleLogin()}
+          <Text
             style={{
+              alignSelf: 'baseline',
+              left: 23,
+              color: 'red',
               width: '90%',
-              height: 45,
-              backgroundColor: '#C89D67',
-              borderRadius: 5,
-              alignItems: 'center',
-              justifyContent: 'center',
             }}>
-            <Text style={{color: '#fff', fontSize: 15, fontWeight: '600'}}>
-              Login now
-            </Text>
+            {showFieldError && passwordError}
+          </Text>
+          <Text
+            style={{
+              alignSelf: 'baseline',
+              left: 23,
+              color: 'red',
+              width: '90%',
+            }}>
+            {snackbarVisible && snackBarError}
+          </Text>
+        </View>
+        {/* <Snackbar
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        action={{
+          label: 'Dismiss',
+          onPress: () => { },
+        }}
+      >
+        {snackBarError}
+      </Snackbar> */}
+
+        <View style={{alignItems: 'center', marginTop: 15}}>
+          <TouchableOpacity
+            disabled={isSignInLoader}
+            onPress={() => handleLogin()}
+            style={[
+              {
+                width: '90%',
+                height: 45,
+                backgroundColor: '#C89D67',
+                borderRadius: 5,
+                alignItems: 'center',
+                justifyContent: 'center',
+              },
+              isSignInLoader && {opacity: 0.7},
+            ]}>
+            {isSignInLoader ? (
+              <ActivityIndicator size={'large'} color={'#fff'} />
+            ) : (
+              <Text style={{color: '#fff', fontSize: 15, fontWeight: '600'}}>
+                Login now
+              </Text>
+            )}
           </TouchableOpacity>
         </View>
 
@@ -350,6 +515,16 @@ export default function Login ({navigation}) {
 
         <View style={{height: 25}}></View>
       </ScrollView>
+      {/* <Snackbar
+        visible={snackbarVisible}
+        onDismiss={() => setSnackbarVisible(false)}
+        action={{
+          label: 'Dismiss',
+          onPress: () => { },
+        }}
+      >
+        {snackBarError}
+      </Snackbar> */}
     </View>
   )
 }

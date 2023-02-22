@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native'
-import React, {useState, useEffect} from 'react'
-const {height, width} = Dimensions.get('window')
+import React, { useState, useEffect,useContext } from 'react'
+const { height, width } = Dimensions.get('window')
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 import firebase from '@react-native-firebase/app'
@@ -17,23 +17,56 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import {ClientContext, useMutation} from 'graphql-hooks'
 
-export default function DrawerContent ({navigation}) {
+export default function DrawerContent({ navigation }) {
+  const client = useContext(ClientContext)
   const [firstname, setFirstName] = useState()
-  const [lastname, setLastName] = useState()
+  const [userData, setUserData] = useState()
+  const [userImage, setUserImage] = useState()
+
   const user = firebase.auth().currentUser
 
   const signOut = async () => {
-    try {
-      await GoogleSignin.signOut()
-      navigation.navigate('Signup')
-      console.log('User signed out successfully')
-    } catch (error) {
-      console.error(error)
+    if(user){
+      try {
+        await GoogleSignin.signOut()
+        await firebase.auth().signOut();
+        navigation.navigate('Login')
+        console.log('User signed out successfully: Firebase')
+      } catch (error) {
+        console.error(error)
+      }
+    }else{
+      try{
+       await AsyncStorage.removeItem("userSession")
+       navigation.navigate('Login')
+       console.log('User signed out successfully: API')
+      }catch(err){
+        console.log(err);
+      }
     }
+
+   
   }
 
+  //   const signOut = async () => {
+  //     try {
+  //         await firebase.auth().signOut();
+  //         navigation.navigate('Signup')
+  //     } catch (e) {
+  //         console.log(e);
+  //     }
+  // }
+
   useEffect(() => {
+    AsyncStorage.getItem('userSession', (err, result) => {
+       const sesData = JSON.parse(result);
+       setUserData(sesData)
+      setUserImage(`https://hive-dash.credot.dev/${sesData?.profileImg}`)
+      // console.log("---------------------------",`https://hive-dash.credot.dev/${sesData.profileImg}`);
+    })
     // console.log("---",user);
     // firestore().collection(user.email).get().then(querySnapshot => {
     //   console.log('Total users: ', querySnapshot.size);
@@ -45,7 +78,7 @@ export default function DrawerContent ({navigation}) {
     //     setLastName(Data.Lastname)
     //   });
     // });
-  },[])
+  }, [])
   return (
     <View style={styles.container}>
       <View>
@@ -78,11 +111,11 @@ export default function DrawerContent ({navigation}) {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <Image style={{width:'100%' , height:'100%' , borderRadius:100}} source={{uri : user && user.photoURL ? user.photoURL : "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80" }}/>
+                <Image style={{ width: '100%', height: '100%', borderRadius: 100 }} source={{ uri: firebase.auth().currentUser? firebase.auth().currentUser.photoURL : userImage }} />
               </View>
             </View>
 
-            <View style={{width: 190, height: 123, marginTop: 20}}>
+            <View style={{ width: 190, height: 123, marginTop: 20 }}>
               <TouchableOpacity onPress={() => navigation.navigate('AccountScreen')}>
                 <Text
                   style={{
@@ -91,7 +124,9 @@ export default function DrawerContent ({navigation}) {
                     marginLeft: 14,
                     fontSize: 18,
                     fontWeight: 'bold',
-                  }}>{user && user.displayName}</Text>
+                  }}>
+                    {firebase.auth().currentUser? firebase.auth().currentUser.displayName : userData?.fullName}
+                    </Text>
 
                 {/* // <Text style={{marginTop:15 , color:'black' , marginLeft:14 , fontSize:18 , fontWeight:'bold'}}>{user.displayName}</Text>  */}
               </TouchableOpacity>
@@ -110,84 +145,84 @@ export default function DrawerContent ({navigation}) {
           </View>
 
           <View>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('Dashboard')}
-                style={{marginLeft: 23, marginTop: 15, flexDirection: 'row'}}>
+                style={{ marginLeft: 23, marginTop: 15, flexDirection: 'row' }}>
                 <Image
-                  style={{width: 16, height: 20, marginTop: 3}}
+                  style={{ width: 16, height: 20, marginTop: 3 }}
                   source={require('../../assets/Badge.png')}
                 />
-                <Text style={{marginLeft: 30, color: 'black', fontSize: 16}}>
+                <Text style={{ marginLeft: 30, color: 'black', fontSize: 16 }}>
                   Dashboard
                 </Text>
               </TouchableOpacity>
             </View>
 
-            <View style={{flexDirection: 'row', marginTop: 10}}>
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
               <TouchableOpacity
-                style={{marginLeft: 20, marginTop: 15, flexDirection: 'row'}}>
+                style={{ marginLeft: 20, marginTop: 15, flexDirection: 'row' }}>
                 <Image
-                  style={{width: 18, height: 19, marginTop: 3}}
+                  style={{ width: 18, height: 19, marginTop: 3 }}
                   source={require('../../assets/Cube.png')}
                 />
-                <Text style={{marginLeft: 30, color: 'black', fontSize: 16}}>
+                <Text style={{ marginLeft: 30, color: 'black', fontSize: 16 }}>
                   My Proposals
                 </Text>
               </TouchableOpacity>
             </View>
 
-            <View style={{flexDirection: 'row', marginTop: 10, marginLeft: 2}}>
+            <View style={{ flexDirection: 'row', marginTop: 10, marginLeft: 2 }}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('Payout')}
-                style={{marginLeft: 20, marginTop: 15, flexDirection: 'row'}}>
+                style={{ marginLeft: 20, marginTop: 15, flexDirection: 'row' }}>
                 <Image
-                  style={{width: 16, height: 20, marginTop: 3}}
+                  style={{ width: 16, height: 20, marginTop: 3 }}
                   source={require('../../assets/Pay.png')}
                 />
-                <Text style={{marginLeft: 30, color: 'black', fontSize: 16}}>
+                <Text style={{ marginLeft: 30, color: 'black', fontSize: 16 }}>
                   Payouts
                 </Text>
               </TouchableOpacity>
             </View>
 
-            <View style={{flexDirection: 'row', marginTop: 10}}>
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('ManageT')}
-                style={{marginLeft: 20, marginTop: 15, flexDirection: 'row'}}>
+                style={{ marginLeft: 20, marginTop: 15, flexDirection: 'row' }}>
                 <Image
-                  style={{width: 21, height: 19, marginTop: 3}}
+                  style={{ width: 21, height: 19, marginTop: 3 }}
                   source={require('../../assets/Bag1.png')}
                 />
-                <Text style={{marginLeft: 24, color: 'black', fontSize: 16}}>
+                <Text style={{ marginLeft: 24, color: 'black', fontSize: 16 }}>
                   Manage Tasks
                 </Text>
               </TouchableOpacity>
             </View>
 
-            <View style={{flexDirection: 'row', marginTop: 10}}>
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
               <TouchableOpacity
-                style={{marginLeft: 20, marginTop: 15, flexDirection: 'row'}}>
+                style={{ marginLeft: 20, marginTop: 15, flexDirection: 'row' }}>
                 <Image
-                  style={{width: 21, height: 19, marginTop: 3}}
+                  style={{ width: 21, height: 19, marginTop: 3 }}
                   source={require('../../assets/Bag1.png')}
                 />
-                <Text style={{marginLeft: 24, color: 'black', fontSize: 16}}>
+                <Text style={{ marginLeft: 24, color: 'black', fontSize: 16 }}>
                   Manage projects
                 </Text>
               </TouchableOpacity>
             </View>
 
-            <View style={{flexDirection: 'row', marginTop: 10}}>
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('Users')}
-                style={{marginLeft: 20, marginTop: 15, flexDirection: 'row'}}>
+                style={{ marginLeft: 20, marginTop: 15, flexDirection: 'row' }}>
                 <Image
-                  style={{width: 21, height: 20, marginTop: 3}}
+                  style={{ width: 21, height: 20, marginTop: 3 }}
                   source={require('../../assets/Settings.png')}
                 />
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={{marginLeft: 25, color: 'black', fontSize: 16}}>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={{ marginLeft: 25, color: 'black', fontSize: 16 }}>
                     Settings
                   </Text>
                   <Image
@@ -210,7 +245,7 @@ export default function DrawerContent ({navigation}) {
                 backgroundColor: '#DDDDDD',
                 marginTop: 20,
               }}>
-              <View style={{flexDirection: 'row', marginTop: 0}}>
+              <View style={{ flexDirection: 'row', marginTop: 0 }}>
                 <View
                   style={{
                     width: 12,
@@ -245,7 +280,7 @@ export default function DrawerContent ({navigation}) {
                   marginTop: 5,
                 }}></View>
 
-              <View style={{flexDirection: 'row', marginTop: 0}}>
+              <View style={{ flexDirection: 'row', marginTop: 0 }}>
                 <View
                   style={{
                     width: 12,
@@ -279,7 +314,7 @@ export default function DrawerContent ({navigation}) {
                   marginTop: 5,
                 }}></View>
 
-              <View style={{flexDirection: 'row', marginTop: 0}}>
+              <View style={{ flexDirection: 'row', marginTop: 0 }}>
                 <View
                   style={{
                     width: 12,
@@ -312,7 +347,7 @@ export default function DrawerContent ({navigation}) {
                   marginTop: 5,
                 }}></View>
 
-              <View style={{flexDirection: 'row', marginTop: 0}}>
+              <View style={{ flexDirection: 'row', marginTop: 0 }}>
                 <View
                   style={{
                     width: 12,
@@ -340,12 +375,12 @@ export default function DrawerContent ({navigation}) {
               </View>
             </View>
 
-            <View style={{flexDirection: 'row', marginTop: 10}}>
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('InvoiceScreen')}
-                style={{marginLeft: 20, marginTop: 10, flexDirection: 'row'}}>
+                style={{ marginLeft: 20, marginTop: 10, flexDirection: 'row' }}>
                 <Image
-                  style={{width: 21, height: 23, marginTop: 2}}
+                  style={{ width: 21, height: 23, marginTop: 2 }}
                   source={require('../../assets/Invoice.png')}
                 />
                 <Text
@@ -360,26 +395,26 @@ export default function DrawerContent ({navigation}) {
               </TouchableOpacity>
             </View>
 
-            <View style={{flexDirection: 'row', marginTop: 10}}>
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('MySavedScreen')}
-                style={{marginLeft: 20, marginTop: 15, flexDirection: 'row'}}>
+                style={{ marginLeft: 20, marginTop: 15, flexDirection: 'row' }}>
                 <Image
-                  style={{width: 23, height: 20, marginTop: 2}}
+                  style={{ width: 23, height: 20, marginTop: 2 }}
                   source={require('../../assets/Lover.png')}
                 />
-                <Text style={{marginLeft: 18, color: 'black', fontSize: 16}}>
+                <Text style={{ marginLeft: 18, color: 'black', fontSize: 16 }}>
                   Saved items
                 </Text>
               </TouchableOpacity>
             </View>
 
-            <View style={{flexDirection: 'row', marginTop: 10}}>
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
               <TouchableOpacity
                 onPress={signOut}
-                style={{marginLeft: 20, marginTop: 15, flexDirection: 'row'}}>
+                style={{ marginLeft: 20, marginTop: 15, flexDirection: 'row' }}>
                 <Image
-                  style={{width: 22, height: 24, marginTop: 2}}
+                  style={{ width: 22, height: 24, marginTop: 2 }}
                   source={require('../../assets/Logout.png')}
                 />
                 <Text
@@ -394,7 +429,7 @@ export default function DrawerContent ({navigation}) {
               </TouchableOpacity>
             </View>
 
-            <View style={{height: 30}}></View>
+            <View style={{ height: 30 }}></View>
           </View>
         </ScrollView>
       </View>

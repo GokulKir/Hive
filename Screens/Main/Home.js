@@ -23,7 +23,9 @@ import {
 import {useManualQuery, useQuery,ClientContext} from 'graphql-hooks'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import SkeletonLoaderFreelancersList from '../../Components/SkeletonLoaderFreelancersList'
-const {height, width} = Dimensions.get('window')
+import AsyncStorage from '@react-native-async-storage/async-storage'
+const { height, width } = Dimensions.get('window')
+
 
 //Freelance api graph Ql//
 
@@ -56,8 +58,8 @@ query Freelancers {
 
 //Freelance api graph Ql//
 
-export default function Home ({navigation, props}) {
-  const {loading, error, data} = useQuery(FREELANCE_LISTING)
+export default function Home({ navigation, props }) {
+  const { loading, error, data } = useQuery(FREELANCE_LISTING)
 
   // console.log('++++++++++', data)
 
@@ -73,6 +75,7 @@ export default function Home ({navigation, props}) {
 
 
   useEffect(() => {
+    // AsyncStorage.removeItem('userSession')
     // freeLancerList({variables: {}}).then(response => {
     //   console.log('frelncer list response', response)
     //   setData1(response)
@@ -101,7 +104,7 @@ export default function Home ({navigation, props}) {
       <View>
         <ScrollView>
           <View
-            style={{width: '100%', height: 407, backgroundColor: '#1D1D1B'}}>
+            style={{ width: '100%', height: 407, backgroundColor: '#1D1D1B' }}>
             <View>
               <Text
                 style={{
@@ -124,7 +127,7 @@ export default function Home ({navigation, props}) {
               </Text>
             </View>
 
-            <View style={{alignItems: 'center', marginTop: 30}}>
+            <View style={{ alignItems: 'center', marginTop: 30 }}>
               <View
                 style={{
                   width: '90%',
@@ -134,7 +137,7 @@ export default function Home ({navigation, props}) {
                   flexDirection: 'row',
                 }}>
                 <Image
-                  style={{width: 19, height: 20, marginTop: 10, marginLeft: 10}}
+                  style={{ width: 19, height: 20, marginTop: 10, marginLeft: 10 }}
                   source={require('../../assets/SER.png')}
                 />
                 <TextInput
@@ -152,7 +155,7 @@ export default function Home ({navigation, props}) {
               </View>
             </View>
 
-            <View style={{alignItems: 'center', marginTop: 50}}>
+            <View style={{ alignItems: 'center', marginTop: 50 }}>
               <View
                 style={{
                   width: '90%',
@@ -162,7 +165,7 @@ export default function Home ({navigation, props}) {
                   flexDirection: 'row',
                 }}>
                 <Image
-                  style={{width: 23, height: 19, marginTop: 12, marginLeft: 10}}
+                  style={{ width: 23, height: 19, marginTop: 12, marginLeft: 10 }}
                   source={require('../../assets/Users.png')}
                 />
 
@@ -176,7 +179,7 @@ export default function Home ({navigation, props}) {
                   }}>
                   Talent
                 </Text>
-                <TouchableOpacity style={{width: 10, height: 16}}>
+                <TouchableOpacity style={{ width: 10, height: 16 }}>
                   <Image
                     style={{
                       width: 10,
@@ -190,7 +193,7 @@ export default function Home ({navigation, props}) {
               </View>
             </View>
 
-            <View style={{alignItems: 'center', marginTop: 50}}>
+            <View style={{ alignItems: 'center', marginTop: 50 }}>
               <TouchableOpacity
                 style={{
                   width: '90%',
@@ -200,24 +203,24 @@ export default function Home ({navigation, props}) {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <Text style={{color: '#fff', fontWeight: 'bold', fontSize: 17}}>
+                <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 17 }}>
                   Search now
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
 
-          <View style={{marginTop: 0}}>
-            <View style={{flexDirection: 'row'}}>
+          <View style={{ marginTop: 0 }}>
+            <View style={{ flexDirection: 'row' }}>
               <View
-                style={{marginTop: 20, marginLeft: 20, flexDirection: 'row'}}>
+                style={{ marginTop: 20, marginLeft: 20, flexDirection: 'row' }}>
                 <Text
-                  style={{fontSize: 20, color: 'black', fontWeight: 'bold'}}>
+                  style={{ fontSize: 20, color: 'black', fontWeight: 'bold' }}>
                   Explore categories
                 </Text>
               </View>
 
-              <TouchableOpacity style={{marginLeft: 10, marginTop: 21}}>
+              <TouchableOpacity style={{ marginLeft: 10, marginTop: 21 }}>
                 <Text
                   style={{
                     fontSize: 14,
@@ -230,119 +233,119 @@ export default function Home ({navigation, props}) {
                 </Text>
               </TouchableOpacity>
             </View>
+            <ScrollView
+              horizontal={true}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}>
+              <View
+                style={{
+                  width: 123,
+                  height: 95,
+                  marginTop: 30,
+                  marginLeft: width * 0.06,
+                  flexDirection: 'row',
+                }}>
+                <TouchableOpacity style={{ alignItems: 'center' }}>
+                  <View
+                    style={{
+                      width: 65,
+                      height: 65,
+                      backgroundColor: '#DDDDDD',
+                      borderRadius: 5,
+                    }}></View>
+                  <View style={{ marginTop: 8, alignItems: 'center' }}>
+                    <Text style={{ color: 'black', fontSize: width * 0.035 }}>
+                      Development
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
 
-            <View style={{height: '82%', marginTop: 20}}>
-              <ScrollView
-                horizontal={true}
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}>
+              <TouchableOpacity
+                style={{
+                  alignItems: 'center',
+                  marginTop: 30,
+                  marginLeft: width * 0.01,
+                  marginRight: 20,
+                }}>
                 <View
                   style={{
-                    width: 123,
-                    height: 95,
-                    marginTop: 30,
-                    marginLeft: width * 0.06,
-                    flexDirection: 'row',
-                  }}>
-                  <TouchableOpacity style={{alignItems: 'center'}}>
-                    <View
-                      style={{
-                        width: 65,
-                        height: 65,
-                        backgroundColor: '#DDDDDD',
-                        borderRadius: 5,
-                      }}></View>
-                    <View style={{marginTop: 8, alignItems: 'center'}}>
-                      <Text style={{color: 'black', fontSize: width * 0.035}}>
-                        Development
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
+                    width: 65,
+                    height: 65,
+                    backgroundColor: '#DDDDDD',
+                    borderRadius: 5,
+                  }}></View>
+                <View style={{ marginTop: 8, alignItems: 'center' }}>
+                  <Text style={{ color: 'black', fontSize: width * 0.035 }}>
+                    Designing
+                  </Text>
                 </View>
+              </TouchableOpacity>
 
-                <TouchableOpacity
+              <TouchableOpacity
+                style={{
+                  alignItems: 'center',
+                  marginTop: 30,
+                  marginLeft: width * 0.09,
+                }}>
+                <View
                   style={{
-                    alignItems: 'center',
-                    marginTop: 30,
-                    marginLeft: width * 0.01,
-                    marginRight: 20,
-                  }}>
-                  <View
-                    style={{
-                      width: 65,
-                      height: 65,
-                      backgroundColor: '#DDDDDD',
-                      borderRadius: 5,
-                    }}></View>
-                  <View style={{marginTop: 8, alignItems: 'center'}}>
-                    <Text style={{color: 'black', fontSize: width * 0.035}}>
-                      Designing
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                    width: 65,
+                    height: 65,
+                    backgroundColor: '#DDDDDD',
+                    borderRadius: 5,
+                  }}></View>
+                <View style={{ marginTop: 8, alignItems: 'center' }}>
+                  <Text style={{ color: 'black', fontSize: width * 0.035 }}>
+                    Marketing
+                  </Text>
+                </View>
+              </TouchableOpacity>
 
-                <TouchableOpacity
+              <TouchableOpacity
+                style={{
+                  alignItems: 'center',
+                  marginTop: 30,
+                  marginLeft: width * 0.11,
+                }}>
+                <View
                   style={{
-                    alignItems: 'center',
-                    marginTop: 30,
-                    marginLeft: width * 0.09,
-                  }}>
-                  <View
-                    style={{
-                      width: 65,
-                      height: 65,
-                      backgroundColor: '#DDDDDD',
-                      borderRadius: 5,
-                    }}></View>
-                  <View style={{marginTop: 8, alignItems: 'center'}}>
-                    <Text style={{color: 'black', fontSize: width * 0.035}}>
-                      Marketing
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                    width: 65,
+                    height: 65,
+                    backgroundColor: '#DDDDDD',
+                    borderRadius: 5,
+                  }}></View>
+                <View style={{ marginTop: 8, alignItems: 'center' }}>
+                  <Text style={{ color: 'black', fontSize: width * 0.035 }}>
+                    Music & Audio
+                  </Text>
+                </View>
+              </TouchableOpacity>
 
-                <TouchableOpacity
+              <TouchableOpacity
+                style={{
+                  alignItems: 'center',
+                  marginTop: 30,
+                  marginLeft: width * 0.05,
+                }}>
+                <View
                   style={{
-                    alignItems: 'center',
-                    marginTop: 30,
-                    marginLeft: width * 0.11,
-                  }}>
-                  <View
-                    style={{
-                      width: 65,
-                      height: 65,
-                      backgroundColor: '#DDDDDD',
-                      borderRadius: 5,
-                    }}></View>
-                  <View style={{marginTop: 8, alignItems: 'center'}}>
-                    <Text style={{color: 'black', fontSize: width * 0.035}}>
-                      Music & Audio
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                    width: 65,
+                    height: 65,
+                    backgroundColor: '#DDDDDD',
+                    borderRadius: 5,
+                  }}></View>
+                <View style={{ marginTop: 8, alignItems: 'center' }}>
+                  <Text style={{ color: 'black', fontSize: width * 0.035 }}>
+                    House Cleaning
+                  </Text>
+                </View>
+              </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={{
-                    alignItems: 'center',
-                    marginTop: 30,
-                    marginLeft: width * 0.07,
-                  }}>
-                  <View
-                    style={{
-                      width: 65,
-                      height: 65,
-                      backgroundColor: '#DDDDDD',
-                      borderRadius: 5,
-                    }}></View>
-                  <View style={{marginTop: 8, alignItems: 'center'}}>
-                    <Text style={{color: 'black', fontSize: width * 0.035}}>
-                      House Cleaning
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+            </ScrollView>
 
-                <View style={{width: 10}}></View>
-              </ScrollView>
+            <View style={{ marginTop: 0 }}>
+
 
               <View
                 style={{
@@ -351,7 +354,7 @@ export default function Home ({navigation, props}) {
                   marginTop: 20,
                 }}></View>
 
-              <View style={{marginLeft: 20, marginTop: 30}}>
+              <View style={{ marginLeft: 20, marginTop: 30 }}>
                 <Text
                   style={{
                     fontSize: width * 0.056,
@@ -366,9 +369,9 @@ export default function Home ({navigation, props}) {
 
               {Datas?.freelancerList?.freelancers.map((obj, i) => {
                 return (
-                  <TouchableOpacity 
+                  <TouchableOpacity
                     key={i}
-                    style={{flexDirection: 'row', marginTop: hp('1%')}}>
+                    style={{ flexDirection: 'row', marginTop: hp('1%') }}>
                     <View
                       style={{
                         width: '100%',
@@ -386,12 +389,12 @@ export default function Home ({navigation, props}) {
                         }}>
                         {obj.isActivated ? (
                           <Image
-                            style={{width: 17, height: 17}}
+                            style={{ width: 17, height: 17 }}
                             source={require('../../assets/Dot.png')}
                           />
                         ) : (
                           <Image
-                            style={{width: 17, height: 17}}
+                            style={{ width: 17, height: 17 }}
                             source={require('../../assets/Dot1.png')}
                           />
                         )}
@@ -404,10 +407,10 @@ export default function Home ({navigation, props}) {
                           width: 122,
                           height: 58,
                         }}>
-                        <Text style={{fontSize: width * 0.042, color: 'black'}}>
+                        <Text style={{ fontSize: width * 0.042, color: 'black' }}>
                           {obj.username}
                         </Text>
-                        <View style={{flexDirection: 'row'}}>
+                        <View style={{ flexDirection: 'row' }}>
                           <Image
                             style={{
                               marginTop: 7,
@@ -436,8 +439,8 @@ export default function Home ({navigation, props}) {
                         </View>
                       </View>
 
-                      <View style={{marginLeft: wp('15%'), marginTop: 8}}>
-                        <Text style={{color: 'grey'}}>Starting from</Text>
+                      <View style={{ marginLeft: wp('15%'), marginTop: 8 }}>
+                        <Text style={{ color: 'grey' }}>Starting from</Text>
                         <Text
                           style={{
                             color: 'black',
@@ -453,7 +456,7 @@ export default function Home ({navigation, props}) {
                 )
               })}
 
-              <View style={{alignItems: 'center', marginTop: 10}}>
+              <View style={{ alignItems: 'center', marginTop: 10 }}>
                 <TouchableOpacity
                   onPress={() => navigation.navigate('Users')}
                   style={{
@@ -465,11 +468,11 @@ export default function Home ({navigation, props}) {
                     flexDirection: 'row',
                   }}>
                   <Text
-                    style={{color: '#C89D67', fontSize: 16, marginLeft: 10}}>
+                    style={{ color: '#C89D67', fontSize: 16, marginLeft: 10 }}>
                     Explore all freelancers
                   </Text>
                   <Image
-                    style={{width: 15, height: 15, marginLeft: 15}}
+                    style={{ width: 15, height: 15, marginLeft: 15 }}
                     source={require('../../assets/AB.png')}
                   />
                 </TouchableOpacity>
@@ -488,26 +491,26 @@ export default function Home ({navigation, props}) {
               </View>
 
               <View>
-                
-                  <View style={{flexDirection: 'row'}}>
-               
-                  <ServiesHome/>
 
-                    <View
-                      style={{
-                        width: 204,
-                        height: 276,
-                        backgroundColor: '#fff',
-                        marginTop: 30,
-                        marginLeft: 25,
-                      }}>
-                      <View style={{alignItems: 'center', marginTop: 10}}>
+                <View style={{ flexDirection: 'row' }}>
 
-                      </View>
+                  <ServiesHome />
+
+                  <View
+                    style={{
+                      width: 204,
+                      height: 276,
+                      backgroundColor: '#fff',
+                      marginTop: 30,
+                      marginLeft: 25,
+                    }}>
+                    <View style={{ alignItems: 'center', marginTop: 10 }}>
+
                     </View>
                   </View>
-              
-                <View style={{alignItems: 'center', marginTop: 30}}>
+                </View>
+
+                <View style={{ alignItems: 'center', marginTop: 30 }}>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('FreelancersScreen')}
                     style={{
@@ -519,11 +522,11 @@ export default function Home ({navigation, props}) {
                       flexDirection: 'row',
                     }}>
                     <Text
-                      style={{color: '#C89D67', fontSize: 16, marginLeft: 10}}>
+                      style={{ color: '#C89D67', fontSize: 16, marginLeft: 10 }}>
                       Explore all Tasks
                     </Text>
                     <Image
-                      style={{width: 15, height: 15, marginLeft: 15}}
+                      style={{ width: 15, height: 15, marginLeft: 15 }}
                       source={require('../../assets/AB.png')}
                     />
                   </TouchableOpacity>
