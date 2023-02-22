@@ -9,6 +9,7 @@ import {
   TextInput,
   Dimensions,
   Alert,
+  ImageBackground
 } from 'react-native'
 import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react'
 import LoginB from '.././UserLogin/LoginB'
@@ -58,7 +59,7 @@ query Freelancers {
 
 //Freelance api graph Ql//
 
-export default function Home({ navigation, props }) {
+export default function Home(props) {
   const { loading, error, data } = useQuery(FREELANCE_LISTING)
 
   // console.log('++++++++++', data)
@@ -375,7 +376,8 @@ export default function Home({ navigation, props }) {
                         marginTop: 10,
                         flexDirection: 'row',
                       }}>
-                      <View
+                     
+                     <View
                         style={{
                           width: 56,
                           height: 56,
@@ -383,17 +385,19 @@ export default function Home({ navigation, props }) {
                           borderRadius: 100,
                           marginLeft: 20,
                         }}>
-                        {obj.isActivated ? (
-                          <Image
-                            style={{ width: 17, height: 17 }}
-                            source={require('../../assets/Dot.png')}
-                          />
-                        ) : (
-                          <Image
-                            style={{ width: 17, height: 17 }}
-                            source={require('../../assets/Dot1.png')}
-                          />
-                        )}
+                        <ImageBackground style={{ width: '100%', height: '100%', }} imageStyle={{ borderRadius: 100 }} source={{ uri: `https://hive-dash.credot.dev/${obj.profileImg}` }} >
+                          {obj.isActivated ?
+                            <Image
+                              style={{ width: 17, height: 17 }}
+                              source={require('../../assets/Dot.png')}
+                            /> :
+                            <Image
+                              style={{ width: 17, height: 17 }}
+                              source={require('../../assets/Dot1.png')}
+                            />
+
+                          }
+                        </ImageBackground>
                       </View>
 
                       <View
@@ -454,7 +458,7 @@ export default function Home({ navigation, props }) {
 
               <View style={{ alignItems: 'center', marginTop: 10 }}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Users')}
+                  onPress={() => props.navigation.navigate('Users')}
                   style={{
                     width: '90%',
                     height: 45,
@@ -490,7 +494,7 @@ export default function Home({ navigation, props }) {
 
                 <View style={{ flexDirection: 'row' }}>
 
-                  <ServiesHome />
+                  <ServiesHome  navigation={props.navigation}/>
 
                   <View
                     style={{
@@ -508,7 +512,7 @@ export default function Home({ navigation, props }) {
 
                 <View style={{ alignItems: 'center', marginTop: 30 }}>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('FreelancersScreen')}
+                    onPress={() => props.navigation.navigate('FreelancersScreen')}
                     style={{
                       width: '90%',
                       height: 45,

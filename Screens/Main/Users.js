@@ -155,8 +155,8 @@ export default function UseFree ({navigation}) {
         <FlatList
           data={Datas?.freelancerList?.freelancers}
           keyExtractor={item => item._id}
-          refreshing={true}
-          onRefresh={onRefres}
+          // refreshing={true}
+          // onRefresh={onRefres}
           renderItem={({item}) => {
             return (
               <TouchableOpacity
@@ -180,7 +180,7 @@ export default function UseFree ({navigation}) {
                     <ImageBackground
                       style={{width: '100%', height: '100%'}}
                       imageStyle={{borderRadius: 100}}
-                      source={{uri: item.profileImg}}>
+                      source={{uri: `https://hive-dash.credot.dev/${item.profileImg}`}}>
                       {item.isActivated ? (
                         <Image
                           style={{width: 17, height: 17}}
