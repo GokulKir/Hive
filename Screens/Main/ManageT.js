@@ -160,7 +160,7 @@ export default function MangeTasks ({navigation}) {
           </View>
         </View>
 
-        {data ? <All_Tasks_Skelton/>  :
+        {/* {data ? <All_Tasks_Skelton/>  : */}
   
 
   
@@ -299,7 +299,7 @@ export default function MangeTasks ({navigation}) {
         )
       }}
 />
-}
+{/* } */}
         
 
 {/* <View
