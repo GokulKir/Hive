@@ -160,9 +160,7 @@ export default function MangeTasks ({navigation}) {
           </View>
         </View>
 
-        {data ? <All_Tasks_Skelton/>  :
-  
-
+        {loading ? <All_Tasks_Skelton/>  :
   
 
     <FlatList
@@ -172,9 +170,8 @@ export default function MangeTasks ({navigation}) {
       renderItem={({item})=>{
         return (
     
-
-
-          
+      
+      
           <View style={{alignItems: 'center', marginTop: 25}}>
 
            <View style={{width:wp('90%') , height:hp('35%') , backgroundColor:'#fff' , borderRadius:10}}>
