@@ -33,3 +33,17 @@ query ServiceList($category: String) {
   }
 }
 `
+export const  CATEGORY_LIST = `
+query CategoryFlatList($limit: Int) {
+  categoryList(limit: $limit) {
+    success
+    msg
+    totalPages
+    totalCount
+    categories {
+      name
+      icon
+    }
+  }
+}
+`
