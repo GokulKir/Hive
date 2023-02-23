@@ -72,10 +72,6 @@ export default function UseFree ({navigation}) {
 
   //callbacks
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index)
-  }, [])
-
   useEffect(() => {
     // freeLancerList({variables: {}}).then(response => {
     //   console.log('frelncer list response', response)
@@ -155,18 +151,18 @@ export default function UseFree ({navigation}) {
         <FlatList
           data={Datas?.freelancerList?.freelancers}
           keyExtractor={item => item._id}
+          style={{marginBottom:50}}
           // refreshing={true}
           // onRefresh={onRefres}
           renderItem={({item}) => {
             return (
               <TouchableOpacity
                 onPress={() => navigation.navigate('AccountScreen')}
-                style={{flexDirection: 'row'}}>
+                style={{flexDirection: 'row',marginTop:10}}>
                 <View
                   style={{
                     width: '100%',
                     height: 80,
-                    marginTop: 20,
                     flexDirection: 'row',
                   }}>
                   <View

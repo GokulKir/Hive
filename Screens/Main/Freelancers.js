@@ -371,7 +371,6 @@ export default function Freelancers(props) {
                   style={{
                     width: wp('45%'),
                     height: hp('40%'),
-
                     marginTop: 10,
                     marginLeft: wp('3%'),
                   }}>
