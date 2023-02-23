@@ -98,7 +98,7 @@ export default function Login ({navigation}) {
         setIsSignInLoader(false)
       } else {
         const {token, success, msg, userData} = data.userLogin
-        // client.setHeader('Authorization', `Bearer ${token}`)
+        client.setHeader('Authorization', `Bearer ${token}`)
         client.setHeader('token', `${token}`)
         console.log(userData)
         if (success) {

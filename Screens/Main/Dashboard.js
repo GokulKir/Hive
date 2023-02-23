@@ -61,6 +61,7 @@ export default function Dashboard({ navigation }) {
 
 
   const ImageSelector = async () => {
+      
     launchCamera({}, (response) => {
       console.log(response?.assets?.[0]?.uri);
       if (response.didCancel) {
@@ -68,11 +69,18 @@ export default function Dashboard({ navigation }) {
       } else if (response.error) {
         console.log('Camera Error: ', response.error);
       } else {
-        console.log(response);
-        setSelectedImage(response?.assets?.[0]?.uri)
-        user.updateProfile({ photoURL: selectedImage });
 
+        console.log("_____________________-",response);
+        //   if(user) {
+        // setSelectedImage(response?.assets?.[0]?.uri)
+        // user.updateProfile({ photoURL: response?.assets?.[0]?.uri });
+      
 
+        //   }else {
+
+        //     updateProfile({ variables: {  profileImg: response?.assets?.[0]?.uri } })
+
+        //   }
       }
 
 
@@ -83,17 +91,19 @@ export default function Dashboard({ navigation }) {
 
   }
 
-  const ImageLibrary = () => {
+  const ImageLibrary = async () => {
     launchImageLibrary({}, (response) => {
-      console.log(response?.assets?.[0]?.uri);
+      // console.log(response?.assets?.[0]?.uri);
       if (response.didCancel) {
         console.log('User cancelled image library');
       } else if (response.error) {
         console.log('ImageLibrary Error: ', response.error);
       } else {
-        console.log(response);
+        // console.log(response);
         setSelectedImage(response?.assets?.[0]?.uri)
-        user.updateProfile({ photoURL: selectedImage });
+         updateProfile({ variables: {  profileImg: response?.assets?.[0]?.uri } })
+
+        // console.log("______________________________",res);
       }
     });
 
@@ -139,7 +149,7 @@ export default function Dashboard({ navigation }) {
                     borderRadius: 100,
                   }}>
 
-                  {firebase.auth().currentUser ?
+                  {/* {firebase.auth().currentUser ? */}
                     <ImageBackground source={{ uri: user ? user.photoURL : selectedImage }}
                       style={{ height: '100%', width: '100%', borderRadius: 100 }} imageStyle={{ borderRadius: 100 }}>
                       <Image
@@ -147,7 +157,7 @@ export default function Dashboard({ navigation }) {
                         source={require('../../assets/Dot.png')}
                       />
                     </ImageBackground>
-                    : null}
+                    {/* : null} */}
                 </View>
 
                 <View
