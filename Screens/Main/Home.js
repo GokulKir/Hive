@@ -321,6 +321,9 @@ export default function Home(props) {
               {Datas?.freelancerList?.freelancers.map((obj, i) => {
                 return (
                   <TouchableOpacity
+                  onPress={()=>{
+                    props.navigation.navigate('AccountScreen',{freelancerId:obj._id})
+                  }}
                     key={i}
                     style={{ flexDirection: 'row', marginTop: hp('1%') }}>
                     <View
@@ -464,7 +467,7 @@ export default function Home(props) {
                   </View>
                 </View>
 
-                <View style={{ alignItems: 'center', marginTop: 30 }}>
+                <View style={{ alignItems: 'center', marginTop: 30,bottom:20 }}>
                   <TouchableOpacity
                     onPress={() => props.navigation.navigate('FreelancersScreen')}
                     style={{

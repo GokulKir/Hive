@@ -83,9 +83,10 @@ const ServiesHome = ({navigation}) => {
         horizontal={true}
         data={CategoryData}
         keyExtractor={item => item._id}
+        showsHorizontalScrollIndicator={false}
         renderItem={({item}) => {
           return (
-            <TouchableOpacity onPress={()=> navigation.navigate('TaskD')} style={{marginLeft: wp('5%'),top:20,right:10}}>
+            <TouchableOpacity onPress={()=> navigation.navigate('TaskD')} style={{marginLeft: wp('8%'),top:20,right:10}}>
               <ImageBackground
                       // style={{
                       //   height: 126,
