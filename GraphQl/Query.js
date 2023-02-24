@@ -92,6 +92,46 @@ query GetFreelancerDetails($getFreelancerDetailsId: ID) {
         major
       }
       jobSuccess
+      awards {
+        title
+        startYear
+        endYear
+        description
+        issuer
+      }
+      experience {
+        company
+        role
+        startYear
+        endYear
+        description
+      }
+    }
+  }
+}
+`
+export const  SERVICE_DETAILS = `
+query GetServiceDetails($serviceId: String) {
+  getServiceDetails(serviceId: $serviceId) {
+    success
+    msg
+    details {
+      title
+      shortDescription
+      images
+      price
+      rating
+      slug
+      owner {
+        name
+        _id
+        rating
+        profileImg
+        isActivated
+        firstName
+        lastName
+      }
+      serviceDetails
     }
   }
 }
