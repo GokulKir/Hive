@@ -271,7 +271,7 @@ export default function Account(props) {
             return (
               <View style={{ marginLeft: 30,marginTop:20 }} key={index}>
                 <Text style={{ marginTop: 10, color: 'black' }}>
-                  {item.role}
+                  {item.title}
                 </Text>
                 <Text
                   style={{
@@ -281,7 +281,7 @@ export default function Account(props) {
                     color: 'black',
                     fontWeight: 'normal',
                   }}>
-                  {item?.company}
+                  {item?.issuer}
                 </Text>
                 <Text style={{  marginTop: 10 }}>
                   {item.startYear} - {item.endYear}
