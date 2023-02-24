@@ -8,8 +8,8 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from 'react-native'
-import React, {useState, useEffect} from 'react'
-const {height, width} = Dimensions.get('window')
+import React, { useState, useEffect } from 'react'
+const { height, width } = Dimensions.get('window')
 import auth from '@react-native-firebase/auth'
 import firebase from '@react-native-firebase/app'
 import firestore from '@react-native-firebase/firestore'
@@ -17,58 +17,48 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
+import { useManualQuery, useQuery } from 'graphql-hooks'
+import FreelancerDetailsSkeleton from '../../Components/FreelancerDetailsSkeleton'
+import { FREELANCER_DETAILS } from '../../GraphQl/Query'
+
 const user = firebase.auth().currentUser
 
-export default function Account (route) {
+export default function Account(props) {
+  const { freelancerId } = props.route.params || ""
   const [firstname, setFirstName] = useState()
   const [lastname, setLastName] = useState()
+  const [details, setDetails] = useState([])
+
+
+  const { loading, error, data } = useQuery(FREELANCER_DETAILS, {
+    variables: {
+      getFreelancerDetailsId: props?.route?.params?.freelancerId
+    }
+  })
+
+  // const { getFreelancerDetails } = data
 
 
   useEffect(() => {
-  
-    // firestore()
-    //   .collection(user?.email)
-    //   .get()
-    //   .then(querySnapshot => {
-    //     console.log('Total users: ', querySnapshot.size)
+    if (data?.getFreelancerDetails?.success) {
+      console.log("-------------------", data?.getFreelancerDetails?.userDetails);
+      setDetails(data?.getFreelancerDetails?.userDetails)
+    }
+  }, [data])
 
-    //     querySnapshot.forEach(documentSnapshot => {
-    //       console.log('User ID: ', documentSnapshot.id, documentSnapshot.data())
-    //       Data = documentSnapshot.data()
-    //       console.log('USER : ' + Data)
-    //       setFirstName(Data.Firstname)
-    //       setLastName(Data.Lastname)
-    //     })
-    //   })
-  }, [])
+  if (loading) {
+    return (
+      <FreelancerDetailsSkeleton />
+    )
+  }
+
+
   return (
     <View style={styles.container}>
       <ScrollView>
-        <View style={{alignItems: 'center', marginTop: 90}}>
-          {/* <Image style={{width:64 , height:63}} source={{uri : user.photoURL}}/> */}
-          {/* <View
-            style={{
-              width: width * 0.24,
-              height: height * 0.06,
-              backgroundColor: '#DDDDDD',
-              borderTopLeftRadius: 100,
-              borderTopRightRadius: 100,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <ImageBackground
-              style={{width: width * 0.24, height: height * 0.06}}
-              imageStyle={{borderTopLeftRadius: 100, borderTopRightRadius: 100}}
-              source={{uri: user.photoURL}}>
-              <Image
-                style={{width: 17, height: 17, marginTop: 9}}
-                source={require('../../assets/Dot.png')}
-              />
-            </ImageBackground>
-          </View> */}
-
+        <View style={{ alignItems: 'center', marginTop: 90 }}>
           <View style={styles.SecondLayer}>
-            {/* <Image
+            <Image
               style={{
                 width: wp('22%'),
                 height: hp('11%'),
@@ -76,27 +66,9 @@ export default function Account (route) {
                 marginTop: -40,
                 alignSelf: 'center',
               }}
-              source={{uri: user?.photoURL}}
-            /> */}
-            {/* <View style={{alignItems: 'center'}}>
-              <View
-                style={{
-                  width: width * 0.24,
-                  height: height * 0.06,
-                  backgroundColor: '#DDDDDD',
-                  marginBottom: 145,
-                  borderBottomLeftRadius: 100,
-                  borderBottomRightRadius: 100,
-                }}>
-                <ImageBackground
-                  style={{width: width * 0.24, height: height * 0.06}}
-                  imageStyle={{
-                    borderBottomLeftRadius: 100,
-                    borderBottomRightRadius: 100,
-                  }}
-                  source={{uri: user.photoURL}}></ImageBackground>
-              </View>
-            </View> */}
+              source={{ uri:details&& details.profileImg ? `https://hive-dash.credot.dev/${details?.profileImg}`: "https://medusajs.com/images/avatars/user-avatar-03.png" }}
+            />
+
           </View>
         </View>
 
@@ -107,39 +79,28 @@ export default function Account (route) {
             backgroundColor: '#fff',
             marginTop: 0,
           }}>
-          <View style={{alignItems: 'center'}}>
-            {firstname && lastname ? (
-              <Text
-                style={{
-                  color: '#1DA1F2',
-                  fontSize: width * 0.04,
-                  marginTop: 0,
-                }}>
-                {firstname} {lastname}
-              </Text>
-            ) : (
-              <Text
-                style={{
-                  color: '#1DA1F2',
-                  fontSize: width * 0.04,
-                  marginTop: 0,
-                }}>
-                {user?.displayName}
-              </Text>
-            )}
+          <View style={{ alignItems: 'center' }}>
+            <Text
+              style={{
+                color: '#1DA1F2',
+                fontSize: width * 0.04,
+              }}>
+              {`${details?.firstName}${details?.lastName}`}
+            </Text>
 
             <Text
               style={{
                 marginTop: 7,
                 color: 'black',
-                fontSize: width * 0.048,
-                fontWeight: '600',
+                fontSize: width * 0.04,
+                fontWeight: '300',
+                margin: 10
               }}>
-              I will write rest APi in react native
+              {details?.description}
             </Text>
           </View>
 
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image
               style={{
                 width: 19,
@@ -156,7 +117,7 @@ export default function Account (route) {
                 marginTop: 9,
                 marginLeft: 16,
               }}>
-              4.5
+              {details?.rating}
             </Text>
             <Text
               style={{
@@ -168,7 +129,7 @@ export default function Account (route) {
               (1,287)
             </Text>
             <Image
-              style={{width: 19, height: 15, marginLeft: 13, marginTop: 12}}
+              style={{ width: 19, height: 15, marginLeft: 13, marginTop: 12 }}
               source={require('../../assets/Ey.png')}
             />
             <Text
@@ -182,8 +143,8 @@ export default function Account (route) {
             </Text>
           </View>
 
-          <View style={{alignItems: 'center', marginTop: 30}}>
-            <Text style={{color: 'black'}}>Location:</Text>
+          <View style={{ alignItems: 'center', marginTop: 30 }}>
+            <Text style={{ color: 'black' }}>Location:</Text>
             <Text
               style={{
                 marginTop: 10,
@@ -191,10 +152,10 @@ export default function Account (route) {
                 fontSize: 17,
                 fontWeight: '650',
               }}>
-              1424 Quaking Acres, Arlington, IL
+              {details?.country}, {details?.city}
             </Text>
 
-            <Text style={{marginTop: 40, fontSize: 15, color: 'black'}}>
+            <Text style={{ marginTop: 40, fontSize: 15, color: 'black' }}>
               Success rate:
             </Text>
 
@@ -209,7 +170,7 @@ export default function Account (route) {
             </Text>
           </View>
 
-          <View style={{alignItems: 'center', marginTop: 30}}>
+          <View style={{ alignItems: 'center', marginTop: 30 }}>
             <TouchableOpacity
               style={{
                 width: '60%',
@@ -219,7 +180,7 @@ export default function Account (route) {
                 flexDirection: 'row',
               }}>
               <Image
-                style={{marginLeft: 30, marginTop: 12, width: 20, height: 20}}
+                style={{ marginLeft: 30, marginTop: 12, width: 20, height: 20 }}
                 source={require('../../assets/Me.png')}
               />
               <Text
@@ -234,27 +195,6 @@ export default function Account (route) {
             </TouchableOpacity>
           </View>
 
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image
-              style={{
-                width: 25,
-                height: 20,
-                marginLeft: width * 0.3,
-                marginTop: 30,
-              }}
-              source={require('../../assets/Heart.png')}
-            />
-            <Text
-              style={{
-                marginLeft: 8,
-                marginTop: 30,
-                color: 'grey',
-                fontSize: 18,
-              }}>
-              Add to save
-            </Text>
-          </View>
-
           <View
             style={{
               width: '100%',
@@ -264,67 +204,36 @@ export default function Account (route) {
               marginTop: 40,
             }}></View>
 
-          <View style={{marginLeft: 30, marginTop: 20}}>
-            <Text style={{color: 'black', fontSize: 20, fontWeight: '600'}}>
+          <View style={{ marginLeft: 30, marginTop: 20 }}>
+            <Text style={{ color: 'black', fontSize: 20, fontWeight: '600' }}>
               Qualification background
             </Text>
           </View>
 
-          <View style={{marginTop: 10}}>
-            <Text style={{marginLeft: 30, marginTop: 30, color: 'black'}}>
-              Florida State University
-            </Text>
-            <Text
-              style={{
-                color: 'black',
-                marginLeft: 28,
-                marginTop: 10,
-                fontSize: 17,
-                color: 'black',
-                fontWeight: 'normal',
-              }}>
-              Web & Apps Project Manager
-            </Text>
-            <Text style={{marginLeft: 28, marginTop: 10}}>
-              November 24, 2018
-            </Text>
-          </View>
+          {details?.education?.map((item, index) => {
+            return (
+              <View style={{ marginTop: 10 }} key={index}>
+                <Text style={{ marginLeft: 30, marginTop: 30, color: 'black' }}>
+                  {item.institution}
+                </Text>
+                <Text
+                  style={{
+                    color: 'black',
+                    marginLeft: 28,
+                    marginTop: 10,
+                    fontSize: 17,
+                    color: 'black',
+                    fontWeight: 'normal',
+                  }}>
+                  {item?.major}
+                </Text>
+                <Text style={{ marginLeft: 28, marginTop: 10 }}>
+                  {item.startYear} - {item.endYear}
+                </Text>
+              </View>
+            )
+          })}
 
-          <View style={{marginTop: 10}}>
-            <Text style={{marginLeft: 30, marginTop: 20}}>
-              Valencia College
-            </Text>
-            <Text
-              style={{
-                color: 'black',
-                marginLeft: 28,
-                marginTop: 10,
-                fontSize: 17,
-                color: 'black',
-                fontWeight: 'normal',
-              }}>
-              MBA - Hospital Management
-            </Text>
-            <Text style={{marginLeft: 28, marginTop: 10}}>March 13, 2014</Text>
-          </View>
-
-          <View style={{marginTop: 10}}>
-            <Text style={{marginLeft: 30, marginTop: 20}}>
-              Texas A & M University-College Station
-            </Text>
-            <Text
-              style={{
-                color: 'black',
-                marginLeft: 28,
-                marginTop: 10,
-                fontSize: 17,
-                color: 'black',
-                fontWeight: 'normal',
-              }}>
-              BCS - Bachelor Computer Science
-            </Text>
-            <Text style={{marginLeft: 28, marginTop: 10}}>June 27, 2012</Text>
-          </View>
 
           <View
             style={{
@@ -335,14 +244,14 @@ export default function Account (route) {
               marginTop: 40,
             }}></View>
 
-          <View style={{marginLeft: 30, marginTop: 30}}>
-            <Text style={{color: 'black', fontSize: 18, fontWeight: 'bold'}}>
+          <View style={{ marginLeft: 30, marginTop: 30 }}>
+            <Text style={{ color: 'black', fontSize: 18, fontWeight: 'bold' }}>
               Services Offered
             </Text>
           </View>
 
-          <View style={{alignItems: 'center'}}>
-            <TouchableOpacity style={{marginTop: 34}}>
+          <View style={{ alignItems: 'center' }}>
+            <TouchableOpacity style={{ marginTop: 34 }}>
               <View
                 style={{
                   width: 345,
@@ -359,21 +268,21 @@ export default function Account (route) {
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
-                  <Text style={{color: '#fff'}}>Featured</Text>
+                  <Text style={{ color: '#fff' }}>Featured</Text>
                 </View>
               </View>
 
-              <View style={{flexDirection: 'row'}}>
-                <Text style={{color: '#1DA1F2', marginTop: 12}}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={{ color: '#1DA1F2', marginTop: 12 }}>
                   Programming, WordPress, WP setup
                 </Text>
-                <Text style={{color: 'grey', marginTop: 12, marginLeft: 70}}>
+                <Text style={{ color: 'grey', marginTop: 12, marginLeft: 70 }}>
                   From
                 </Text>
               </View>
 
-              <View style={{flexDirection: 'row', marginTop: 10}}>
-                <Text style={{color: 'black', fontWeight: '700'}}>
+              <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                <Text style={{ color: 'black', fontWeight: '700' }}>
                   I will write rest APi in react native
                 </Text>
 
@@ -388,9 +297,9 @@ export default function Account (route) {
                 </Text>
               </View>
 
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <Image
-                  style={{width: 19, height: 19, marginLeft: 10, marginTop: 10}}
+                  style={{ width: 19, height: 19, marginLeft: 10, marginTop: 10 }}
                   source={require('../../assets/Rate.png')}
                 />
                 <Text
@@ -412,7 +321,7 @@ export default function Account (route) {
                   (2,659)
                 </Text>
                 <Image
-                  style={{width: 19, height: 15, marginLeft: 13, marginTop: 12}}
+                  style={{ width: 19, height: 15, marginLeft: 13, marginTop: 12 }}
                   source={require('../../assets/Ey.png')}
                 />
                 <Text
@@ -426,8 +335,8 @@ export default function Account (route) {
                 </Text>
               </View>
 
-              <View style={{flexDirection: 'row'}}>
-                <View style={{alignItems: 'center', marginTop: 20}}>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={{ alignItems: 'center', marginTop: 20 }}>
                   <View
                     style={{
                       width: 344,
@@ -445,13 +354,13 @@ export default function Account (route) {
                         alignItems: 'center',
                         justifyContent: 'center',
                       }}>
-                      <View style={{alignItems: 'center'}}>
+                      <View style={{ alignItems: 'center' }}>
                         <Image source={require('../../assets/Buc.png')} />
                       </View>
                     </View>
 
-                    <View style={{marginTop: 11, marginLeft: 15}}>
-                      <Text style={{color: 'black', fontWeight: 'bold'}}>
+                    <View style={{ marginTop: 11, marginLeft: 15 }}>
+                      <Text style={{ color: 'black', fontWeight: 'bold' }}>
                         2,562
                       </Text>
                       <Text
@@ -464,7 +373,7 @@ export default function Account (route) {
                       </Text>
                     </View>
 
-                    <View style={{alignItems: 'center', marginLeft: 36}}>
+                    <View style={{ alignItems: 'center', marginLeft: 36 }}>
                       <View
                         style={{
                           width: 344,
@@ -482,13 +391,13 @@ export default function Account (route) {
                             alignItems: 'center',
                             justifyContent: 'center',
                           }}>
-                          <View style={{alignItems: 'center'}}>
+                          <View style={{ alignItems: 'center' }}>
                             <Image source={require('../../assets/Buc.png')} />
                           </View>
                         </View>
 
-                        <View style={{marginTop: 11, marginLeft: 15}}>
-                          <Text style={{color: 'black', fontWeight: 'bold'}}>
+                        <View style={{ marginTop: 11, marginLeft: 15 }}>
+                          <Text style={{ color: 'black', fontWeight: 'bold' }}>
                             7 Days
                           </Text>
                           <Text
@@ -508,8 +417,8 @@ export default function Account (route) {
             </TouchableOpacity>
           </View>
 
-          <View style={{alignItems: 'center'}}>
-            <TouchableOpacity style={{marginTop: 14}}>
+          <View style={{ alignItems: 'center' }}>
+            <TouchableOpacity style={{ marginTop: 14 }}>
               <View
                 style={{
                   width: 345,
@@ -526,21 +435,21 @@ export default function Account (route) {
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
-                  <Text style={{color: '#fff'}}>Featured</Text>
+                  <Text style={{ color: '#fff' }}>Featured</Text>
                 </View>
               </View>
 
-              <View style={{flexDirection: 'row'}}>
-                <Text style={{color: '#1DA1F2', marginTop: 12}}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={{ color: '#1DA1F2', marginTop: 12 }}>
                   Programming, WordPress, WP setup
                 </Text>
-                <Text style={{color: 'grey', marginTop: 12, marginLeft: 70}}>
+                <Text style={{ color: 'grey', marginTop: 12, marginLeft: 70 }}>
                   From
                 </Text>
               </View>
 
-              <View style={{flexDirection: 'row', marginTop: 10}}>
-                <Text style={{color: 'black', fontWeight: '700'}}>
+              <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                <Text style={{ color: 'black', fontWeight: '700' }}>
                   I will write rest APi in react native
                 </Text>
 
@@ -555,9 +464,9 @@ export default function Account (route) {
                 </Text>
               </View>
 
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <Image
-                  style={{width: 19, height: 19, marginLeft: 10, marginTop: 10}}
+                  style={{ width: 19, height: 19, marginLeft: 10, marginTop: 10 }}
                   source={require('../../assets/Rate.png')}
                 />
                 <Text
@@ -579,7 +488,7 @@ export default function Account (route) {
                   (2,659)
                 </Text>
                 <Image
-                  style={{width: 19, height: 15, marginLeft: 13, marginTop: 12}}
+                  style={{ width: 19, height: 15, marginLeft: 13, marginTop: 12 }}
                   source={require('../../assets/Ey.png')}
                 />
                 <Text
@@ -593,8 +502,8 @@ export default function Account (route) {
                 </Text>
               </View>
 
-              <View style={{flexDirection: 'row'}}>
-                <View style={{alignItems: 'center', marginTop: 20}}>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={{ alignItems: 'center', marginTop: 20 }}>
                   <View
                     style={{
                       width: 344,
@@ -612,13 +521,13 @@ export default function Account (route) {
                         alignItems: 'center',
                         justifyContent: 'center',
                       }}>
-                      <View style={{alignItems: 'center'}}>
+                      <View style={{ alignItems: 'center' }}>
                         <Image source={require('../../assets/Buc.png')} />
                       </View>
                     </View>
 
-                    <View style={{marginTop: 11, marginLeft: 15}}>
-                      <Text style={{color: 'black', fontWeight: 'bold'}}>
+                    <View style={{ marginTop: 11, marginLeft: 15 }}>
+                      <Text style={{ color: 'black', fontWeight: 'bold' }}>
                         2,562
                       </Text>
                       <Text
@@ -631,7 +540,7 @@ export default function Account (route) {
                       </Text>
                     </View>
 
-                    <View style={{alignItems: 'center', marginLeft: 36}}>
+                    <View style={{ alignItems: 'center', marginLeft: 36 }}>
                       <View
                         style={{
                           width: 344,
@@ -649,13 +558,13 @@ export default function Account (route) {
                             alignItems: 'center',
                             justifyContent: 'center',
                           }}>
-                          <View style={{alignItems: 'center'}}>
+                          <View style={{ alignItems: 'center' }}>
                             <Image source={require('../../assets/Buc.png')} />
                           </View>
                         </View>
 
-                        <View style={{marginTop: 11, marginLeft: 15}}>
-                          <Text style={{color: 'black', fontWeight: 'bold'}}>
+                        <View style={{ marginTop: 11, marginLeft: 15 }}>
+                          <Text style={{ color: 'black', fontWeight: 'bold' }}>
                             7 Days
                           </Text>
                           <Text
@@ -675,8 +584,8 @@ export default function Account (route) {
             </TouchableOpacity>
           </View>
 
-          <View style={{alignItems: 'center'}}>
-            <TouchableOpacity style={{marginTop: 14}}>
+          <View style={{ alignItems: 'center' }}>
+            <TouchableOpacity style={{ marginTop: 14 }}>
               <View
                 style={{
                   width: 345,
@@ -693,21 +602,21 @@ export default function Account (route) {
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
-                  <Text style={{color: '#fff'}}>Featured</Text>
+                  <Text style={{ color: '#fff' }}>Featured</Text>
                 </View>
               </View>
 
-              <View style={{flexDirection: 'row'}}>
-                <Text style={{color: '#1DA1F2', marginTop: 12}}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={{ color: '#1DA1F2', marginTop: 12 }}>
                   Programming, WordPress, WP setup
                 </Text>
-                <Text style={{color: 'grey', marginTop: 12, marginLeft: 70}}>
+                <Text style={{ color: 'grey', marginTop: 12, marginLeft: 70 }}>
                   From
                 </Text>
               </View>
 
-              <View style={{flexDirection: 'row', marginTop: 10}}>
-                <Text style={{color: 'black', fontWeight: '700'}}>
+              <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                <Text style={{ color: 'black', fontWeight: '700' }}>
                   I will write rest APi in react native
                 </Text>
 
@@ -722,9 +631,9 @@ export default function Account (route) {
                 </Text>
               </View>
 
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ flexDirection: 'row' }}>
                 <Image
-                  style={{width: 19, height: 19, marginLeft: 10, marginTop: 10}}
+                  style={{ width: 19, height: 19, marginLeft: 10, marginTop: 10 }}
                   source={require('../../assets/Rate.png')}
                 />
                 <Text
@@ -746,7 +655,7 @@ export default function Account (route) {
                   (2,659)
                 </Text>
                 <Image
-                  style={{width: 19, height: 15, marginLeft: 13, marginTop: 12}}
+                  style={{ width: 19, height: 15, marginLeft: 13, marginTop: 12 }}
                   source={require('../../assets/Ey.png')}
                 />
                 <Text
@@ -760,8 +669,8 @@ export default function Account (route) {
                 </Text>
               </View>
 
-              <View style={{flexDirection: 'row'}}>
-                <View style={{alignItems: 'center', marginTop: 20}}>
+              <View style={{ flexDirection: 'row' }}>
+                <View style={{ alignItems: 'center', marginTop: 20 }}>
                   <View
                     style={{
                       width: 344,
@@ -779,13 +688,13 @@ export default function Account (route) {
                         alignItems: 'center',
                         justifyContent: 'center',
                       }}>
-                      <View style={{alignItems: 'center'}}>
+                      <View style={{ alignItems: 'center' }}>
                         <Image source={require('../../assets/Buc.png')} />
                       </View>
                     </View>
 
-                    <View style={{marginTop: 11, marginLeft: 15}}>
-                      <Text style={{color: 'black', fontWeight: 'bold'}}>
+                    <View style={{ marginTop: 11, marginLeft: 15 }}>
+                      <Text style={{ color: 'black', fontWeight: 'bold' }}>
                         2,562
                       </Text>
                       <Text
@@ -798,7 +707,7 @@ export default function Account (route) {
                       </Text>
                     </View>
 
-                    <View style={{alignItems: 'center', marginLeft: 36}}>
+                    <View style={{ alignItems: 'center', marginLeft: 36 }}>
                       <View
                         style={{
                           width: 344,
@@ -816,13 +725,13 @@ export default function Account (route) {
                             alignItems: 'center',
                             justifyContent: 'center',
                           }}>
-                          <View style={{alignItems: 'center'}}>
+                          <View style={{ alignItems: 'center' }}>
                             <Image source={require('../../assets/Buc.png')} />
                           </View>
                         </View>
 
-                        <View style={{marginTop: 11, marginLeft: 15}}>
-                          <Text style={{color: 'black', fontWeight: 'bold'}}>
+                        <View style={{ marginTop: 11, marginLeft: 15 }}>
+                          <Text style={{ color: 'black', fontWeight: 'bold' }}>
                             7 Days
                           </Text>
                           <Text

@@ -47,3 +47,52 @@ query CategoryFlatList($limit: Int) {
   }
 }
 `
+export const  FREELANCER_DETAILS = `
+query GetFreelancerDetails($getFreelancerDetailsId: ID) {
+  getFreelancerDetails(id: $getFreelancerDetailsId) {
+    success
+    msg
+    userDetails {
+      _id
+      stage
+      firstName
+      lastName
+      profileImg
+      gender
+      country
+      email
+      username
+      city
+      mobile
+      isActivated
+      rating
+      description
+      hourlyRate
+      position
+      languages {
+        _id
+        title
+        slug
+        isDeleted
+      }
+      totalHours
+      totalJobs
+      joined
+      bankDetails {
+        accountNo
+        IFSC
+        verified
+        institution
+      }
+      education {
+        institution
+        description
+        startYear
+        endYear
+        major
+      }
+      jobSuccess
+    }
+  }
+}
+`

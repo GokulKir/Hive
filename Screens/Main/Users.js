@@ -157,7 +157,7 @@ export default function UseFree ({navigation}) {
           renderItem={({item}) => {
             return (
               <TouchableOpacity
-                onPress={() => navigation.navigate('AccountScreen')}
+                onPress={() => navigation.navigate('AccountScreen',{freelancerId:item._id})}
                 style={{flexDirection: 'row',marginTop:10}}>
                 <View
                   style={{
