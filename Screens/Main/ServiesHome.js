@@ -86,7 +86,7 @@ const ServiesHome = ({navigation}) => {
         showsHorizontalScrollIndicator={false}
         renderItem={({item}) => {
           return (
-            <TouchableOpacity onPress={()=> navigation.navigate('TaskD')} style={{marginLeft: wp('8%'),top:20,right:10}}>
+            <TouchableOpacity onPress={()=> navigation.navigate('TaskD',{serviceId:item._id})} style={{marginLeft: wp('8%'),top:20,right:10}}>
               <ImageBackground
                       // style={{
                       //   height: 126,

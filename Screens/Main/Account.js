@@ -155,7 +155,7 @@ export default function Account(props) {
               {details?.country}, {details?.city}
             </Text>
 
-            <Text style={{ marginTop: 40, fontSize: 15, color: 'black' }}>
+            {/* <Text style={{ marginTop: 40, fontSize: 15, color: 'black' }}>
               Success rate:
             </Text>
 
@@ -167,7 +167,7 @@ export default function Account(props) {
                 fontWeight: 'bold',
               }}>
               87% Compleated
-            </Text>
+            </Text> */}
           </View>
 
           <View style={{ alignItems: 'center', marginTop: 30 }}>
@@ -204,22 +204,21 @@ export default function Account(props) {
               marginTop: 40,
             }}></View>
 
-          <View style={{ marginLeft: 30, marginTop: 20 }}>
+<View style={{ marginLeft: 30, marginTop: 20 }}>
             <Text style={{ color: 'black', fontSize: 20, fontWeight: '600' }}>
-              Qualification background
+            Education
             </Text>
           </View>
 
           {details?.education?.map((item, index) => {
             return (
-              <View style={{ marginTop: 10 }} key={index}>
-                <Text style={{ marginLeft: 30, marginTop: 30, color: 'black' }}>
+              <View style={{ marginLeft: 30,marginTop:20 }} key={index}>
+                <Text style={{ marginTop: 10, color: 'black' }}>
                   {item.institution}
                 </Text>
                 <Text
                   style={{
                     color: 'black',
-                    marginLeft: 28,
                     marginTop: 10,
                     fontSize: 17,
                     color: 'black',
@@ -227,7 +226,64 @@ export default function Account(props) {
                   }}>
                   {item?.major}
                 </Text>
-                <Text style={{ marginLeft: 28, marginTop: 10 }}>
+                <Text style={{  marginTop: 10 }}>
+                  {item.startYear} - {item.endYear}
+                </Text>
+              </View>
+            )
+          })}
+          <View style={{ marginLeft: 30, marginTop: 20 }}>
+            <Text style={{ color: 'black', fontSize: 20, fontWeight: '600' }}>
+            Work & Experience
+            </Text>
+          </View>
+
+          {details?.experience?.map((item, index) => {
+            return (
+              <View style={{ marginLeft: 30,marginTop:20 }} key={index}>
+                <Text style={{ marginTop: 10, color: 'black' }}>
+                  {item.role}
+                </Text>
+                <Text
+                  style={{
+                    color: 'black',
+                    marginTop: 10,
+                    fontSize: 17,
+                    color: 'black',
+                    fontWeight: 'normal',
+                  }}>
+                  {item?.company}
+                </Text>
+                <Text style={{  marginTop: 10 }}>
+                  {item.startYear} - {item.endYear}
+                </Text>
+              </View>
+            )
+          })}
+
+          <View style={{ marginLeft: 30, marginTop: 20 }}>
+            <Text style={{ color: 'black', fontSize: 20, fontWeight: '600' }}>
+            Awards and Certificates
+            </Text>
+          </View>
+
+          {details?.awards?.map((item, index) => {
+            return (
+              <View style={{ marginLeft: 30,marginTop:20 }} key={index}>
+                <Text style={{ marginTop: 10, color: 'black' }}>
+                  {item.title}
+                </Text>
+                <Text
+                  style={{
+                    color: 'black',
+                    marginTop: 10,
+                    fontSize: 17,
+                    color: 'black',
+                    fontWeight: 'normal',
+                  }}>
+                  {item?.issuer}
+                </Text>
+                <Text style={{  marginTop: 10 }}>
                   {item.startYear} - {item.endYear}
                 </Text>
               </View>
