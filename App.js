@@ -1,11 +1,9 @@
-import  React,{useEffect,useState} from 'react'
-import { View, TouchableOpacity } from 'react-native'
-import { Avatar } from 'react-native-paper'
-import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
-import { createDrawerNavigator } from '@react-navigation/drawer'
-
-
+import React, {useEffect, useState} from 'react'
+import {View, TouchableOpacity} from 'react-native'
+import {Avatar} from 'react-native-paper'
+import {NavigationContainer} from '@react-navigation/native'
+import {createStackNavigator} from '@react-navigation/stack'
+import {createDrawerNavigator} from '@react-navigation/drawer'
 
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
@@ -63,9 +61,10 @@ import Filter2 from './Screens/Filter/Filter2'
 import Users from './Screens/Main/Users'
 //Order Screen ui
 import Order from './Screens/Order/Order'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 //Chat page ui //
-import Chat from './Screens/Messages/Chat' ;
+import Chat from './Screens/Messages/Chat'
+import ChatRoom from './Screens/Messages/ChatRoom'
 import SuccessLogin from './Screens/UserLogin/SuccessLogin'
 import firebase from '@react-native-firebase/app'
 import {
@@ -75,48 +74,56 @@ import {
 } from '@react-native-google-signin/google-signin'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-
 const user = firebase.auth().currentUser
-const MyStack = (props) => {
+const MyStack = props => {
+  const [userImage, setUserImage] = useState()
 
-  const[userImage,setUserImage]=useState()
-  
-useEffect(() => {
- 
-  GoogleSignin.configure({
-    webClientId:
-      '86575262147-5ek6sbcsva6bi38al4h641sa731s0aja.apps.googleusercontent.com',
-  })
-}, [])
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '86575262147-5ek6sbcsva6bi38al4h641sa731s0aja.apps.googleusercontent.com',
+    })
+  }, [])
 
-  function ProfileImage({ navigation }) {
+  function ProfileImage ({navigation}) {
     AsyncStorage.getItem('userSession', (err, result) => {
-      const sesData = JSON.parse(result);
+      const sesData = JSON.parse(result)
       setUserImage(`https://hive-dash.credot.dev/${sesData?.profileImg}`)
       // console.log("---------------------------",`https://hive-dash.credot.dev/${sesData.profileImg}`);
     })
     return (
-      <TouchableOpacity onPress={() => {
-        navigation.navigate("ProfileScreen")
-      }}>
-        <Avatar.Image size={35} source={{ uri:firebase.auth().currentUser? firebase.auth().currentUser.photoURL : userImage  }} style={{ right: 10 }} />
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('ProfileScreen')
+        }}>
+        <Avatar.Image
+          size={35}
+          source={{
+            uri: firebase.auth().currentUser
+              ? firebase.auth().currentUser.photoURL
+              : userImage,
+          }}
+          style={{right: 10}}
+        />
       </TouchableOpacity>
     )
   }
 
-  function BackButtonAndDrawer({ navigation }) {
-
+  function BackButtonAndDrawer ({navigation}) {
     return (
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{flexDirection: 'row'}}>
         {/* <StatusBar
           backgroundColor={AppStyles.Colors.screensHeaderColor}
         /> */}
-        <Icon name="menu" size={30} style={{ marginLeft: 10 }}
-          color={"#000"}
-          backgroundColor="black" onPress={() =>
-            navigation.openDrawer()} />
-
-      </View >
+        <Icon
+          name='menu'
+          size={30}
+          style={{marginLeft: 10}}
+          color={'#000'}
+          backgroundColor='black'
+          onPress={() => navigation.openDrawer()}
+        />
+      </View>
     )
   }
   return (
@@ -124,245 +131,231 @@ useEffect(() => {
       <Stack.Screen
         name='Splash'
         component={Splash}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name='Login'
         component={Login}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name='Signup'
         component={Signup}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name='HomeScreen'
         component={Home}
         options={{
           headerLeft: () => (
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{flexDirection: 'row'}}>
               {/* <StatusBar
               backgroundColor={AppStyles.Colors.screensHeaderColor}
             /> */}
-              <Icon name="menu" size={30} style={{ marginLeft: 10 }}
-                color={"#fff"}
-                backgroundColor="black" onPress={() =>
-                  props.navigation.openDrawer()} />
-
-            </View >
+              <Icon
+                name='menu'
+                size={30}
+                style={{marginLeft: 10}}
+                color={'#fff'}
+                backgroundColor='black'
+                onPress={() => props.navigation.openDrawer()}
+              />
+            </View>
           ),
           // headerTitle: props => <Logo {...props} />,
-          headerStyle: { backgroundColor: '#1D1D1B' },
-          headerRight: () => <ProfileImage {...props} />
+          headerStyle: {backgroundColor: '#1D1D1B'},
+          headerRight: () => <ProfileImage {...props} />,
         }}
       />
       <Stack.Screen
         name='Password'
         component={Password}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name='Dashboard'
         component={Dashboard}
         options={{
-          headerLeft: () => (
-            <BackButtonAndDrawer {...props} />
-          ),
+          headerLeft: () => <BackButtonAndDrawer {...props} />,
           headerTitle: props => <Logo1 {...props} />,
           // headerStyle: { backgroundColor: '#fff' },
-          headerRight: () => <ProfileImage {...props} />
+          headerRight: () => <ProfileImage {...props} />,
         }}
       />
       <Stack.Screen
         name='ProfileScreen'
         component={Profile}
         options={{
-          headerLeft: () => (
-            <BackButtonAndDrawer {...props} />
-          ),
+          headerLeft: () => <BackButtonAndDrawer {...props} />,
           headerTitle: props => <Logo2 {...props} />,
           // headerStyle: { backgroundColor: '#fff' },
-          headerRight: () => <ProfileImage {...props} />
+          headerRight: () => <ProfileImage {...props} />,
         }}
       />
       <Stack.Screen
         name='AccountScreen'
         component={Account}
         options={{
-          headerLeft: () => (
-            <BackButtonAndDrawer {...props} />
-          ),
+          headerLeft: () => <BackButtonAndDrawer {...props} />,
           headerTitle: props => <Logo3 {...props} />,
           // headerStyle: { backgroundColor: '#fff' },
-          headerRight: () => <ProfileImage {...props} />
+          headerRight: () => <ProfileImage {...props} />,
         }}
       />
       <Stack.Screen
         name='UploadScreen'
         component={Upload}
         options={{
-          headerLeft: () => (
-            <BackButtonAndDrawer {...props} />
-          ),
+          headerLeft: () => <BackButtonAndDrawer {...props} />,
           headerTitle: props => <Logo4 {...props} />,
           // headerStyle: { backgroundColor: '#DDDDDD' },
-          headerRight: () => <ProfileImage {...props} />
+          headerRight: () => <ProfileImage {...props} />,
         }}
       />
       <Stack.Screen
         name='InvoiceScreen'
         component={Invoice}
         options={{
-          headerLeft: () => (
-            <BackButtonAndDrawer {...props} />
-          ),
+          headerLeft: () => <BackButtonAndDrawer {...props} />,
           headerTitle: props => <Logo5 {...props} />,
           // headerStyle: { backgroundColor: '#fff' },
-          headerRight: () => <ProfileImage {...props} />
+          headerRight: () => <ProfileImage {...props} />,
         }}
       />
       <Stack.Screen
         name='MySavedScreen'
         component={MySaved}
         options={{
-          headerLeft: () => (
-            <BackButtonAndDrawer {...props} />
-          ),
+          headerLeft: () => <BackButtonAndDrawer {...props} />,
           headerTitle: props => <Logo6 {...props} />,
           // headerStyle: { backgroundColor: '#F7F7F7' },
-          headerRight: () => <ProfileImage {...props} />
+          headerRight: () => <ProfileImage {...props} />,
         }}
       />
       <Stack.Screen
         name='ACS'
         component={ACS}
         options={{
-          headerLeft: () => (
-            <BackButtonAndDrawer {...props} />
-          ),
+          headerLeft: () => <BackButtonAndDrawer {...props} />,
           headerTitle: props => <Logo7 {...props} />,
           // headerStyle: { backgroundColor: '#F7F7F7' },
-          headerRight: () => <ProfileImage {...props} />
+          headerRight: () => <ProfileImage {...props} />,
         }}
       />
       <Stack.Screen
         name='FreelancersScreen'
         component={Freelancers}
         options={{
-          headerLeft: () => (
-            <BackButtonAndDrawer {...props} />
-          ),
+          headerLeft: () => <BackButtonAndDrawer {...props} />,
           headerTitle: props => <Logo3 {...props} />,
           // headerStyle: { backgroundColor: '#DDDDDD' },
-          headerRight: () => <ProfileImage {...props} />
+          headerRight: () => <ProfileImage {...props} />,
         }}
       />
       <Stack.Screen
         name='ManageT'
         component={ManageT}
         options={{
-          headerLeft: () => (
-            <BackButtonAndDrawer {...props} />
-          ),
+          headerLeft: () => <BackButtonAndDrawer {...props} />,
           headerTitle: props => <Logo8 {...props} />,
           // headerStyle: { backgroundColor: '#fff' },
-          headerRight: () => <ProfileImage {...props} />
+          headerRight: () => <ProfileImage {...props} />,
         }}
       />
       <Stack.Screen
         name='Users'
         component={Users}
         options={{
-          headerLeft: () => (
-            <BackButtonAndDrawer {...props} />
-          ),
+          headerLeft: () => <BackButtonAndDrawer {...props} />,
           headerTitle: props => <Logo3 {...props} />,
           // headerStyle: { backgroundColor: '#fff' },
-          headerRight: () => <ProfileImage {...props} />
+          headerRight: () => <ProfileImage {...props} />,
         }}
       />
       <Stack.Screen
         name='Edit'
         component={Edit}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name='Payout'
         component={Payout}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name='TaskD'
         component={TaskD}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name='TaskDetails'
         component={TaskDetails}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name='Filter'
         component={Filter}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name='Filter2'
         component={Filter2}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name='Order'
         component={Order}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name='LoginB'
         component={LoginB}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name='SignupB'
         component={SignupB}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
-      <Stack.Screen 
-       name="Chat"
-       component={Chat}
-       options={{
-        headerLeft: () => (
-          <BackButtonAndDrawer {...props}/>
-         ),
-        headerTitle: props => <Logo9 {...props} />,
-        headerStyle: { backgroundColor: '#fff' },
-      }}
-       />
+      <Stack.Screen
+        name='Chat'
+        component={Chat}
+        options={{
+          headerLeft: () => <BackButtonAndDrawer {...props} />,
+          headerTitle: props => <Logo9 {...props} />,
+          headerStyle: {backgroundColor: '#fff'},
+        }}
+      />
       <Stack.Screen
         name='SuccessLogin'
         component={SuccessLogin}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name='CRoom'
+        component={ChatRoom}
+        options={{headerShown : false}}
       />
     </Stack.Navigator>
   )
 }
 
-
-export default function App(route) {
+export default function App (route) {
   return (
     <NavigationContainer>
       <Drawer.Navigator
         screenOptions={{
           headerTintColor: 'black',
         }}
-        drawerContent={({ ...props }) => {
+        drawerContent={({...props}) => {
           return <DrawerContent {...props} route={route}></DrawerContent>
         }}>
         <Drawer.Screen
           name='ALLSCREENS'
           component={MyStack}
           options={{
-            headerShown: false
+            headerShown: false,
           }}
         />
       </Drawer.Navigator>
