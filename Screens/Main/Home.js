@@ -276,7 +276,9 @@ export default function Home(props) {
                 </Text>
               </View>
 
-              <TouchableOpacity style={{ marginLeft: 10, marginTop: 21 }}>
+              <TouchableOpacity style={{ marginLeft: 10, marginTop: 21 }} onPress={()=>{
+                props.navigation.navigate("Categories")
+              }}>
                 <Text
                   style={{
                     fontSize: 14,

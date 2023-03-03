@@ -1,5 +1,5 @@
 import  React,{useEffect,useState} from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity,Text } from 'react-native'
 import { Avatar } from 'react-native-paper'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -74,6 +74,7 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import Categories from './Screens/Main/Categories'
 
 
 const user = firebase.auth().currentUser
@@ -342,6 +343,18 @@ useEffect(() => {
         name='SuccessLogin'
         component={SuccessLogin}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='Categories'
+        component={Categories}
+        options={{
+          headerLeft: () => (
+            <BackButtonAndDrawer {...props} />
+          ),
+          headerTitle: props => <Text style={{fontSize:20,fontWeight:'bold',left:80}}>Categories</Text>,
+          // headerStyle: { backgroundColor: '#fff' },
+          headerRight: () => <ProfileImage {...props} />
+        }}
       />
     </Stack.Navigator>
   )

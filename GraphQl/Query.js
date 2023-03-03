@@ -136,3 +136,26 @@ query GetServiceDetails($serviceId: String) {
   }
 }
 `
+export const  CATEGORIES = `
+query CategoryList {
+  categoryList {
+    success
+    msg
+    categories {
+      _id
+      icon
+      name
+      children {
+        _id
+        icon
+        name
+        children {
+          _id
+          icon
+          name
+        }
+      }
+    }
+  }
+}
+`

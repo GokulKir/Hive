@@ -123,7 +123,7 @@ export default function UseFree ({navigation}) {
               marginTop: 20,
               fontWeight: 'bold',
             }}>
-            29 search results(s) found
+       {Datas?.freelancerList?.freelancers?.length} search results(s) found
           </Text>
 
           <TouchableOpacity

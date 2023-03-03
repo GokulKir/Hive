@@ -375,7 +375,9 @@ export default function Freelancers(props) {
                     // marginTop: 10,
                     marginLeft: wp('3%'),
                   }}>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={()=>{
+                    props.navigation.navigate('TaskD',{serviceId:item._id})
+                  }}>
                     <ImageBackground
                       // style={{
                       //   height: 126,
