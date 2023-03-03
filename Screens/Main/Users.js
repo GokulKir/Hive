@@ -123,7 +123,7 @@ export default function UseFree ({navigation}) {
               marginTop: 20,
               fontWeight: 'bold',
             }}>
-            29 search results(s) found
+       {Datas?.freelancerList?.freelancers?.length} search results(s) found
           </Text>
 
           <TouchableOpacity
@@ -157,7 +157,7 @@ export default function UseFree ({navigation}) {
           renderItem={({item}) => {
             return (
               <TouchableOpacity
-                onPress={() => navigation.navigate('AccountScreen')}
+                onPress={() => navigation.navigate('AccountScreen',{freelancerId:item._id})}
                 style={{flexDirection: 'row',marginTop:10}}>
                 <View
                   style={{

@@ -11,7 +11,7 @@ import {
   Alert,
   ImageBackground
 } from 'react-native'
-import React, {useCallback, useMemo, useRef, useState, useEffect,useContext} from 'react'
+import React, { useCallback, useMemo, useRef, useState, useEffect, useContext } from 'react'
 import LoginB from '.././UserLogin/LoginB'
 import auth from '@react-native-firebase/auth'
 import firebase from '@react-native-firebase/app'
@@ -21,10 +21,13 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
-import {useManualQuery, useQuery,ClientContext} from 'graphql-hooks'
+import { useManualQuery, useQuery, ClientContext } from 'graphql-hooks'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import SkeletonLoaderFreelancersList from '../../Components/SkeletonLoaderFreelancersList'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { CATEGORY_LIST } from '../../GraphQl/Query'
+import { FlatList } from 'react-native-gesture-handler'
+import CategorySkeleton from '../../Components/CategorySkeleton'
 const { height, width } = Dimensions.get('window')
 
 
@@ -61,6 +64,8 @@ query Freelancers {
 
 export default function Home(props) {
   const { loading, error, data } = useQuery(FREELANCE_LISTING)
+
+  // const { loading, error, data } = useQuery(CATEGORY_LIST)
 
   // console.log('++++++++++', data)
 
@@ -99,6 +104,56 @@ export default function Home(props) {
     console.log('Data>>>>>>', Datas?.freelancerList?.freelancers)
   }, [Datas])
   //Calling API //
+
+  const ExploreCategories = () => {
+    const { loading, error, data } = useQuery(CATEGORY_LIST, {
+      variables: {
+        // "email": "ajnash.aju323@gmail.com",
+        // "password": "12345678",
+        "pageNumber": 1,
+        "limit": 6
+      }
+    }
+    )
+
+    if (loading) {
+      return (
+        <CategorySkeleton />
+      )
+    }
+    return (
+      <FlatList
+        style={{ padding: 10, top: 10, right: 10 }}
+        data={data?.categoryList?.categories}
+        keyExtractor={(item) => item._id}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        renderItem={({ item }) => {
+          return (
+            <TouchableOpacity
+              style={{ margin: 10 }}
+              onPress={() => { Alert.alert("oo", JSON.stringify(item)) }}>
+              {/* {item.icon ?
+
+                <Image
+                  style={{ width: 50, height: 50, alignSelf: "center" }}
+                  source={{uri:`https://hive-dash.credot.dev/${item.icon}`}}
+                />
+                : */}
+              <Image
+                style={{ width: 50, height: 50, alignSelf: "center" }}
+                source={require('../../assets/D&T.png')}
+              />
+              {/* } */}
+              {/* <View style={{backgroundColor:"red"}}> */}
+              <Text style={{ fontSize: 12, alignSelf: "center" }}>{item.name}</Text>
+              {/* </View> */}
+            </TouchableOpacity>
+          )
+        }}
+      />
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -221,7 +276,9 @@ export default function Home(props) {
                 </Text>
               </View>
 
-              <TouchableOpacity style={{ marginLeft: 10, marginTop: 21 }}>
+              <TouchableOpacity style={{ marginLeft: 10, marginTop: 21 }} onPress={()=>{
+                props.navigation.navigate("Categories")
+              }}>
                 <Text
                   style={{
                     fontSize: 14,
@@ -234,116 +291,7 @@ export default function Home(props) {
                 </Text>
               </TouchableOpacity>
             </View>
-            <ScrollView
-              horizontal={true}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}>
-              <View
-                style={{
-                  width: 123,
-                  height: 95,
-                  marginTop: 30,
-                  marginLeft: width * 0.06,
-                  flexDirection: 'row',
-                }}>
-                <TouchableOpacity style={{ alignItems: 'center' }}>
-                  <View
-                    style={{
-                      width: 65,
-                      height: 65,
-                      backgroundColor: '#DDDDDD',
-                      borderRadius: 5,
-                    }}></View>
-                  <View style={{ marginTop: 8, alignItems: 'center' }}>
-                    <Text style={{ color: 'black', fontSize: width * 0.035 }}>
-                      Development
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-
-              <TouchableOpacity
-                style={{
-                  alignItems: 'center',
-                  marginTop: 30,
-                  marginLeft: width * 0.01,
-                  marginRight: 20,
-                }}>
-                <View
-                  style={{
-                    width: 65,
-                    height: 65,
-                    backgroundColor: '#DDDDDD',
-                    borderRadius: 5,
-                  }}></View>
-                <View style={{ marginTop: 8, alignItems: 'center' }}>
-                  <Text style={{ color: 'black', fontSize: width * 0.035 }}>
-                    Designing
-                  </Text>
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  alignItems: 'center',
-                  marginTop: 30,
-                  marginLeft: width * 0.09,
-                }}>
-                <View
-                  style={{
-                    width: 65,
-                    height: 65,
-                    backgroundColor: '#DDDDDD',
-                    borderRadius: 5,
-                  }}></View>
-                <View style={{ marginTop: 8, alignItems: 'center' }}>
-                  <Text style={{ color: 'black', fontSize: width * 0.035 }}>
-                    Marketing
-                  </Text>
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  alignItems: 'center',
-                  marginTop: 30,
-                  marginLeft: width * 0.11,
-                }}>
-                <View
-                  style={{
-                    width: 65,
-                    height: 65,
-                    backgroundColor: '#DDDDDD',
-                    borderRadius: 5,
-                  }}></View>
-                <View style={{ marginTop: 8, alignItems: 'center' }}>
-                  <Text style={{ color: 'black', fontSize: width * 0.035 }}>
-                    Music & Audio
-                  </Text>
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  alignItems: 'center',
-                  marginTop: 30,
-                  marginLeft: width * 0.05,
-                }}>
-                <View
-                  style={{
-                    width: 65,
-                    height: 65,
-                    backgroundColor: '#DDDDDD',
-                    borderRadius: 5,
-                  }}></View>
-                <View style={{ marginTop: 8, alignItems: 'center' }}>
-                  <Text style={{ color: 'black', fontSize: width * 0.035 }}>
-                    House Cleaning
-                  </Text>
-                </View>
-              </TouchableOpacity>
-
-            </ScrollView>
+            <ExploreCategories />
 
             <View style={{ marginTop: 0 }}>
 
@@ -366,11 +314,18 @@ export default function Home(props) {
                 </Text>
               </View>
 
-              {loading ? <SkeletonLoaderFreelancersList /> : null}
+              {loading ?
+                <View style={{marginTop:-60}}>
+                  <SkeletonLoaderFreelancersList />
+                </View>
+                : null}
 
               {Datas?.freelancerList?.freelancers.map((obj, i) => {
                 return (
                   <TouchableOpacity
+                  onPress={()=>{
+                    props.navigation.navigate('AccountScreen',{freelancerId:obj._id})
+                  }}
                     key={i}
                     style={{ flexDirection: 'row', marginTop: hp('1%') }}>
                     <View
@@ -380,8 +335,8 @@ export default function Home(props) {
                         marginTop: 10,
                         flexDirection: 'row',
                       }}>
-                     
-                     <View
+
+                      <View
                         style={{
                           width: 56,
                           height: 56,
@@ -498,7 +453,7 @@ export default function Home(props) {
 
                 <View style={{ flexDirection: 'row' }}>
 
-                  <ServiesHome  navigation={props.navigation}/>
+                  <ServiesHome navigation={props.navigation} />
 
                   <View
                     style={{
@@ -514,7 +469,7 @@ export default function Home(props) {
                   </View>
                 </View>
 
-                <View style={{ alignItems: 'center', marginTop: 30 }}>
+                <View style={{ alignItems: 'center', marginTop: 30,bottom:20 }}>
                   <TouchableOpacity
                     onPress={() => props.navigation.navigate('FreelancersScreen')}
                     style={{

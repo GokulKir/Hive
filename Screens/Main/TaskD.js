@@ -7,18 +7,27 @@ import {
   Image,
   ImageBackground,
 } from 'react-native'
-import React from 'react'
-import {
-  responsiveHeight,
-  responsiveWidth,
-  responsiveFontSize,
-} from 'react-native-responsive-dimensions'
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen'
+import React, { useState, useEffect } from 'react'
+import { SERVICE_DETAILS } from '../../GraphQl/Query'
+import { useManualQuery, useQuery } from 'graphql-hooks';
 
-export default function TaskD ({navigation}) {
+
+export default function TaskD(props) {
+  const { loading, error, data } = useQuery(SERVICE_DETAILS, {
+    variables: {
+      serviceId: props?.route?.params?.serviceId
+
+    }
+  })
+  const [details, setDetails] = useState([])
+
+  useEffect(() => {
+    if (data?.getServiceDetails?.details) {
+      console.log("-------------------", data?.getServiceDetails?.details);
+      setDetails(data?.getServiceDetails?.details)
+    }
+  }, [data])
+
   return (
     <View style={styles.container}>
       <View
@@ -28,32 +37,25 @@ export default function TaskD ({navigation}) {
           backgroundColor: '#F7F7F7',
           elevation: 5,
           flexDirection: 'row',
+          justifyContent: 'space-between',
+          padding:10
         }}>
-        <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
+        <TouchableOpacity onPress={() => props.navigation.goBack()}>
           <Image
-            style={{width: 30, height: 30, marginLeft: 20, marginTop: 16}}
+            style={{ width: 30, height: 30 }}
             source={require('../../assets/Side.png')}
           />
         </TouchableOpacity>
-
-        <View style={{marginLeft: 217, marginTop: 21, flexDirection: 'row'}}>
-          <TouchableOpacity>
-            <Image
-              style={{width: 22, height: 22}}
-              source={require('../../assets/LoveG.png')}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Image
-              style={{width: 20, height: 22, marginLeft: 20}}
-              source={require('../../assets/ShareG.png')}
-            />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity >
+          <Image
+            style={{ width: 22, height: 22,resizeMode:"contain",right:10,top:5}}
+            source={require('../../assets/ShareG.png')}
+          />
+        </TouchableOpacity>
       </View>
 
       <ScrollView>
-        <ScrollView
+        {/* <ScrollView
           horizontal
           disableIntervalMomentum={true}
           showsVerticalScrollIndicator={false}>
@@ -84,7 +86,11 @@ export default function TaskD ({navigation}) {
                 marginLeft: 10,
               }}></View>
           </View>
-        </ScrollView>
+        </ScrollView> */}
+        <Image
+          style={{ width: "100%", height: 200, resizeMode: "cover" }}
+          source={{ uri: `https://hive-dash.credot.dev/${details?.images?.[0]}` }}
+        />
 
         <View
           style={{
@@ -95,63 +101,75 @@ export default function TaskD ({navigation}) {
             borderWidth: 0.8,
             borderColor: '#DDDDDD',
           }}>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <View
               style={{
-                width: 50,
-                height: 50,
+                width: 56,
+                height: 56,
                 backgroundColor: '#DDDDDD',
-                marginLeft: 20,
-                marginTop: 8,
                 borderRadius: 100,
-                flexDirection: 'row',
+                marginLeft: 20,
               }}>
-              <Image
-                style={{width: 17, height: 17}}
-                source={require('../../assets/Dot.png')}
-              />
-              <View
-                style={{
-                  width: 156,
-                  height: 56,
-                  backgroundColor: '#fff',
-                  marginLeft: 40,
-                }}>
-                <Text
-                  style={{
-                    color: 'black',
-                    fontSize: 16,
-                    fontWeight: '700',
-                    marginLeft: 5,
-                  }}>
-                  Kellyiam Walker
-                </Text>
-                <Image
-                  style={{width: 104, height: 18, marginLeft: 2, marginTop: 6}}
-                  source={require('../../assets/Rating.png')}
-                />
-              </View>
-
-              <View>
-                <TouchableOpacity>
+              <ImageBackground
+                style={{ width: '100%', height: '100%' }}
+                imageStyle={{ borderRadius: 100 }}
+                source={{ uri: `https://hive-dash.credot.dev/${details?.owner?.profileImg}` }}>
+                {details?.owner?.isActivated ? (
                   <Image
-                    style={{
-                      width: 22,
-                      height: 22,
-                      marginLeft: 62,
-                      marginTop: 12,
-                    }}
-                    source={require('../../assets/Message.png')}
+                    style={{ width: 17, height: 17 }}
+                    source={require('../../assets/Dot.png')}
                   />
-                </TouchableOpacity>
-              </View>
+                ) : (
+                  <Image
+                    style={{ width: 17, height: 17 }}
+                    source={require('../../assets/Dot1.png')}
+                  />
+                )}
+              </ImageBackground>
+            </View>
+
+            <View
+              style={{
+                width: 156,
+                height: 56,
+                backgroundColor: '#fff',
+                marginLeft: 10,
+                top: 3, flex: 1
+              }}>
+              <Text
+                style={{
+                  color: 'black',
+                  fontSize: 16,
+                  fontWeight: '700',
+                }}>
+                {details?.owner?.firstName} {details?.owner?.lastName}
+              </Text>
+              <Image
+                style={{ width: 104, height: 18, marginLeft: 2, marginTop: 6 }}
+                source={require('../../assets/Rating.png')}
+              />
+            </View>
+
+            <View>
+              <TouchableOpacity>
+                <Image
+                  style={{
+                    width: 22,
+                    height: 22,
+                    // marginLeft: 62,
+                    marginTop: 20,
+                    right: 20
+                  }}
+                  source={require('../../assets/Message.png')}
+                />
+              </TouchableOpacity>
             </View>
           </View>
         </View>
 
         <View>
           <Image
-            style={{marginLeft: 30, marginTop: 20, width: 74, height: 23}}
+            style={{ marginLeft: 30, marginTop: 20, width: 74, height: 23 }}
             source={require('../../assets/Label1.png')}
           />
         </View>
@@ -164,7 +182,7 @@ export default function TaskD ({navigation}) {
               marginLeft: 34,
               marginTop: 10,
             }}>
-            Programming, WordPress, WP setup
+            {details?.slug}
           </Text>
           <Text
             style={{
@@ -173,91 +191,13 @@ export default function TaskD ({navigation}) {
               marginLeft: 34,
               marginTop: 10,
             }}>
-            I will write rest APi in react native
+            {details?.shortDescription}
           </Text>
 
           <Image
-            style={{width: 160, height: 24, marginLeft: 30, marginTop: 10}}
+            style={{ width: 160, height: 24, marginLeft: 30, marginTop: 10 }}
             source={require('../../assets/RateT.png')}
           />
-        </View>
-
-        <View style={{alignItems: 'center', marginTop: 10}}>
-          <Image
-            style={{width: '85%', height: 279, marginTop: 30}}
-            source={require('../../assets/Ips.png')}
-          />
-        </View>
-
-        <View>
-          <Text
-            style={{
-              color: 'black',
-              marginLeft: 30,
-              marginTop: 30,
-              fontSize: 18,
-              fontWeight: '600',
-            }}>
-            What more can expect
-          </Text>
-        </View>
-
-        <View style={{alignItems: 'center', marginTop: 10}}>
-          <Text style={{fontSize: 14, marginRight: 10}}>
-            Ativero eos et accusamus et iustoan odiosimos
-          </Text>
-
-          <Text style={{fontSize: 14, marginRight: 10, marginTop: 3}}>
-            ducimus quites blanditiis praesentium uptatum
-          </Text>
-
-          <Text style={{fontSize: 14, marginRight: 10, marginTop: 3}}>
-            deleniti atque corrupti quos dolores et quastan
-          </Text>
-
-          <Text style={{fontSize: 14, marginRight: 100, marginTop: 3}}>
-            molestias excepturi occaecatie.
-          </Text>
-        </View>
-
-        <View style={{alignItems: 'center'}}></View>
-
-        <View>
-          <Image
-            style={{width: '80%', height: 149, marginTop: 10, marginLeft: 25}}
-            source={require('../../assets/Let2.png')}
-          />
-        </View>
-
-        <View style={{alignItems: 'center', marginTop: 10}}>
-          <Text style={{fontSize: 14, marginRight: 10}}>
-            Ativero eos et accusamus et iustoan odiosimos{' '}
-          </Text>
-
-          <Text style={{fontSize: 14, marginRight: 10, marginTop: 3}}>
-            ducimus quites blanditiis praesentium uptatum
-          </Text>
-
-          <Text style={{fontSize: 14, marginRight: 10, marginTop: 3}}>
-            deleniti atque corrupti quos dolores et quastan
-          </Text>
-
-          <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 14, marginRight: 23, marginTop: 3}}>
-              molestias excepturi occaecatie.
-            </Text>
-            <TouchableOpacity>
-              <Text
-                style={{
-                  fontSize: 14,
-                  marginRight: 10,
-                  marginTop: 3,
-                  color: '#1DA1F2',
-                }}>
-                show less
-              </Text>
-            </TouchableOpacity>
-          </View>
         </View>
 
         <View
@@ -269,7 +209,7 @@ export default function TaskD ({navigation}) {
             borderBottomWidth: 0.7,
             borderBottomColor: 'grey',
           }}>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <View
               style={{
                 width: 56,
@@ -280,15 +220,15 @@ export default function TaskD ({navigation}) {
                 borderRadius: 5,
               }}></View>
 
-            <View style={{marginTop: 30, marginLeft: 20}}>
-              <Text style={{color: 'black'}}>Starts from</Text>
-              <Text style={{color: '#C89D67', fontSize: 16, fontWeight: '700'}}>
-                $250.00
+            <View style={{ marginTop: 30, marginLeft: 20 }}>
+              <Text style={{ color: 'black' }}>Starts from</Text>
+              <Text style={{ color: '#C89D67', fontSize: 16, fontWeight: '700' }}>
+                ${details?.price}
               </Text>
             </View>
           </View>
 
-          <View style={{alignItems: 'center', marginTop: 15}}>
+          <View style={{ alignItems: 'center', marginTop: 15 }}>
             <TouchableOpacity
               style={{
                 width: '90%',
@@ -303,32 +243,32 @@ export default function TaskD ({navigation}) {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <Text style={{color: '#fff', fontSize: 16}}>
+                <Text style={{ color: '#fff', fontSize: 16 }}>
                   Hire me for your task
                 </Text>
                 <Image
-                  style={{width: 15, height: 15, marginLeft: 10}}
+                  style={{ width: 15, height: 15, marginLeft: 10 }}
                   source={require('../../assets/SideR.png')}
                 />
               </View>
             </TouchableOpacity>
           </View>
 
-          <View style={{alignItems: 'center', marginTop: 30}}>
+          <View style={{ alignItems: 'center', marginTop: 30 }}>
             <Image
-              style={{width: '100%', height: 98}}
+              style={{ width: '100%', height: 98 }}
               source={require('../../assets/Stats.png')}
             />
           </View>
         </View>
 
-        <View style={{marginLeft: 30, marginTop: 30}}>
-          <Text style={{color: 'black', fontSize: 17, fontWeight: '700'}}>
+        <View style={{ marginLeft: 30, marginTop: 30 }}>
+          <Text style={{ color: 'black', fontSize: 17, fontWeight: '700' }}>
             Common FAQs
           </Text>
         </View>
 
-        <View style={{alignItems: 'center', marginTop: 50}}>
+        <View style={{ alignItems: 'center', marginTop: 50 }}>
           <View
             style={{
               width: '90%',
@@ -349,7 +289,7 @@ export default function TaskD ({navigation}) {
             </Text>
             <TouchableOpacity>
               <Image
-                style={{width: 22, height: 10, marginLeft: '88%'}}
+                style={{ width: 22, height: 10, marginLeft: '88%' }}
                 source={require('../../assets/Minuse.png')}
               />
             </TouchableOpacity>
@@ -363,19 +303,19 @@ export default function TaskD ({navigation}) {
               }}>
               improve WordPress development
             </Text>
-            <Text style={{marginLeft: 20, marginTop: 20, fontSize: 15}}>
+            <Text style={{ marginLeft: 20, marginTop: 20, fontSize: 15 }}>
               Ativero eos et accusamus iustoan osimos
             </Text>
-            <Text style={{marginLeft: 20, marginTop: 5, fontSize: 15}}>
+            <Text style={{ marginLeft: 20, marginTop: 5, fontSize: 15 }}>
               ducimus quites blanditiis praese eisntium
             </Text>
-            <Text style={{marginLeft: 20, marginTop: 10, fontSize: 15}}>
+            <Text style={{ marginLeft: 20, marginTop: 10, fontSize: 15 }}>
               uptatum deleniti atque corrupti.
             </Text>
           </View>
         </View>
 
-        <View style={{alignItems: 'center', marginTop: 10}}>
+        <View style={{ alignItems: 'center', marginTop: 10 }}>
           <View
             style={{
               width: '90%',
@@ -402,7 +342,7 @@ export default function TaskD ({navigation}) {
               </Text>
               <TouchableOpacity>
                 <Image
-                  style={{width: 15, height: 16}}
+                  style={{ width: 15, height: 16 }}
                   source={require('../../assets/Plus.png')}
                 />
               </TouchableOpacity>
@@ -410,7 +350,7 @@ export default function TaskD ({navigation}) {
           </View>
         </View>
 
-        <View style={{alignItems: 'center', marginTop: 10}}>
+        <View style={{ alignItems: 'center', marginTop: 10 }}>
           <View
             style={{
               width: '90%',
@@ -437,7 +377,7 @@ export default function TaskD ({navigation}) {
               </Text>
               <TouchableOpacity>
                 <Image
-                  style={{width: 15, height: 16, marginRight: 10}}
+                  style={{ width: 15, height: 16, marginRight: 10 }}
                   source={require('../../assets/Plus.png')}
                 />
               </TouchableOpacity>
@@ -445,7 +385,7 @@ export default function TaskD ({navigation}) {
           </View>
         </View>
 
-        <View style={{alignItems: 'center', marginTop: 10}}>
+        <View style={{ alignItems: 'center', marginTop: 10 }}>
           <View
             style={{
               width: '90%',
@@ -496,7 +436,7 @@ export default function TaskD ({navigation}) {
           </View>
         </View>
 
-        <View style={{alignItems: 'center', marginTop: 10}}>
+        <View style={{ alignItems: 'center', marginTop: 10 }}>
           <View
             style={{
               width: '90%',
@@ -524,7 +464,7 @@ export default function TaskD ({navigation}) {
               </Text>
               <TouchableOpacity>
                 <Image
-                  style={{width: 15, height: 16}}
+                  style={{ width: 15, height: 16 }}
                   source={require('../../assets/Plus.png')}
                 />
               </TouchableOpacity>
@@ -532,7 +472,7 @@ export default function TaskD ({navigation}) {
           </View>
         </View>
 
-        <View style={{height: 256}}></View>
+        <View style={{ height: 256 }}></View>
       </ScrollView>
     </View>
   )

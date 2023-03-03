@@ -339,7 +339,7 @@ export default function Freelancers(props) {
                 marginTop: 20,
                 fontWeight: 'bold',
               }}>
-              29 search results(s) found
+             {CategoryData?.length} search results(s) found
             </Text>
 
             <TouchableOpacity
@@ -363,6 +363,7 @@ export default function Freelancers(props) {
 
           <FlatList
             data={CategoryData}
+            style={{marginBottom:50}}
             keyExtractor={item => item._id}
             numColumns={2}
             renderItem={({ item }) => {
@@ -371,10 +372,12 @@ export default function Freelancers(props) {
                   style={{
                     width: wp('45%'),
                     height: hp('40%'),
-                    marginTop: 10,
+                    // marginTop: 10,
                     marginLeft: wp('3%'),
                   }}>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={()=>{
+                    props.navigation.navigate('TaskD',{serviceId:item._id})
+                  }}>
                     <ImageBackground
                       // style={{
                       //   height: 126,
@@ -405,7 +408,6 @@ export default function Freelancers(props) {
                         }}>
                         {item?.owner?.username}
                       </Text>
-                      <Text style={{ color: 'black' }}>
                         <Text
                           numberOfLines={2}
                           style={{
@@ -417,7 +419,6 @@ export default function Freelancers(props) {
                           }}>
                           {item?.owner?.description}
                         </Text>
-                      </Text>
                     </View>
 
                     <View style={{ flexDirection: 'row' }}>

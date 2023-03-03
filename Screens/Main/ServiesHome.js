@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  ImageBackground
 } from 'react-native'
 import React, {useState, useEffect} from 'react'
 import {
@@ -82,23 +83,30 @@ const ServiesHome = ({navigation}) => {
         horizontal={true}
         data={CategoryData}
         keyExtractor={item => item._id}
+        showsHorizontalScrollIndicator={false}
         renderItem={({item}) => {
           return (
-            <TouchableOpacity onPress={()=> navigation.navigate('TaskD')} style={{marginLeft: wp('5%')}}>
-              <View
-                style={{
-                  height: hp('19%'),
-                  width: '101%',
-                  backgroundColor: '#DDDDDD',
-                  borderRadius: 5,
-                  marginLeft: wp('1%'),
-                  marginTop: hp('3%'),
-                }}>
-                <Image
-                  style={{width: 75, height: 23}}
-                  source={require('../../assets/Feat.png')}
-                />
-              </View>
+            <TouchableOpacity onPress={()=> navigation.navigate('TaskD',{serviceId:item._id})} style={{marginLeft: wp('8%'),top:20,right:10}}>
+              <ImageBackground
+                      // style={{
+                      //   height: 126,
+                      //   width: '100%',
+                      //   backgroundColor: '#DDDDDD',
+                      //   borderRadius: 5,
+                      //   marginTop: 45,
+                      // }}
+                      style={{ width: "100%", height: 126 }}
+                      source={{ uri: `https://hive-dash.credot.dev/${item?.owner?.profileImg}` }}
+                    >
+                      {/* <Image
+                      style={{width: 80, height: 25}}
+                      source={require('../../assets/Label2.png')}
+                    /> */}
+                      <Image
+                        style={{ width: 80, height: 25 }}
+                        source={require('../../assets/Label2.png')}
+                      />
+                    </ImageBackground>
 
               <View>
                 <Text
