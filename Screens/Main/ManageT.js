@@ -74,8 +74,8 @@ const AVAILABLE_TASKS = `query FreelencerOwnServicesList($status: Int) {
       }
     }
   }
-}`
-
+}
+`
 export default function MangeTasks ({navigation}) {
   const {loading, error, data} = useQuery(AVAILABLE_TASKS)
   const [Datas, setDatas] = useState([])
