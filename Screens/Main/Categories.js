@@ -7,6 +7,7 @@ import {
 import { Card, List, Divider } from 'react-native-paper';
 import { CATEGORIES } from '../../GraphQl/Query';
 import { useManualQuery, useQuery } from 'graphql-hooks';
+import ExploreCategorySkeleton from '../../Components/ExploreCategory';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -71,6 +72,12 @@ const Categories = () => {
             // console.log("-------------------", data?.categoryList?.categories?.[0]?.children);
         }
     }, [data])
+
+    if(loading){
+        return(
+            <ExploreCategorySkeleton/>
+        )
+    }
 
     return (
         <View style={{ flex: 1,backgroundColor:"#fff" }}>
