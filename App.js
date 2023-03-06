@@ -1,5 +1,5 @@
-import  React,{useEffect,useState} from 'react'
-import { View, TouchableOpacity,Text } from 'react-native'
+import React, { useEffect, useState, useContext } from 'react'
+import { View, TouchableOpacity, Text } from 'react-native'
 import { Avatar } from 'react-native-paper'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -76,19 +76,15 @@ import {
 } from '@react-native-google-signin/google-signin'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Categories from './Screens/Main/Categories'
+import Store from './Screens/Store'
+import { Context } from './Screens/Store'
 
 const user = firebase.auth().currentUser
-const MyStack = props => {
+
+const DrawerScreens = (props) => {
   const [userImage, setUserImage] = useState()
 
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId:
-        '86575262147-5ek6sbcsva6bi38al4h641sa731s0aja.apps.googleusercontent.com',
-    })
-  }, [])
-
-  function ProfileImage ({navigation}) {
+  function ProfileImage({ navigation }) {
     AsyncStorage.getItem('userSession', (err, result) => {
       const sesData = JSON.parse(result)
       setUserImage(`https://hive-dash.credot.dev/${sesData?.profileImg}`)
@@ -106,22 +102,22 @@ const MyStack = props => {
               ? firebase.auth().currentUser.photoURL
               : userImage,
           }}
-          style={{right: 10}}
+          style={{ right: 10 }}
         />
       </TouchableOpacity>
     )
   }
 
-  function BackButtonAndDrawer ({navigation}) {
+  function BackButtonAndDrawer({ navigation }) {
     return (
-      <View style={{flexDirection: 'row'}}>
+      <View style={{ flexDirection: 'row' }}>
         {/* <StatusBar
           backgroundColor={AppStyles.Colors.screensHeaderColor}
         /> */}
         <Icon
           name='menu'
           size={30}
-          style={{marginLeft: 10}}
+          style={{ marginLeft: 10 }}
           color={'#000'}
           backgroundColor='black'
           onPress={() => navigation.openDrawer()}
@@ -129,36 +125,37 @@ const MyStack = props => {
       </View>
     )
   }
+
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name='Splash'
-        component={Splash}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name='Login'
-        component={Login}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name='Signup'
-        component={Signup}
-        options={{headerShown: false}}
-      />
+      {/* <Stack.Screen
+          name='Splash'
+          component={Splash}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='Login'
+          component={Login}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='Signup'
+          component={Signup}
+          options={{ headerShown: false }}
+        /> */}
       <Stack.Screen
         name='HomeScreen'
         component={Home}
         options={{
           headerLeft: () => (
-            <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row' }}>
               {/* <StatusBar
               backgroundColor={AppStyles.Colors.screensHeaderColor}
             /> */}
               <Icon
                 name='menu'
                 size={30}
-                style={{marginLeft: 10}}
+                style={{ marginLeft: 10 }}
                 color={'#fff'}
                 backgroundColor='black'
                 onPress={() => props.navigation.openDrawer()}
@@ -166,14 +163,14 @@ const MyStack = props => {
             </View>
           ),
           // headerTitle: props => <Logo {...props} />,
-          headerStyle: {backgroundColor: '#1D1D1B'},
+          headerStyle: { backgroundColor: '#1D1D1B' },
           headerRight: () => <ProfileImage {...props} />,
         }}
       />
       <Stack.Screen
         name='Password'
         component={Password}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name='Dashboard'
@@ -278,47 +275,47 @@ const MyStack = props => {
       <Stack.Screen
         name='Edit'
         component={Edit}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name='Payout'
         component={Payout}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name='TaskD'
         component={TaskD}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name='TaskDetails'
         component={TaskDetails}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name='Filter'
         component={Filter}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name='Filter2'
         component={Filter2}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name='Order'
         component={Order}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name='LoginB'
         component={LoginB}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name='SignupB'
         component={SignupB}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name='Chat'
@@ -326,19 +323,19 @@ const MyStack = props => {
         options={{
           headerLeft: () => <BackButtonAndDrawer {...props} />,
           headerTitle: props => <Logo9 {...props} />,
-          headerStyle: {backgroundColor: '#fff'},
+          headerStyle: { backgroundColor: '#fff' },
         }}
       />
       <Stack.Screen
         name='SuccessLogin'
         component={SuccessLogin}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
 
       <Stack.Screen
         name='CRoom'
         component={ChatRoom}
-        options={{headerShown : false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name='Categories'
@@ -347,7 +344,7 @@ const MyStack = props => {
           headerLeft: () => (
             <BackButtonAndDrawer {...props} />
           ),
-          headerTitle: props => <Text style={{fontSize:20,fontWeight:'bold',left:80}}>Categories</Text>,
+          headerTitle: props => <Text style={{ fontSize: 20, fontWeight: 'bold', left: 80 }}>Categories</Text>,
           // headerStyle: { backgroundColor: '#fff' },
           headerRight: () => <ProfileImage {...props} />
         }}
@@ -356,24 +353,79 @@ const MyStack = props => {
   )
 }
 
-export default function App (route) {
+const MyStack = ({ route, navigation }) => {
+  const [state, dispatch] = useContext(Context);
+  const [isLogedin, setIslogedin] = useState(true);
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '86575262147-5ek6sbcsva6bi38al4h641sa731s0aja.apps.googleusercontent.com',
+    })
+  }, [])
+
+  useEffect(() => {
+
+    AsyncStorage.getItem('userSession', (err, result) => {
+      const sesData = JSON.parse(result)
+      if (sesData) {
+        setIslogedin(true)
+      } else {
+
+        if (state.sessionData) {
+          setIslogedin(true)
+        } else {
+          setIslogedin(false)
+        }
+      }
+    })
+
+  }, [state.sessionData])
+
   return (
-    <NavigationContainer>
-      <Drawer.Navigator
-        screenOptions={{
-          headerTintColor: 'black',
-        }}
-        drawerContent={({...props}) => {
-          return <DrawerContent {...props} route={route}></DrawerContent>
-        }}>
-        <Drawer.Screen
-          name='ALLSCREENS'
-          component={MyStack}
-          options={{
-            headerShown: false,
+    <>
+      {isLogedin ?
+        <Drawer.Navigator
+          screenOptions={{
+            headerTintColor: 'black',
           }}
-        />
-      </Drawer.Navigator>
-    </NavigationContainer>
+          drawerContent={({ ...props }) => {
+            return <DrawerContent {...props} route={route}></DrawerContent>
+          }}>
+          <Drawer.Screen
+            name='ALLSCREENS'
+            component={DrawerScreens}
+            options={{
+              headerShown: false,
+            }}
+          />
+        </Drawer.Navigator>
+        :
+        <Stack.Navigator>
+          <Stack.Screen
+            name='Login'
+            component={Login}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='Signup'
+            component={Signup}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      }
+
+    </>
+  )
+}
+
+export default function App(route) {
+
+  return (
+    <Store>
+      <NavigationContainer>
+        <MyStack />
+      </NavigationContainer>
+    </Store>
   )
 }

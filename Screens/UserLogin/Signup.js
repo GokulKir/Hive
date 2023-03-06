@@ -373,7 +373,7 @@ export default function Signup({ navigation }) {
             height: 244,
             backgroundColor: '#1D1D1B',
           }}>
-          <TouchableOpacity onPress={() => navigation.navigate('LoginB')}>
+          {/* <TouchableOpacity onPress={() => navigation.navigate('LoginB')}>
             <Text
               style={{
                 color: 'grey',
@@ -383,7 +383,7 @@ export default function Signup({ navigation }) {
               }}>
               Skip
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <Image
             style={{ height: 45, width: 95, marginTop: 35 }}
