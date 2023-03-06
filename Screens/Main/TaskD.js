@@ -35,8 +35,8 @@ export default function TaskD(props) {
         data?.getServiceDetails?.reviewStatistics?.two +
         data?.getServiceDetails?.reviewStatistics?.three +
         data?.getServiceDetails?.reviewStatistics?.four +
-        data?.getServiceDetails?.reviewStatistics?.five 
-        )
+        data?.getServiceDetails?.reviewStatistics?.five
+      )
     }
   }, [data])
 
@@ -487,55 +487,55 @@ export default function TaskD(props) {
         <View style={{ backgroundColor: "#fff", margin: 20, borderRadius: 5 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'center', padding: 5, }}>
             <Text>5 <Image
-                    style={{ width: 12, height: 12, marginLeft: 10, marginTop: 4 }}
-                    source={require('../../assets/Rate.png')}
-                  /></Text>
+              style={{ width: 12, height: 12, marginLeft: 10, marginTop: 4 }}
+              source={require('../../assets/Rate.png')}
+            /></Text>
             <View style={{ width: "70%", height: 5, backgroundColor: "#f9f5ef", alignSelf: 'center', margin: 5 }} >
-              <View style={{ backgroundColor: "#e1c03f", width:ratings?.five / totalCount * 100 || 0, height: 5 }} />
+              <View style={{ backgroundColor: "#e1c03f", width: ratings?.five / totalCount * 100 || 0, height: 5 }} />
             </View>
             <Text>{ratings?.five}</Text>
           </View>
 
           <View style={{ flexDirection: 'row', justifyContent: 'center', padding: 5, }}>
             <Text>4 <Image
-                    style={{ width: 12, height: 12, marginLeft: 10, marginTop: 4 }}
-                    source={require('../../assets/Rate.png')}
-                  /></Text>
+              style={{ width: 12, height: 12, marginLeft: 10, marginTop: 4 }}
+              source={require('../../assets/Rate.png')}
+            /></Text>
             <View style={{ width: "70%", height: 5, backgroundColor: "#f9f5ef", alignSelf: 'center', margin: 5 }} >
-              <View style={{ backgroundColor: "#e1c03f", width:ratings?.four / totalCount * 100 || 0, height: 5 }} />
+              <View style={{ backgroundColor: "#e1c03f", width: ratings?.four / totalCount * 100 || 0, height: 5 }} />
             </View>
             <Text>{ratings?.four}</Text>
           </View>
 
           <View style={{ flexDirection: 'row', justifyContent: 'center', padding: 5, }}>
             <Text>3 <Image
-                    style={{ width: 12, height: 12, marginLeft: 10, marginTop: 4 }}
-                    source={require('../../assets/Rate.png')}
-                  /></Text>
+              style={{ width: 12, height: 12, marginLeft: 10, marginTop: 4 }}
+              source={require('../../assets/Rate.png')}
+            /></Text>
             <View style={{ width: "70%", height: 5, backgroundColor: "#f9f5ef", alignSelf: 'center', margin: 5 }} >
-              <View style={{ backgroundColor: "#e1c03f", width:ratings?.three / totalCount * 100 || 0, height: 5 }} />
+              <View style={{ backgroundColor: "#e1c03f", width: ratings?.three / totalCount * 100 || 0, height: 5 }} />
             </View>
             <Text>{ratings?.three}</Text>
           </View>
 
           <View style={{ flexDirection: 'row', justifyContent: 'center', padding: 5, }}>
             <Text>2 <Image
-                    style={{ width: 12, height: 12, marginLeft: 10, marginTop: 4 }}
-                    source={require('../../assets/Rate.png')}
-                  /></Text>
+              style={{ width: 12, height: 12, marginLeft: 10, marginTop: 4 }}
+              source={require('../../assets/Rate.png')}
+            /></Text>
             <View style={{ width: "70%", height: 5, backgroundColor: "#f9f5ef", alignSelf: 'center', margin: 5 }} >
-              <View style={{ backgroundColor: "#e1c03f", width:ratings?.two / totalCount * 100 || 0, height: 5 }} />
+              <View style={{ backgroundColor: "#e1c03f", width: ratings?.two / totalCount * 100 || 0, height: 5 }} />
             </View>
             <Text>{ratings?.two}</Text>
           </View>
 
           <View style={{ flexDirection: 'row', justifyContent: 'center', padding: 5, }}>
             <Text>1 <Image
-                    style={{ width: 12, height: 12, marginLeft: 10, marginTop: 4 }}
-                    source={require('../../assets/Rate.png')}
-                  /></Text>
+              style={{ width: 12, height: 12, marginLeft: 10, marginTop: 4 }}
+              source={require('../../assets/Rate.png')}
+            /></Text>
             <View style={{ width: "70%", height: 5, backgroundColor: "#f9f5ef", alignSelf: 'center', margin: 5 }} >
-              <View style={{ backgroundColor: "#e1c03f", width:ratings?.one / totalCount * 100 || 0, height: 5 }} />
+              <View style={{ backgroundColor: "#e1c03f", width: ratings?.one / totalCount * 100 || 0, height: 5 }} />
             </View>
             <Text>{ratings?.one}</Text>
           </View>
