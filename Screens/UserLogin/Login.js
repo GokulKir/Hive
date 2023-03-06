@@ -10,8 +10,8 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native'
-import React, {useState, useEffect, useContext} from 'react'
-const {width, height} = Dimensions.get('window')
+import React, { useState, useEffect, useContext } from 'react'
+const { width, height } = Dimensions.get('window')
 import {
   GoogleSignin,
   GoogleSigninButton,
@@ -19,9 +19,10 @@ import {
 } from '@react-native-google-signin/google-signin'
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
-import {ClientContext, useMutation} from 'graphql-hooks'
-import {Snackbar, IconButton} from 'react-native-paper'
+import { ClientContext, useMutation } from 'graphql-hooks'
+import { Snackbar, IconButton } from 'react-native-paper'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Context } from '../Store'
 
 const USER_LOGIN = `
 mutation UserLogin($email: String!, $password: String!) {
@@ -39,8 +40,9 @@ mutation UserLogin($email: String!, $password: String!) {
 }
 `
 
-export default function Login ({navigation}) {
+export default function Login({ navigation }) {
   const client = useContext(ClientContext)
+  const [state, dispatch] = useContext(Context);
 
   const [LoginUser] = useMutation(USER_LOGIN)
   useEffect(() => {
@@ -87,8 +89,8 @@ export default function Login ({navigation}) {
     } else if (validate(email) && password.length >= 8) {
       setIsSignInLoader(true)
       console.log('email and passwrd', email, password)
-      const {data, error} = await LoginUser({
-        variables: {email, password},
+      const { data, error } = await LoginUser({
+        variables: { email, password },
       })
 
       console.log(data)
@@ -97,7 +99,7 @@ export default function Login ({navigation}) {
         console.log(error)
         setIsSignInLoader(false)
       } else {
-        const {token, success, msg, userData} = data.userLogin
+        const { token, success, msg, userData } = data.userLogin
         client.setHeader('Authorization', `Bearer ${token}`)
         client.setHeader('token', `${token}`)
         console.log(userData)
@@ -107,7 +109,8 @@ export default function Login ({navigation}) {
           } catch (err) {
           } finally {
             setIsSignInLoader(false)
-            navigation.navigate('HomeScreen')
+            // navigation.navigate('HomeScreen')
+            dispatch({ type: "SET_SESSION", payload: userData });
           }
           //  navigation.navigate('HomeScreen')
         } else if (msg) {
@@ -202,7 +205,7 @@ export default function Login ({navigation}) {
   //Google Sign in  API //
 
   const LoginGoogle = async () => {
-    const {idToken} = await GoogleSignin.signIn()
+    const { idToken } = await GoogleSignin.signIn()
 
     const googleCredential = auth.GoogleAuthProvider.credential(idToken)
 
@@ -242,13 +245,13 @@ export default function Login ({navigation}) {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <View style={{width: '100%', height: 56, backgroundColor: '#1D1D1B'}}>
-          <View style={{marginLeft: width - 58, marginTop: 15}}>
-            <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-              <Text style={{color: 'grey', marginTop: 3, fontSize: 15}}>
+        <View style={{ width: '100%', height: 56, backgroundColor: '#1D1D1B' }}>
+          <View style={{ marginLeft: width - 58, marginTop: 15 }}>
+            {/* <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+              <Text style={{ color: 'grey', marginTop: 3, fontSize: 15 }}>
                 Skip
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 
@@ -260,7 +263,7 @@ export default function Login ({navigation}) {
             alignItems: 'center',
           }}>
           <Image
-            style={{marginTop: 60, height: 46, width: 96}}
+            style={{ marginTop: 60, height: 46, width: 96 }}
             source={require('../../assets/Logo.png')}
           />
 
@@ -276,7 +279,7 @@ export default function Login ({navigation}) {
         </View>
 
         <View>
-          <View style={{marginLeft: 20, marginTop: 25}}>
+          <View style={{ marginLeft: 20, marginTop: 25 }}>
             <Text
               style={{
                 color: 'black',
@@ -288,7 +291,7 @@ export default function Login ({navigation}) {
           </View>
         </View>
 
-        <View style={{alignItems: 'center', marginTop: 30}}>
+        <View style={{ alignItems: 'center', marginTop: 30 }}>
           <View
             style={{
               alignItems: 'center',
@@ -324,7 +327,7 @@ export default function Login ({navigation}) {
             />
           </View>
 
-          <Text style={{alignSelf: 'baseline', left: 23, color: 'red'}}>
+          <Text style={{ alignSelf: 'baseline', left: 23, color: 'red' }}>
             {showFieldError && emailError}
           </Text>
 
@@ -399,7 +402,7 @@ export default function Login ({navigation}) {
         {snackBarError}
       </Snackbar> */}
 
-        <View style={{alignItems: 'center', marginTop: 15}}>
+        <View style={{ alignItems: 'center', marginTop: 15 }}>
           <TouchableOpacity
             disabled={isSignInLoader}
             onPress={() => handleLogin()}
@@ -412,20 +415,20 @@ export default function Login ({navigation}) {
                 alignItems: 'center',
                 justifyContent: 'center',
               },
-              isSignInLoader && {opacity: 0.7},
+              isSignInLoader && { opacity: 0.7 },
             ]}>
             {isSignInLoader ? (
               <ActivityIndicator size={'large'} color={'#fff'} />
             ) : (
-              <Text style={{color: '#fff', fontSize: 15, fontWeight: '600'}}>
+              <Text style={{ color: '#fff', fontSize: 15, fontWeight: '600' }}>
                 Login now
               </Text>
             )}
           </TouchableOpacity>
         </View>
 
-        <View style={{alignItems: 'center', marginTop: 30}}>
-          <View style={{flexDirection: 'row'}}>
+        <View style={{ alignItems: 'center', marginTop: 30 }}>
+          <View style={{ flexDirection: 'row' }}>
             <View
               style={{
                 borderWidth: 0.4,
@@ -436,7 +439,7 @@ export default function Login ({navigation}) {
                 marginRight: 8,
               }}></View>
 
-            <Text style={{fontSize: 17, fontWeight: '600'}}>OR</Text>
+            <Text style={{ fontSize: 17, fontWeight: '600' }}>OR</Text>
 
             <View
               style={{
@@ -450,7 +453,7 @@ export default function Login ({navigation}) {
           </View>
         </View>
 
-        <View style={{alignItems: 'center', marginTop: 30}}>
+        <View style={{ alignItems: 'center', marginTop: 30 }}>
           <TouchableOpacity
             onPress={LoginGoogle}
             style={{
@@ -465,7 +468,7 @@ export default function Login ({navigation}) {
               flexDirection: 'row',
             }}>
             <Image
-              style={{width: 28, height: 28}}
+              style={{ width: 28, height: 28 }}
               source={require('../../assets/Google.png')}
             />
             <Text
@@ -481,9 +484,9 @@ export default function Login ({navigation}) {
           </TouchableOpacity>
         </View>
 
-        <View style={{alignItems: 'center'}}>
-          <View style={{width: '100%', height: 45, marginTop: 19}}>
-            <View style={{flexDirection: 'row'}}>
+        <View style={{ alignItems: 'center' }}>
+          <View style={{ width: '100%', height: 45, marginTop: 19 }}>
+            <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
                 <Text
                   style={{
@@ -513,7 +516,7 @@ export default function Login ({navigation}) {
           </View>
         </View>
 
-        <View style={{height: 25}}></View>
+        <View style={{ height: 25 }}></View>
       </ScrollView>
       {/* <Snackbar
         visible={snackbarVisible}

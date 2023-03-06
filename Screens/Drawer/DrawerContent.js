@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native'
-import React, { useState, useEffect,useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 const { height, width } = Dimensions.get('window')
 import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
@@ -18,18 +18,21 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {ClientContext, useMutation} from 'graphql-hooks'
+import { ClientContext, useMutation } from 'graphql-hooks'
+import { Context } from '../Store'
+import { Switch } from 'react-native-paper';
 
 export default function DrawerContent({ navigation }) {
   const client = useContext(ClientContext)
   const [firstname, setFirstName] = useState()
   const [userData, setUserData] = useState()
   const [userImage, setUserImage] = useState()
+  const [state, dispatch] = useContext(Context);
 
   const user = firebase.auth().currentUser
 
   const signOut = async () => {
-    if(user){
+    if (user) {
       try {
         await GoogleSignin.signOut()
         await firebase.auth().signOut();
@@ -38,17 +41,18 @@ export default function DrawerContent({ navigation }) {
       } catch (error) {
         console.error(error)
       }
-    }else{
-      try{
-       await AsyncStorage.removeItem("userSession")
-       navigation.navigate('Login')
-       console.log('User signed out successfully: API')
-      }catch(err){
+    } else {
+      try {
+        await AsyncStorage.removeItem("userSession")
+        //  navigation.navigate('Login')
+        dispatch({ type: "SET_SESSION", payload: null });
+        console.log('User signed out successfully: API')
+      } catch (err) {
         console.log(err);
       }
     }
 
-   
+
   }
 
   //   const signOut = async () => {
@@ -62,8 +66,8 @@ export default function DrawerContent({ navigation }) {
 
   useEffect(() => {
     AsyncStorage.getItem('userSession', (err, result) => {
-       const sesData = JSON.parse(result);
-       setUserData(sesData)
+      const sesData = JSON.parse(result);
+      setUserData(sesData)
       setUserImage(`https://hive-dash.credot.dev/${sesData?.profileImg}`)
       // console.log("---------------------------",`https://hive-dash.credot.dev/${sesData.profileImg}`);
     })
@@ -111,7 +115,7 @@ export default function DrawerContent({ navigation }) {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <Image style={{ width: '100%', height: '100%', borderRadius: 100 }} source={{ uri: firebase.auth().currentUser? firebase.auth().currentUser.photoURL : userImage }} />
+                <Image style={{ width: '100%', height: '100%', borderRadius: 100 }} source={{ uri: firebase.auth().currentUser ? firebase.auth().currentUser.photoURL : userImage }} />
               </View>
             </View>
 
@@ -125,22 +129,26 @@ export default function DrawerContent({ navigation }) {
                     fontSize: 18,
                     fontWeight: 'bold',
                   }}>
-                    {firebase.auth().currentUser? firebase.auth().currentUser.displayName : userData?.fullName}
-                    </Text>
+                  {firebase.auth().currentUser ? firebase.auth().currentUser.displayName : userData?.fullName}
+                </Text>
 
                 {/* // <Text style={{marginTop:15 , color:'black' , marginLeft:14 , fontSize:18 , fontWeight:'bold'}}>{user.displayName}</Text>  */}
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate('LoginB')}>
+              <View style={{ flexDirection: 'row', marginLeft:10 }}>
+                <Switch value={state?.mode === 0 ? false : true} color={"black"} onValueChange={() => {
+                  dispatch({ type: "SET_MODE", payload: state?.mode === 0 ? 1 : 0 });
+
+                }} style={{ marginTop: 5 }} />
                 <Text
                   style={{
-                    marginTop: 13,
-                    color: '#1DA1F2',
-                    marginLeft: 14,
+                    marginTop: 8,
+                    // color: '#1DA1F2',
                     fontSize: 13,
+                    marginLeft:4
                   }}>
-                  Switch to buyer
+                  {state?.mode === 0 ? "Client Mode" : "Freelancer Mode"}
                 </Text>
-              </TouchableOpacity>
+              </View>
             </View>
           </View>
 
@@ -375,26 +383,30 @@ export default function DrawerContent({ navigation }) {
               </View>
             </View>
 
-            <View style={{ flexDirection: 'row', marginTop: 10 }}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('InvoiceScreen')}
-                style={{ marginLeft: 20, marginTop: 10, flexDirection: 'row' }}>
-                <Image
-                  style={{ width: 21, height: 23, marginTop: 2 }}
-                  source={require('../../assets/Invoice.png')}
-                />
-                <Text
-                  style={{
-                    marginLeft: 21,
-                    color: 'black',
-                    fontSize: 16,
-                    marginTop: 3,
-                  }}>
-                  Invoices
-                </Text>
-              </TouchableOpacity>
-            </View>
+            {state?.mode === 1 ?
 
+              <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('InvoiceScreen')}
+                  style={{ marginLeft: 20, marginTop: 10, flexDirection: 'row' }}>
+                  <Image
+                    style={{ width: 21, height: 23, marginTop: 2 }}
+                    source={require('../../assets/Invoice.png')}
+                  />
+                  <Text
+                    style={{
+                      marginLeft: 21,
+                      color: 'black',
+                      fontSize: 16,
+                      marginTop: 3,
+                    }}>
+                    Invoices
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              :
+              <></>
+            }
             <View style={{ flexDirection: 'row', marginTop: 10 }}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('MySavedScreen')}
