@@ -8,11 +8,15 @@ import {
   ScrollView,
   ImageBackground,
 } from 'react-native'
-import React, {useCallback, useMemo, useRef, useState} from 'react'
+import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react'
 import BottomSheet from '@gorhom/bottom-sheet'
+import { LANGUAGES, SKILLS } from '../../GraphQl/Query';
+import { useManualQuery, useQuery } from 'graphql-hooks';
 import CheckBox from '@react-native-community/checkbox'
 
-export default function Filter ({navigation}) {
+export default function Filter({ navigation }) {
+  const [skillsList, setSkillsList] = useState([])
+  const [languagesList, setLanguagesList] = useState([])
   const [isSelected, setSelection] = useState(false)
   const [isSelected1, setSelection1] = useState(false)
   const [isSelected2, setSelection2] = useState(false)
@@ -24,19 +28,26 @@ export default function Filter ({navigation}) {
   const [isSelected8, setSelection8] = useState(false)
   const [isSelected9, setSelection9] = useState(false)
   const [isSelected10, setSelection10] = useState(false)
+
+
+  const { loading, error, data: skills } = useQuery(SKILLS)
+  const { data: languages } = useQuery(LANGUAGES)
+
   const bottomSheetRef = useRef(null)
   const snapPoints = useMemo(() => ['55%', '188%'], [])
 
+  useEffect(() => {
+    setSkillsList(skills?.skillList?.skills)
+    setLanguagesList(languages?.listLanguages?.languages)
+  }, [languages, skills])
+
   //callbacks
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index)
-  }, [])
   return (
     <View style={styles.container}>
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <ScrollView>
-          <View style={{alignItems: 'center'}}>
+          <View style={{ alignItems: 'center' }}>
             <View
               style={{
                 width: '95%',
@@ -65,16 +76,16 @@ export default function Filter ({navigation}) {
                   Narrow your search
                 </Text>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('AccountScreen')}
-                  style={{marginTop: 16, marginLeft: 98}}>
+                  onPress={() => navigation.goBack()}
+                  style={{ marginTop: 16, marginLeft: 98 }}>
                   <Image
-                    style={{width: 14, height: 14}}
+                    style={{ width: 14, height: 14 }}
                     source={require('../../assets/NOT.png')}
                   />
                 </TouchableOpacity>
               </View>
 
-              <View style={{alignItems: 'center', marginTop: 40}}>
+              <View style={{ alignItems: 'center', marginTop: 40 }}>
                 <View
                   style={{
                     width: '90%',
@@ -105,206 +116,65 @@ export default function Filter ({navigation}) {
                 </View>
               </View>
 
-              <View style={{marginTop: 30, marginLeft: 20}}>
-                <Text style={{color: 'black', fontSize: 17}}>Skills</Text>
+
+              <View style={{ marginTop: 30, marginLeft: 20 }}>
+                <Text style={{ color: 'black', fontSize: 17 }}>Skills</Text>
+              </View>
+              {skillsList?.map((item, index) => {
+                return (
+                  <View style={{ flexDirection: 'row', left: 20 }}>
+                    <CheckBox
+                      disabled={false}
+                    // value={isSelected}
+                    // onValueChange={newValue => setSelection(newValue)}
+                    />
+
+                    <Text
+                      style={{
+                        marginTop: 4,
+                        marginLeft: 8,
+                        fontSize: 17,
+                        color: 'black',
+                      }}>
+                      {item.title}
+                    </Text>
+                  </View>
+                )
+              })}
+
+              <View style={{ marginTop: 30, marginLeft: 20 }}>
+                <Text style={{ color: 'black', fontSize: 17 }}>Language</Text>
+              </View>
+              {languagesList?.map((item, index) => {
+                return (
+                  <View
+                    style={{ flexDirection: 'row', marginTop: 10, marginLeft: 20 }}>
+                    <CheckBox
+                      disabled={false}
+                    // value={isSelected7}
+                    // onValueChange={newValue => setSelection7(newValue)}
+                    />
+
+                    <Text
+                      style={{
+                        marginTop: 4,
+                        marginLeft: 8,
+                        fontSize: 17,
+                        color: 'black',
+                      }}>
+                      {item.title}
+                    </Text>
+                  </View>
+                )
+              }
+              )}
+
+              
+              {/* <View style={{ marginTop: 30, marginLeft: 20 }}>
+                <Text style={{ color: 'black', fontSize: 17 }}>Location</Text>
               </View>
 
-              <View style={{marginLeft: 20, marginTop: 10}}>
-                <View style={{flexDirection: 'row'}}>
-                  <CheckBox
-                    disabled={false}
-                    value={isSelected}
-                    onValueChange={newValue => setSelection(newValue)}
-                  />
-
-                  <Text
-                    style={{
-                      marginTop: 4,
-                      marginLeft: 8,
-                      fontSize: 17,
-                      color: 'black',
-                    }}>
-                    UI Designer
-                  </Text>
-                </View>
-
-                <View style={{flexDirection: 'row', marginTop: 10}}>
-                  <CheckBox
-                    disabled={false}
-                    value={isSelected1}
-                    onValueChange={newValue => setSelection1(newValue)}
-                  />
-
-                  <Text
-                    style={{
-                      marginTop: 4,
-                      marginLeft: 8,
-                      fontSize: 17,
-                      color: 'black',
-                    }}>
-                    Web Designer
-                  </Text>
-                </View>
-
-                <View style={{flexDirection: 'row', marginTop: 10}}>
-                  <CheckBox
-                    disabled={false}
-                    value={isSelected2}
-                    onValueChange={newValue => setSelection2(newValue)}
-                  />
-
-                  <Text
-                    style={{
-                      marginTop: 4,
-                      marginLeft: 8,
-                      fontSize: 17,
-                      color: 'black',
-                    }}>
-                    Web Developper
-                  </Text>
-                </View>
-
-                <View style={{flexDirection: 'row', marginTop: 10}}>
-                  <CheckBox
-                    disabled={false}
-                    value={isSelected3}
-                    onValueChange={newValue => setSelection3(newValue)}
-                  />
-
-                  <Text
-                    style={{
-                      marginTop: 4,
-                      marginLeft: 8,
-                      fontSize: 17,
-                      color: 'black',
-                    }}>
-                    Illustrator
-                  </Text>
-                </View>
-
-                <View style={{flexDirection: 'row', marginTop: 10}}>
-                  <CheckBox
-                    disabled={false}
-                    value={isSelected4}
-                    onValueChange={newValue => setSelection4(newValue)}
-                  />
-
-                  <Text
-                    style={{
-                      marginTop: 4,
-                      marginLeft: 8,
-                      fontSize: 17,
-                      color: 'black',
-                    }}>
-                    Graphic esigner
-                  </Text>
-                </View>
-
-                <View style={{flexDirection: 'row', marginTop: 10}}>
-                  <CheckBox
-                    disabled={false}
-                    value={isSelected5}
-                    onValueChange={newValue => setSelection5(newValue)}
-                  />
-
-                  <Text
-                    style={{
-                      marginTop: 4,
-                      marginLeft: 8,
-                      fontSize: 17,
-                      color: 'black',
-                    }}>
-                    ReactJS
-                  </Text>
-                </View>
-
-                <View style={{flexDirection: 'row', marginTop: 10}}>
-                  <CheckBox
-                    disabled={false}
-                    value={isSelected6}
-                    onValueChange={newValue => setSelection6(newValue)}
-                  />
-
-                  <Text
-                    style={{
-                      marginTop: 4,
-                      marginLeft: 8,
-                      fontSize: 17,
-                      color: 'black',
-                    }}>
-                    NodeJS
-                  </Text>
-                </View>
-              </View>
-
-              <View style={{marginTop: 30, marginLeft: 20}}>
-                <Text style={{color: 'black', fontSize: 17}}>Language</Text>
-              </View>
-
-              <View>
-                <View
-                  style={{flexDirection: 'row', marginTop: 10, marginLeft: 20}}>
-                  <CheckBox
-                    disabled={false}
-                    value={isSelected7}
-                    onValueChange={newValue => setSelection7(newValue)}
-                  />
-
-                  <Text
-                    style={{
-                      marginTop: 4,
-                      marginLeft: 8,
-                      fontSize: 17,
-                      color: 'black',
-                    }}>
-                    English
-                  </Text>
-                </View>
-
-                <View
-                  style={{flexDirection: 'row', marginTop: 10, marginLeft: 20}}>
-                  <CheckBox
-                    disabled={false}
-                    value={isSelected8}
-                    onValueChange={newValue => setSelection8(newValue)}
-                  />
-
-                  <Text
-                    style={{
-                      marginTop: 4,
-                      marginLeft: 8,
-                      fontSize: 17,
-                      color: 'black',
-                    }}>
-                    Arabic
-                  </Text>
-                </View>
-
-                <View
-                  style={{flexDirection: 'row', marginTop: 10, marginLeft: 20}}>
-                  <CheckBox
-                    disabled={false}
-                    value={isSelected9}
-                    onValueChange={newValue => setSelection9(newValue)}
-                  />
-
-                  <Text
-                    style={{
-                      marginTop: 4,
-                      marginLeft: 8,
-                      fontSize: 17,
-                      color: 'black',
-                    }}>
-                    Spanish
-                  </Text>
-                </View>
-              </View>
-
-              <View style={{marginTop: 30, marginLeft: 20}}>
-                <Text style={{color: 'black', fontSize: 17}}>Location</Text>
-              </View>
-
-              <View style={{alignItems: 'center'}}>
+              <View style={{ alignItems: 'center' }}>
                 <View
                   style={{
                     borderBottomColor: 'grey',
@@ -315,18 +185,18 @@ export default function Filter ({navigation}) {
                     flexDirection: 'row',
                   }}>
                   <TextInput
-                    style={{width: '90%', fontSize: 15, fontWeight: 'bold'}}
+                    style={{ width: '90%', fontSize: 15, fontWeight: 'bold' }}
                     placeholder='Choose country'
                   />
                   <Image
-                    style={{marginTop: 25, marginRight: 45}}
+                    style={{ marginTop: 25, marginRight: 45 }}
                     source={require('../../assets/Bar.png')}
                   />
                 </View>
-              </View>
+              </View> */}
 
-              <View style={{alignItems: 'center', marginTop: 20}}>
-                <View style={{flexDirection: 'row'}}>
+              {/* <View style={{ alignItems: 'center', marginTop: 20 }}>
+                <View style={{ flexDirection: 'row' }}>
                   <View
                     style={{
                       width: 156,
@@ -335,7 +205,7 @@ export default function Filter ({navigation}) {
                       marginTop: 20,
                       marginLeft: 20,
                     }}>
-                    <Text style={{color: 'black', fontWeight: 'normal'}}>
+                    <Text style={{ color: 'black', fontWeight: 'normal' }}>
                       Min Price
                     </Text>
                     <Text>$500</Text>
@@ -349,21 +219,21 @@ export default function Filter ({navigation}) {
                       marginTop: 20,
                       marginLeft: 80,
                     }}>
-                    <Text style={{color: 'black', fontWeight: 'normal'}}>
+                    <Text style={{ color: 'black', fontWeight: 'normal' }}>
                       Min Price
                     </Text>
                     <Text>$500</Text>
                   </View>
                 </View>
-              </View>
+              </View> */}
 
-              <View style={{alignItems: 'center', marginTop: 20}}>
+              {/* <View style={{ alignItems: 'center', marginTop: 20 }}>
                 <ImageBackground
-                  style={{width: 264, height: 20, marginLeft: 0}}
+                  style={{ width: 264, height: 20, marginLeft: 0 }}
                   source={require('../../assets/Slider.png')}></ImageBackground>
-              </View>
+              </View> */}
 
-              <View style={{alignItems: 'center', marginTop: 30}}>
+              <View style={{ alignItems: 'center', marginTop: 30 }}>
                 <TouchableOpacity
                   onPress={() => navigation.navigate('HomeScreen')}
                   style={{
@@ -375,7 +245,7 @@ export default function Filter ({navigation}) {
                     justifyContent: 'center',
                   }}>
                   <Text
-                    style={{color: '#fff', fontWeight: 'bold', fontSize: 17}}>
+                    style={{ color: '#fff', fontWeight: 'bold', fontSize: 17 }}>
                     Search now
                   </Text>
                 </TouchableOpacity>
@@ -400,13 +270,11 @@ export default function Filter ({navigation}) {
                     Clear all filters
                   </Text>
                 </TouchableOpacity>
+
+                <View style={{ height: 56 }}></View>
               </View>
-
-              <View></View>
-
-              <View style={{height: 56}}></View>
+              </View>
             </View>
-          </View>
         </ScrollView>
       </View>
     </View>

@@ -25,9 +25,8 @@ const user = firebase.auth().currentUser
 
 export default function Account(props) {
   const { freelancerId } = props.route.params || ""
-  const [firstname, setFirstName] = useState()
-  const [lastname, setLastName] = useState()
   const [details, setDetails] = useState([])
+  const [serviceDetails, setServiceDetails] = useState([])
 
 
   const { loading, error, data } = useQuery(FREELANCER_DETAILS, {
@@ -41,8 +40,9 @@ export default function Account(props) {
 
   useEffect(() => {
     if (data?.getFreelancerDetails?.success) {
-      console.log("-------------------", data?.getFreelancerDetails?.userDetails);
+      console.log("-------------------", data?.getFreelancerDetails?.featuredServices);
       setDetails(data?.getFreelancerDetails?.userDetails)
+      setServiceDetails(data?.getFreelancerDetails?.featuredServices)
     }
   }, [data])
 
@@ -66,7 +66,7 @@ export default function Account(props) {
                 marginTop: -40,
                 alignSelf: 'center',
               }}
-              source={{ uri:details&& details.profileImg ? `https://hive-dash.credot.dev/${details?.profileImg}`: "https://medusajs.com/images/avatars/user-avatar-03.png" }}
+              source={{ uri: details && details.profileImg ? `https://hive-dash.credot.dev/${details?.profileImg}` : "https://medusajs.com/images/avatars/user-avatar-03.png" }}
             />
 
           </View>
@@ -74,8 +74,7 @@ export default function Account(props) {
 
         <View
           style={{
-            width: '100%',
-            height: '100%',
+            flex: 1,
             backgroundColor: '#fff',
             marginTop: 0,
           }}>
@@ -204,15 +203,15 @@ export default function Account(props) {
               marginTop: 40,
             }}></View>
 
-<View style={{ marginLeft: 30, marginTop: 20 }}>
+          <View style={{ marginLeft: 30, marginTop: 20 }}>
             <Text style={{ color: 'black', fontSize: 20, fontWeight: '600' }}>
-            Education
+              Education
             </Text>
           </View>
 
           {details?.education?.map((item, index) => {
             return (
-              <View style={{ marginLeft: 30,marginTop:20 }} key={index}>
+              <View style={{ marginLeft: 30, marginTop: 20 }} key={index}>
                 <Text style={{ marginTop: 10, color: 'black' }}>
                   {item.institution}
                 </Text>
@@ -226,7 +225,7 @@ export default function Account(props) {
                   }}>
                   {item?.major}
                 </Text>
-                <Text style={{  marginTop: 10 }}>
+                <Text style={{ marginTop: 10 }}>
                   {item.startYear} - {item.endYear}
                 </Text>
               </View>
@@ -234,13 +233,13 @@ export default function Account(props) {
           })}
           <View style={{ marginLeft: 30, marginTop: 20 }}>
             <Text style={{ color: 'black', fontSize: 20, fontWeight: '600' }}>
-            Work & Experience
+              Work & Experience
             </Text>
           </View>
 
           {details?.experience?.map((item, index) => {
             return (
-              <View style={{ marginLeft: 30,marginTop:20 }} key={index}>
+              <View style={{ marginLeft: 30, marginTop: 20 }} key={index}>
                 <Text style={{ marginTop: 10, color: 'black' }}>
                   {item.role}
                 </Text>
@@ -254,7 +253,7 @@ export default function Account(props) {
                   }}>
                   {item?.company}
                 </Text>
-                <Text style={{  marginTop: 10 }}>
+                <Text style={{ marginTop: 10 }}>
                   {item.startYear} - {item.endYear}
                 </Text>
               </View>
@@ -263,13 +262,13 @@ export default function Account(props) {
 
           <View style={{ marginLeft: 30, marginTop: 20 }}>
             <Text style={{ color: 'black', fontSize: 20, fontWeight: '600' }}>
-            Awards and Certificates
+              Awards and Certificates
             </Text>
           </View>
 
           {details?.awards?.map((item, index) => {
             return (
-              <View style={{ marginLeft: 30,marginTop:20 }} key={index}>
+              <View style={{ marginLeft: 30, marginTop: 20 }} key={index}>
                 <Text style={{ marginTop: 10, color: 'black' }}>
                   {item.title}
                 </Text>
@@ -283,529 +282,107 @@ export default function Account(props) {
                   }}>
                   {item?.issuer}
                 </Text>
-                <Text style={{  marginTop: 10 }}>
+                <Text style={{ marginTop: 10 }}>
                   {item.startYear} - {item.endYear}
                 </Text>
               </View>
             )
           })}
 
+        </View>
 
-          <View
-            style={{
-              width: '100%',
-              height: 1,
-              borderBottomColor: 'grey',
-              borderBottomWidth: 0.5,
-              marginTop: 40,
-            }}></View>
+        <View style={{ backgroundColor: "#fff" }}>
 
-          <View style={{ marginLeft: 30, marginTop: 30 }}>
+          <View style={{ marginLeft: 30, marginTop: 20 }}>
             <Text style={{ color: 'black', fontSize: 18, fontWeight: 'bold' }}>
               Services Offered
             </Text>
           </View>
 
-          <View style={{ alignItems: 'center' }}>
-            <TouchableOpacity style={{ marginTop: 34 }}>
-              <View
-                style={{
-                  width: 345,
-                  height: 145,
-                  backgroundColor: '#DDDDDD',
-                  marginTop: 10,
-                  borderRadius: 5,
-                }}>
-                <View
-                  style={{
-                    width: 95,
-                    height: 23,
-                    backgroundColor: '#C89D67',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <Text style={{ color: '#fff' }}>Featured</Text>
+          {serviceDetails?.map((item, index) => {
+            return (
+              <View style={{ marginTop: 20, bottom: 10 }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    props.navigation.navigate('TaskD', { serviceId: item._id })
+                  }}
+                >
+                  <ImageBackground
+                    source={{ uri: item.images && item.images.length ? `https://hive-dash.credot.dev/${item.images[0]}` : "https://global-uploads.webflow.com/6236f2260b45449819d1988e/6261573ce87ee639f635e64e_placeholder.png" }}
+                    // source={{ uri: "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8&w=1000&q=80" }}
+                    style={{ width: '92%', height: 134, alignSelf: 'center', left: 14 }}>
+                    <Image
+                      style={{ width: 80, height: 25 }}
+                      source={require('../../assets/Label.png')}
+                    />
+                  </ImageBackground>
+                </TouchableOpacity>
+
+                <View style={{ flexDirection: 'row', left: 30 }}>
+                  <Text style={{ color: '#1DA1F2', marginTop: 12 }}>
+                    {item.slug}
+                  </Text>
+                  <Text style={{ color: 'grey', marginTop: 12, marginLeft: 50 }}>
+                    From
+                  </Text>
                 </View>
-              </View>
 
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={{ color: '#1DA1F2', marginTop: 12 }}>
-                  Programming, WordPress, WP setup
-                </Text>
-                <Text style={{ color: 'grey', marginTop: 12, marginLeft: 70 }}>
-                  From
-                </Text>
-              </View>
+                <View style={{ flexDirection: 'row', marginTop: 10, left: 30 }}>
+                  <Text style={{ color: 'black', fontWeight: '700' }}>
+                    {item.title}
+                  </Text>
 
-              <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                <Text style={{ color: 'black', fontWeight: '700' }}>
-                  I will write rest APi in react native
-                </Text>
-
-                <Text
-                  style={{
-                    color: 'black',
-                    marginLeft: 70,
-                    fontWeight: '700',
-                    fontSize: 15,
-                  }}>
-                  $90.19
-                </Text>
-              </View>
-
-              <View style={{ flexDirection: 'row' }}>
-                <Image
-                  style={{ width: 19, height: 19, marginLeft: 10, marginTop: 10 }}
-                  source={require('../../assets/Rate.png')}
-                />
-                <Text
-                  style={{
-                    color: 'black',
-                    fontSize: 15,
-                    marginTop: 9,
-                    marginLeft: 16,
-                  }}>
-                  5.0
-                </Text>
-                <Text
-                  style={{
-                    color: 'grey',
-                    fontSize: 15,
-                    marginTop: 9,
-                    marginLeft: 16,
-                  }}>
-                  (2,659)
-                </Text>
-                <Image
-                  style={{ width: 19, height: 15, marginLeft: 13, marginTop: 12 }}
-                  source={require('../../assets/Ey.png')}
-                />
-                <Text
-                  style={{
-                    color: 'grey',
-                    fontSize: 15,
-                    marginTop: 9,
-                    marginLeft: 14,
-                  }}>
-                  2,926
-                </Text>
-              </View>
-
-              <View style={{ flexDirection: 'row' }}>
-                <View style={{ alignItems: 'center', marginTop: 20 }}>
-                  <View
+                  <Text
                     style={{
-                      width: 344,
-                      height: 89,
-                      backgroundColor: '#fff',
-                      flexDirection: 'row',
+                      color: 'black',
+                      marginLeft: 150,
+                      fontWeight: '700',
+                      fontSize: 15,
                     }}>
-                    <View
-                      style={{
-                        width: 45,
-                        height: 45,
-                        backgroundColor: '#D9ACEB',
-                        marginTop: 5,
-                        marginLeft: 10,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}>
-                      <View style={{ alignItems: 'center' }}>
-                        <Image source={require('../../assets/Buc.png')} />
-                      </View>
-                    </View>
-
-                    <View style={{ marginTop: 11, marginLeft: 15 }}>
-                      <Text style={{ color: 'black', fontWeight: 'bold' }}>
-                        2,562
-                      </Text>
-                      <Text
-                        style={{
-                          color: 'grey',
-                          fontWeight: 'normal',
-                          fontSize: 12,
-                        }}>
-                        No. of sales
-                      </Text>
-                    </View>
-
-                    <View style={{ alignItems: 'center', marginLeft: 36 }}>
-                      <View
-                        style={{
-                          width: 344,
-                          height: 89,
-                          backgroundColor: '#fff',
-                          flexDirection: 'row',
-                        }}>
-                        <View
-                          style={{
-                            width: 45,
-                            height: 45,
-                            backgroundColor: '#AAFEED',
-                            marginTop: 5,
-                            marginLeft: 10,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}>
-                          <View style={{ alignItems: 'center' }}>
-                            <Image source={require('../../assets/Buc.png')} />
-                          </View>
-                        </View>
-
-                        <View style={{ marginTop: 11, marginLeft: 15 }}>
-                          <Text style={{ color: 'black', fontWeight: 'bold' }}>
-                            7 Days
-                          </Text>
-                          <Text
-                            style={{
-                              color: 'grey',
-                              fontWeight: 'normal',
-                              fontSize: 12,
-                            }}>
-                            Delivery time
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
+                    ${item.price}
+                  </Text>
                 </View>
-              </View>
-            </TouchableOpacity>
-          </View>
 
-          <View style={{ alignItems: 'center' }}>
-            <TouchableOpacity style={{ marginTop: 14 }}>
-              <View
-                style={{
-                  width: 345,
-                  height: 145,
-                  backgroundColor: '#DDDDDD',
-                  marginTop: 10,
-                  borderRadius: 5,
-                }}>
-                <View
-                  style={{
-                    width: 95,
-                    height: 23,
-                    backgroundColor: '#C89D67',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <Text style={{ color: '#fff' }}>Featured</Text>
-                </View>
-              </View>
-
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={{ color: '#1DA1F2', marginTop: 12 }}>
-                  Programming, WordPress, WP setup
-                </Text>
-                <Text style={{ color: 'grey', marginTop: 12, marginLeft: 70 }}>
-                  From
-                </Text>
-              </View>
-
-              <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                <Text style={{ color: 'black', fontWeight: '700' }}>
-                  I will write rest APi in react native
-                </Text>
-
-                <Text
-                  style={{
-                    color: 'black',
-                    marginLeft: 70,
-                    fontWeight: '700',
-                    fontSize: 15,
-                  }}>
-                  $90.19
-                </Text>
-              </View>
-
-              <View style={{ flexDirection: 'row' }}>
-                <Image
-                  style={{ width: 19, height: 19, marginLeft: 10, marginTop: 10 }}
-                  source={require('../../assets/Rate.png')}
-                />
-                <Text
-                  style={{
-                    color: 'black',
-                    fontSize: 15,
-                    marginTop: 9,
-                    marginLeft: 16,
-                  }}>
-                  5.0
-                </Text>
-                <Text
-                  style={{
-                    color: 'grey',
-                    fontSize: 15,
-                    marginTop: 9,
-                    marginLeft: 16,
-                  }}>
-                  (2,659)
-                </Text>
-                <Image
-                  style={{ width: 19, height: 15, marginLeft: 13, marginTop: 12 }}
-                  source={require('../../assets/Ey.png')}
-                />
-                <Text
-                  style={{
-                    color: 'grey',
-                    fontSize: 15,
-                    marginTop: 9,
-                    marginLeft: 14,
-                  }}>
-                  2,926
-                </Text>
-              </View>
-
-              <View style={{ flexDirection: 'row' }}>
-                <View style={{ alignItems: 'center', marginTop: 20 }}>
-                  <View
+                <View style={{ flexDirection: 'row', alignSelf: 'baseline', left: 20 }}>
+                  <Image
+                    style={{ width: 19, height: 19, marginLeft: 10, marginTop: 10 }}
+                    source={require('../../assets/Rate.png')}
+                  />
+                  <Text
                     style={{
-                      width: 344,
-                      height: 89,
-                      backgroundColor: '#fff',
-                      flexDirection: 'row',
+                      color: 'black',
+                      fontSize: 15,
+                      marginTop: 9,
+                      marginLeft: 16,
                     }}>
-                    <View
-                      style={{
-                        width: 45,
-                        height: 45,
-                        backgroundColor: '#D9ACEB',
-                        marginTop: 5,
-                        marginLeft: 10,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}>
-                      <View style={{ alignItems: 'center' }}>
-                        <Image source={require('../../assets/Buc.png')} />
-                      </View>
-                    </View>
-
-                    <View style={{ marginTop: 11, marginLeft: 15 }}>
-                      <Text style={{ color: 'black', fontWeight: 'bold' }}>
-                        2,562
-                      </Text>
-                      <Text
-                        style={{
-                          color: 'grey',
-                          fontWeight: 'normal',
-                          fontSize: 12,
-                        }}>
-                        No. of sales
-                      </Text>
-                    </View>
-
-                    <View style={{ alignItems: 'center', marginLeft: 36 }}>
-                      <View
-                        style={{
-                          width: 344,
-                          height: 89,
-                          backgroundColor: '#fff',
-                          flexDirection: 'row',
-                        }}>
-                        <View
-                          style={{
-                            width: 45,
-                            height: 45,
-                            backgroundColor: '#AAFEED',
-                            marginTop: 5,
-                            marginLeft: 10,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}>
-                          <View style={{ alignItems: 'center' }}>
-                            <Image source={require('../../assets/Buc.png')} />
-                          </View>
-                        </View>
-
-                        <View style={{ marginTop: 11, marginLeft: 15 }}>
-                          <Text style={{ color: 'black', fontWeight: 'bold' }}>
-                            7 Days
-                          </Text>
-                          <Text
-                            style={{
-                              color: 'grey',
-                              fontWeight: 'normal',
-                              fontSize: 12,
-                            }}>
-                            Delivery time
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            </TouchableOpacity>
-          </View>
-
-          <View style={{ alignItems: 'center' }}>
-            <TouchableOpacity style={{ marginTop: 14 }}>
-              <View
-                style={{
-                  width: 345,
-                  height: 145,
-                  backgroundColor: '#DDDDDD',
-                  marginTop: 10,
-                  borderRadius: 5,
-                }}>
-                <View
-                  style={{
-                    width: 95,
-                    height: 23,
-                    backgroundColor: '#C89D67',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <Text style={{ color: '#fff' }}>Featured</Text>
-                </View>
-              </View>
-
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={{ color: '#1DA1F2', marginTop: 12 }}>
-                  Programming, WordPress, WP setup
-                </Text>
-                <Text style={{ color: 'grey', marginTop: 12, marginLeft: 70 }}>
-                  From
-                </Text>
-              </View>
-
-              <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                <Text style={{ color: 'black', fontWeight: '700' }}>
-                  I will write rest APi in react native
-                </Text>
-
-                <Text
-                  style={{
-                    color: 'black',
-                    marginLeft: 70,
-                    fontWeight: '700',
-                    fontSize: 15,
-                  }}>
-                  $90.19
-                </Text>
-              </View>
-
-              <View style={{ flexDirection: 'row' }}>
-                <Image
-                  style={{ width: 19, height: 19, marginLeft: 10, marginTop: 10 }}
-                  source={require('../../assets/Rate.png')}
-                />
-                <Text
-                  style={{
-                    color: 'black',
-                    fontSize: 15,
-                    marginTop: 9,
-                    marginLeft: 16,
-                  }}>
-                  5.0
-                </Text>
-                <Text
-                  style={{
-                    color: 'grey',
-                    fontSize: 15,
-                    marginTop: 9,
-                    marginLeft: 16,
-                  }}>
-                  (2,659)
-                </Text>
-                <Image
-                  style={{ width: 19, height: 15, marginLeft: 13, marginTop: 12 }}
-                  source={require('../../assets/Ey.png')}
-                />
-                <Text
-                  style={{
-                    color: 'grey',
-                    fontSize: 15,
-                    marginTop: 9,
-                    marginLeft: 14,
-                  }}>
-                  2,926
-                </Text>
-              </View>
-
-              <View style={{ flexDirection: 'row' }}>
-                <View style={{ alignItems: 'center', marginTop: 20 }}>
-                  <View
+                    {item.rating}
+                  </Text>
+                  <Text
                     style={{
-                      width: 344,
-                      height: 89,
-                      backgroundColor: '#fff',
-                      flexDirection: 'row',
+                      color: 'grey',
+                      fontSize: 15,
+                      marginTop: 9,
+                      marginLeft: 16,
                     }}>
-                    <View
-                      style={{
-                        width: 45,
-                        height: 45,
-                        backgroundColor: '#D9ACEB',
-                        marginTop: 5,
-                        marginLeft: 10,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}>
-                      <View style={{ alignItems: 'center' }}>
-                        <Image source={require('../../assets/Buc.png')} />
-                      </View>
-                    </View>
-
-                    <View style={{ marginTop: 11, marginLeft: 15 }}>
-                      <Text style={{ color: 'black', fontWeight: 'bold' }}>
-                        2,562
-                      </Text>
-                      <Text
-                        style={{
-                          color: 'grey',
-                          fontWeight: 'normal',
-                          fontSize: 12,
-                        }}>
-                        No. of sales
-                      </Text>
-                    </View>
-
-                    <View style={{ alignItems: 'center', marginLeft: 36 }}>
-                      <View
-                        style={{
-                          width: 344,
-                          height: 89,
-                          backgroundColor: '#fff',
-                          flexDirection: 'row',
-                        }}>
-                        <View
-                          style={{
-                            width: 45,
-                            height: 45,
-                            backgroundColor: '#AAFEED',
-                            marginTop: 5,
-                            marginLeft: 10,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}>
-                          <View style={{ alignItems: 'center' }}>
-                            <Image source={require('../../assets/Buc.png')} />
-                          </View>
-                        </View>
-
-                        <View style={{ marginTop: 11, marginLeft: 15 }}>
-                          <Text style={{ color: 'black', fontWeight: 'bold' }}>
-                            7 Days
-                          </Text>
-                          <Text
-                            style={{
-                              color: 'grey',
-                              fontWeight: 'normal',
-                              fontSize: 12,
-                            }}>
-                            Delivery time
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
+                    (2,659)
+                  </Text>
+                  <Image
+                    style={{ width: 19, height: 15, marginLeft: 13, marginTop: 12 }}
+                    source={require('../../assets/Ey.png')}
+                  />
+                  <Text
+                    style={{
+                      color: 'grey',
+                      fontSize: 15,
+                      marginTop: 9,
+                      marginLeft: 14,
+                    }}>
+                    2,926
+                  </Text>
                 </View>
               </View>
-            </TouchableOpacity>
-          </View>
+            )
+          })}
         </View>
       </ScrollView>
     </View>
