@@ -11,6 +11,11 @@ const Reducer = (state, action) => {
         ...state,
         mode: action.payload,
       };
+      case "SET_PROFILE":
+      return {
+        ...state,
+        userProfile: action.payload,
+      };
 
       default:
         return state;
