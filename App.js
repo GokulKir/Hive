@@ -365,7 +365,7 @@ const MyStack = ({ route, navigation }) => {
   }, [])
 
   useEffect(() => {
-
+console.log("triggered");
     AsyncStorage.getItem('userSession', (err, result) => {
       const sesData = JSON.parse(result)
       if (sesData) {

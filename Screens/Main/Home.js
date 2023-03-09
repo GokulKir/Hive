@@ -28,6 +28,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { CATEGORY_LIST } from '../../GraphQl/Query'
 import { FlatList } from 'react-native-gesture-handler'
 import CategorySkeleton from '../../Components/CategorySkeleton'
+import { Context } from '../Store'
 const { height, width } = Dimensions.get('window')
 
 
@@ -63,6 +64,7 @@ query Freelancers {
 //Freelance api graph Ql//
 
 export default function Home(props) {
+  // const { data: details } = useQuery(PROFILE_DETAILS)
   const { loading, error, data } = useQuery(FREELANCE_LISTING)
 
   // const { loading, error, data } = useQuery(CATEGORY_LIST)
@@ -72,6 +74,7 @@ export default function Home(props) {
   const user = firebase.auth().currentUser
   const [isSelected, setSelection] = useState(false)
   const [Datas, setDatas] = useState([])
+  const [state, dispatch] = useContext(Context);
   const bottomSheetRef = useRef(null)
   const snapPoints = useMemo(() => ['55%', '78%'], [])
 
@@ -100,9 +103,12 @@ export default function Home(props) {
       setDatas(data)
     }
   })
-  useEffect(() => {
-    console.log('Data>>>>>>', Datas?.freelancerList?.freelancers)
-  }, [Datas])
+  // useEffect(() => {
+  //   console.log("-------------------------", details)
+  //   if (details?.getProfileDetails?.userDetails) {
+  //     dispatch({ type: "SET_PROFILE", payload: details?.getProfileDetails?.userDetails });
+  //   }
+  // }, [details])
   //Calling API //
 
   const ExploreCategories = () => {

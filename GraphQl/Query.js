@@ -47,6 +47,56 @@ query CategoryFlatList($limit: Int) {
   }
 }
 `
+export const  CATEGORY_LIST_ALL = `
+query CategoryFlatList() {
+  categoryList() {
+    success
+    msg
+    totalPages
+    totalCount
+    categories {
+      name
+      icon
+    }
+  }
+}
+`
+export const  PROFILE_DETAILS = `
+query GetServiceDetails {
+  getProfileDetails {
+    success
+    msg
+    userDetails {
+      _id
+      firstName
+      lastName
+      username
+      email
+      country
+      gender
+      city
+      mobile
+      description
+      tagline
+      englishLevel
+      hourlyRate
+      languages {
+        _id
+        title
+      }
+      position
+      education {
+        _id
+        institution
+        description
+        major
+        startYear
+        endYear
+      }
+    }
+  }
+}
+`
 export const  LANGUAGES = `
 query GetFreelancerDetails {
   listLanguages {

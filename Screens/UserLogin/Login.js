@@ -53,9 +53,9 @@ export default function Login({ navigation }) {
   }, [])
   const [showPassword, setShowPassword] = useState(false)
   const [isSignInLoader, setIsSignInLoader] = useState(false)
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState('ajnash.aju323@gmail.com')
   const [emailError, setEmailError] = useState('')
-  const [password, setPassword] = useState('')
+  const [password, setPassword] = useState('123456789')
   const [passwordError, setPasswordError] = useState('')
   const [showFieldError, setShowFieldError] = useState('')
   // const [email, setEmail] = useState('ajnash.aju323@gmail.com')
@@ -100,7 +100,7 @@ export default function Login({ navigation }) {
         setIsSignInLoader(false)
       } else {
         const { token, success, msg, userData } = data.userLogin
-        client.setHeader('Authorization', `Bearer ${token}`)
+        // client.setHeader('Authorization', `Bearer ${token}`)
         client.setHeader('token', `${token}`)
         console.log(userData)
         if (success) {
