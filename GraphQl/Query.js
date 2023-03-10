@@ -307,3 +307,20 @@ query ListOwnProposals($type: Int, $pageNumber: Int, $limit: Int) {
   }
 }
 `
+
+export const CHAT_LIST = ` query Query {
+  chatList {
+    chatRoom {
+      _id
+      user {
+        _id
+        firstName
+        lastName
+        profileImg
+        username
+      }
+    }
+    msg
+    success
+  }
+}`

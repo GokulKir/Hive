@@ -279,6 +279,7 @@ import {
   TextInput,
 } from 'react-native'
 import React, {useState, useEffect, useCallback} from 'react'
+import {useManualQuery, useQuery, ClientContext} from 'graphql-hooks'
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -287,17 +288,89 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons'
 import Icon2 from 'react-native-vector-icons/Entypo'
 // import {GiftedChat, InputToolbar} from 'react-native-gifted-chat'
-	import { Bubble, GiftedChat, Send, Day } from 'react-native-gifted-chat'
+import {Bubble, GiftedChat, Send, Day} from 'react-native-gifted-chat'
+import {CHAT_LIST} from '../../GraphQl/Query'
 
+export default function ChatRoom ({navigation, routes, props}) {
+  const [messages, setMessages] = useState('')
+  const [chatDetail, setChatDetail] = useState([])
+  const [newMessage, setNewMessage] = useState("")
+  const {loading, error, data} = useQuery(CHAT_LIST, {
+    variables: {
+      getChatDetailsID: props?.route?.params.CHAT_DETAIL,
+    },
+  })
 
-export default function ChatRoom ({navigation}) {
-  const [messages, setMessages] = useState([])
+  useEffect(() => {}, [])
 
   useEffect(() => {
-  
+    if (data?.getChatDetailsID?.success) {
+      console.log('-------------------', data?.getChatDetailsID)
+      setChatDetail(data?.getChatDetailsID)
+    }
+  }, [data])
+
+
+
+  useEffect(() => {
+    setMessages([
+      {
+        _id: 1,
+        text: 'Hello developer',
+        createdAt: new Date(),
+        user: {
+          _id: 2,
+          name: 'React Native',
+          avatar: 'https://placeimg.com/140/140/any',
+        },
+      },
+    ])
+   
   }, [])
 
- 
+  
+
+
+const  renderBubble=(props)=> {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          left: {
+            backgroundColor: '#FBF7ED',
+          },
+          right: {
+            backgroundColor: '#FBF7ED',
+          },
+        }}
+        textStyle={{
+          left: {
+            color: '#000',
+          },
+          right: {
+            color: '#C89D67',
+          },
+        }}
+      />
+    );
+  }
+
+  const onSend = useCallback((msg = []) => {
+    console.log("kkkkk",msg);
+    setMessages(previousMessages => GiftedChat.append(previousMessages, msg))
+  }, [])
+
+  const SendMessage = (msg) =>{
+
+     setNewMessage(msg)
+    
+
+  }
+
+
+
+
+
   return (
     <View style={styles.container}>
       <View style={{alignItems: 'center'}}>
@@ -363,136 +436,146 @@ export default function ChatRoom ({navigation}) {
       </View>
 
       <View style={{flex: 1, backgroundColor: '#fff'}}>
+        <GiftedChat
+          messages={messages}
+          onSend={msg => onSend(msg)}
+          user={{
+            _id: 1,
+          }}
 
-      
-        <ScrollView>
-       
-          <View style={{marginTop: hp('83.4%')}}>
-            
-            
-            <View
-              style={{
-                width: wp('100%'),
-                height: hp('10%'),
-                borderColor: '#fff',
-                borderWidth: 1,
-                borderRadius: 1,
-                justifyContent: 'center',
-                backgroundColor: '#fff',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
+          renderBubble={renderBubble}
+         
 
-                
-
-                <View style={{flexDirection:'row' , width:wp('79%') , height:hp('6%') , backgroundColor:'#fff' , alignItems:'center' , borderWidth:0.5 , borderColor:'grey' , borderRadius:5 , justifyContent:'center'}}>
-                
-              <TextInput onChangeText={setMessages}
+          
+          renderInputToolbar={props => (
+            <View style={{marginLeft: wp('1.9%'), flexDirection: 'row'}}>
+              <View
                 style={{
-                  width: wp('67%'),
+                  width: wp('80%'),
                   height: hp('5%'),
                   backgroundColor: '#fff',
-                  borderRadius: 5,
-                  paddingLeft: 12,
-                  color: 'black',
-                }}
-                placeholderTextColor='grey'
-                placeholder='Type a message'
-              />
-
-              <TouchableOpacity >
-
-              <Icon2 size={22} name="attachment"/>
-
-              </TouchableOpacity>
-
-</View> 
-            
-    
-              <View style={{}}>
-                <TouchableOpacity
+                  borderColor: 'grey',
+                  borderWidth: 0.6,
+                  flexDirection: 'row',
+                  borderRadius:3
+                }}>
+                <TextInput
+                  placeholder='Type a message'
+                  placeholderTextColor='#A9A9A9'
+                onChangeText={(msg) => SendMessage(msg)}
+                  value={newMessage}
                   style={{
-                    width: wp('14%'),
-                    height: hp('6%'),
-                    backgroundColor: '#C89D67',
-                    marginLeft: 5,
-                    borderRadius: 4,
+                    width: '80%',
+                    height: '100%',
+                    color: 'black',
+                    fontSize: 15,
+                    paddingLeft: 5,
+                  }}
+                  // onSubmitEditing={() =>
+                  //   props.onSend({text: props.text.trim()}, true)
+                  // }
+                  multiline={true}
+                />
+
+                <View
+                  style={{
                     alignItems: 'center',
                     justifyContent: 'center',
+                    marginLeft: wp('7%'),
                   }}>
-                  <Icon color='#fff' name='arrowright' size={26} />
-                </TouchableOpacity>
-              
+                  <TouchableOpacity 
+                    style={{
+                      width: wp('5%'),
+                      height: hp('4%'),
+                      backgroundColor: '#fff',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Icon2 name='attachment' size={21} />
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          </View>
 
-         
-         </ScrollView>
+              <TouchableOpacity
+                style={{
+                  width: wp('15%'),
+                  height: hp('5%'),
+                  backgroundColor: '#C89D67',
+                  marginLeft: wp('1%'),
+                  borderRadius: 3,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onPress={() =>   
+                  
+                setMessages(previousMessages => GiftedChat.append(previousMessages, {"_id": "49f8f649-9298-404a-a5f8-b8a417288d06", "createdAt": new Date(), "text":newMessage, "user": {"_id": 1}}))
+                
+                }>
+                <Icon name='arrowright' color='#fff' size={28} />
+              </TouchableOpacity>
+            </View>
+          )}
+        />
       </View>
     </View>
   )
 }
 
-
 const styles = StyleSheet.create({
-  container:{ flex: 1,
-    backgroundColor: '#fff'},
-  	 contain: {
-  	  height: 50,
-  	  width: 80,
-  	  backgroundColor: "#fff"
-  	 },
-  	 backgroundimage: {
-  	  flex: 1,
-  	  resizeMode: "cover",
-   justifyContent: "center"
-  	 },
-  	 composerContainer: {
-  	  width: '85%',
-  	  height: 50,
-  	  backgroundColor: "#fff",
-  	  paddingTop: 5,
-  	 },
-  	 textInput: {
-	  fontSize: 14,
-	  letterSpacing: 1,
-	  height: 45,
-	  paddingTop: Platform.OS === "ios" ? 8 : 5,
-  paddingBottom: 5,
-	  paddingLeft: 10,
-	  paddingRight: 10,
- 	 },
- 	 suggestionClickStyle: {
- 	  height: 60,
- 	  backgroundColor: '#fff',
- 	  marginTop: -5,
- 	  padding: 10,
- 	  marginLeft: 11
- 	 },
- 	 suggestionRowContainer: {
- 	  width: '100%',
-  	  flexDirection: 'row',
-  	  alignItems: 'center',
-  	 },
-  	 userImage: {
-  	  height: 40,
-  	  width: 40,
-  	  borderRadius: 10
-  	 },
-  	 userNameText: {
-  	  fontSize: 13,
-  	  letterSpacing: 1,
-  	  width: '80%',
-  	  marginLeft: 10
-  	 },
-  	 suggestionContainer: {
-  	  maxHeight: 200,
-  	  borderRadius: 10,
-  	  width: '80%',
-  	  padding: 5,
-  	  left: -10,
- 	 },
- 	});
- 
-  
+  container: {flex: 1, backgroundColor: '#fff'},
+  contain: {
+    height: 50,
+    width: 80,
+    backgroundColor: '#fff',
+  },
+  backgroundimage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+  composerContainer: {
+    width: '85%',
+    height: 50,
+    backgroundColor: '#fff',
+    paddingTop: 5,
+  },
+  textInput: {
+    fontSize: 14,
+    letterSpacing: 1,
+    height: 45,
+    paddingTop: Platform.OS === 'ios' ? 8 : 5,
+    paddingBottom: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  suggestionClickStyle: {
+    height: 60,
+    backgroundColor: '#fff',
+    marginTop: -5,
+    padding: 10,
+    marginLeft: 11,
+  },
+  suggestionRowContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  userImage: {
+    height: 40,
+    width: 40,
+    borderRadius: 10,
+  },
+  userNameText: {
+    fontSize: 13,
+    letterSpacing: 1,
+    width: '80%',
+    marginLeft: 10,
+  },
+  suggestionContainer: {
+    maxHeight: 200,
+    borderRadius: 10,
+    width: '80%',
+    padding: 5,
+    left: -10,
+  },
+})

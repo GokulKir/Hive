@@ -64,6 +64,8 @@ import Users from './Screens/Main/Users'
 //Order Screen ui
 import Order from './Screens/Order/Order'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+//Statement ui
+import Statement from './Screens/Main/Statement'
 //Chat page ui //
 import Chat from './Screens/Messages/Chat'
 import ChatRoom from './Screens/Messages/ChatRoom'
