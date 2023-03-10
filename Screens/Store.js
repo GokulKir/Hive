@@ -4,7 +4,7 @@ import Reducer from "./Reducer";
 
 const initialState = {
     sessionData: null,
-    mode: 0,
+    mode: 1,
 };
 
 const Store = ({children}) => {

@@ -114,15 +114,16 @@
 //       }
 
 
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, Component, useRef } from 'react'
 import { SafeAreaView, Button, Text, ScrollView, View, TouchableOpacity, TextInput as CommentBox, ActivityIndicator } from 'react-native'
 import { useForm, Controller, } from 'react-hook-form'
 import { TextInput, Snackbar, Divider } from 'react-native-paper';
 import { SelectList, MultipleSelectList } from 'react-native-dropdown-select-list'
 import { LANGUAGES, SKILLS, CATEGORY_LIST, PROFILE_DETAILS } from '../../GraphQl/Query';
-import { UPDATE_PROFILE,UPDATE_EDUCATION } from '../../GraphQl/Mutation';
+import { UPDATE_PROFILE, UPDATE_EDUCATION } from '../../GraphQl/Mutation';
 import { useManualQuery, useQuery, useMutation } from 'graphql-hooks';
 import { Context } from '../Store'
+import MultiSelect from 'react-native-multiple-select';
 
 export default function Profile({ navigation }) {
 
@@ -131,6 +132,7 @@ export default function Profile({ navigation }) {
             control,
             handleSubmit,
             setValue,
+            getValues,
             formState: { errors, isValid }
       } = useForm()
 
@@ -142,15 +144,48 @@ export default function Profile({ navigation }) {
       const [snackbarVisible, setSnackbarVisible] = useState(false)
       const [isUpdating, setIsUpdating] = useState(false)
       const [updateProfile] = useMutation(UPDATE_PROFILE)
+      const [updateEducation] = useMutation(UPDATE_EDUCATION)
       const [selected, setSelected] = React.useState([]);
+      const multiSelect = useRef()
       // const [userDetails, setUse] = useState([])
       const languagesList = []
       const categoryList = []
 
+      const items = [{
+            id: '92iijs7yta',
+            name: 'Ondo'
+      }, {
+            id: 'a0s0a8ssbsd',
+            name: 'Ogun'
+      }, {
+            id: '16hbajsabsd',
+            name: 'Calabar'
+      }, {
+            id: 'nahs75a5sg',
+            name: 'Lagos'
+      }, {
+            id: '667atsas',
+            name: 'Maiduguri'
+      }, {
+            id: 'hsyasajs',
+            name: 'Anambra'
+      }, {
+            id: 'djsjudksjd',
+            name: 'Benue'
+      }, {
+            id: 'sdhyaysdj',
+            name: 'Kaduna'
+      }, {
+            id: 'suudydjsjd',
+            name: 'Abuja'
+      }
+      ];
+
+
       // const { loading, error, data: skills } = useQuery(SKILLS)
       const { data: languages, } = useQuery(LANGUAGES)
 
-      const [fetch,{ data: details }] = useManualQuery(PROFILE_DETAILS)
+      const [fetch, { data: details }] = useManualQuery(PROFILE_DETAILS)
 
       const { data: categories } = useQuery(CATEGORY_LIST, {
             variables: {
@@ -161,9 +196,9 @@ export default function Profile({ navigation }) {
             }
       })
 
-      useEffect(()=>{
+      useEffect(() => {
             fetch()
-      },[])
+      }, [])
 
       useEffect(() => {
             console.log("------+++ ---", details?.getProfileDetails?.userDetails);
@@ -215,7 +250,6 @@ export default function Profile({ navigation }) {
       const gender = [
             { key: '0', value: 'Male' },
             { key: '1', value: 'Female' },
-            // { key: '3', value: 'Other' },
       ]
 
       const englishLevel = [
@@ -232,7 +266,7 @@ export default function Profile({ navigation }) {
                   variables: data
             })
             fetch().then(({ aa }) => {
-                  console.log("{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}",aa)
+                  // console.log("{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}{}",aa)
                   setIsUpdating(false)
                   setSnackBarMsg(response?.updateProfile?.msg)
                   setSnackbarVisible(true)
@@ -240,15 +274,16 @@ export default function Profile({ navigation }) {
                         setSnackbarVisible(false)
                   }, 5000);
                   setRefresh(!refresh)
-            
-              })
-      
+
+            })
+
             // console.log("=========", response);
 
       }
 
       return (
             <>
+
                   <ScrollView contentContainerStyle={{}}>
                         <View style={{ backgroundColor: "#fff", padding: 10, borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}>
                               <Controller
@@ -409,36 +444,54 @@ export default function Profile({ navigation }) {
                                     )}
 
                               />
-                              {/* <Controller
-                              control={control}
-                              name="Languages"
-                              render={({ field: { onChange, value, onBlur } }) => (
+                              <Controller
+                                    control={control}
+                                    name="Languages"
+                                    render={({ field: { onChange, value, onBlur } }) => (
 
 
-                                    <>
-                                          <Text style={{ left: 15, top: 5, fontSize: 12, color: "#1d1d1b" }}>Languages</Text>
-                                          <MultipleSelectList
-                                                setSelected={(value) => { }}
-                                                onBlur={onBlur}
-                                                data={languagesList}
-                                                placeholder="Languages"
-                                                save="value"
-                                                defaultOption={{ key: '1', value: 'Male' }}
-                                                boxStyles={{ borderWidth: 0, minHeight: 50, margin: 0, borderBottomWidth: 1 }}
-                                          />
-                                    </>
-                                    // <TextInput
-                                    //       label="Languages"
-                                    //       onBlur={onBlur}
-                                    //       onChangeText={value => onChange(value)}
-                                    //       value={value}
-                                    //       backgroundColor={"#fff"}
-                                    //       textColor={"#1d1d1b"}
-                                    //       style={{ height: 70 }}
-                                    // />
-                              )}
+                                          <>
+                                                {/* <Text style={{ left: 15, top: 5, fontSize: 12, color: "#1d1d1b" }}>Languages</Text> */}
+                                                <MultiSelect
+                                                styleDropdownMenu={{margin:20}}
+                                                      hideTags
+                                                      items={items}
+                                                      uniqueKey="id"
+                                                      ref={multiSelect}
+                                                      onSelectedItemsChange={(value) => setSelected(value)}
+                                                      selectedItems={selected}
+                                                      selectText="Languages"
+                                                      searchInputPlaceholderText="Search Items..."
+                                                      onChangeInput={(text) => console.log(text)}
+                                                      altFontFamily="ProximaNova-Light"
+                                                      tagRemoveIconColor="#CCC"
+                                                      tagBorderColor="#CCC"
+                                                      tagTextColor="#CCC"
+                                                      selectedItemTextColor="#CCC"
+                                                      selectedItemIconColor="#CCC"
+                                                      itemTextColor="#000"
+                                                      displayKey="name"
+                                                      searchInputStyle={{ color: '#CCC' }}
+                                                      submitButtonColor="#C89D67"
+                                                      submitButtonText="Submit"
+                                                />
+                                                <View>
+                                                      {multiSelect?.current?.getSelectedItemsExt(selected)}
+                                                      {/* {console.log(multiSelect?.current?._itemSelected())} */}
+                                                </View>
+                                          </>
+                                          // <TextInput
+                                          //       label="Languages"
+                                          //       onBlur={onBlur}
+                                          //       onChangeText={value => onChange(value)}
+                                          //       value={value}
+                                          //       backgroundColor={"#fff"}
+                                          //       textColor={"#1d1d1b"}
+                                          //       style={{ height: 70 }}
+                                          // />
+                                    )}
 
-                        /> */}
+                              />
                               {/* <Controller
                               control={control}
                               name="EnglishLanguageLevel"
@@ -532,7 +585,7 @@ export default function Profile({ navigation }) {
 
                               />
                               <View style={{ alignItems: 'center' }}>
-                                    <TouchableOpacity disabled={isUpdating} onPress={handleSubmit(onSubmit)} style={[{ width: 324, height: 40, backgroundColor: '#C89D67', borderRadius: 5, alignItems: 'center', justifyContent: 'center', marginTop: 15,marginBottom:10 }, isUpdating && { opacity: 0.7 }]}>
+                                    <TouchableOpacity disabled={isUpdating} onPress={handleSubmit(onSubmit)} style={[{ width: 324, height: 40, backgroundColor: '#C89D67', borderRadius: 5, alignItems: 'center', justifyContent: 'center', marginTop: 15, marginBottom: 10 }, isUpdating && { opacity: 0.7 }]}>
                                           {isUpdating ? (
                                                 <ActivityIndicator size={'large'} color={'#fff'} />
                                           ) : <Text style={{ fontSize: 17, color: '#fff', fontWeight: 'normal' }}>Save & update</Text>
@@ -559,17 +612,17 @@ export default function Profile({ navigation }) {
                                           </View>
                                           <Divider />
                                           <Divider />
-                                          <View style={{padding:10}}>
-                                                <View style={{ padding:5 }}>
+                                          <View style={{ padding: 10 }}>
+                                                <View style={{ padding: 5 }}>
                                                       <Text style={{ fontSize: 13, left: 10 }}>{item.institution}</Text>
                                                       <Text style={{ fontSize: 16, color: 'black', fontWeight: "bold", left: 5 }}>{item.major}</Text>
                                                 </View>
-                                                <View style={{ alignItems: 'center',margin:10 }}>
+                                                <View style={{ alignItems: 'center', margin: 10 }}>
                                                       <TouchableOpacity onPress={() => navigation.navigate('Edit')} style={{ width: 324, height: 40, backgroundColor: '#C89D67', borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}>
                                                             <Text style={{ fontSize: 17, color: '#fff', fontWeight: 'normal' }}>Edit</Text>
                                                       </TouchableOpacity>
                                                 </View>
-                                                <View style={{ alignItems: 'center',margin:10 }}>
+                                                <View style={{ alignItems: 'center', margin: 10 }}>
                                                       <TouchableOpacity>
                                                             <Text style={{}}>Remove</Text>
                                                       </TouchableOpacity>
