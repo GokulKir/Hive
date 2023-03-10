@@ -81,6 +81,7 @@ import Categories from './Screens/Main/Categories'
 import Store from './Screens/Store'
 import { Context } from './Screens/Store'
 import Proposals from './Screens/Main/Proposals'
+import Reviews from './Screens/Main/Reviews'
 
 const user = firebase.auth().currentUser
 
@@ -360,6 +361,18 @@ const DrawerScreens = (props) => {
             <BackButtonAndDrawer {...props} />
           ),
           headerTitle: props => <Text style={{ fontSize: 20, fontWeight: 'bold', left: 80 }}>Proposals</Text>,
+          // headerStyle: { backgroundColor: '#fff' },
+          headerRight: () => <ProfileImage {...props} />
+        }}
+      />
+      <Stack.Screen
+        name='Reviews'
+        component={Reviews}
+        options={{
+          headerLeft: () => (
+            <BackButtonAndDrawer {...props} />
+          ),
+          headerTitle: props => <Text style={{ fontSize: 20, fontWeight: 'bold', left: 80 }}>Reviews</Text>,
           // headerStyle: { backgroundColor: '#fff' },
           headerRight: () => <ProfileImage {...props} />
         }}

@@ -410,6 +410,30 @@ export default function DrawerContent({ navigation }) {
               :
               <></>
             }
+            {state?.mode === 0 ?
+
+              <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Reviews')}
+                  style={{ marginLeft: 20, marginTop: 10, flexDirection: 'row' }}>
+                  <Image
+                    style={{ width: 21, height: 23, marginTop: 2 }}
+                    source={require('../../assets/Invoice.png')}
+                  />
+                  <Text
+                    style={{
+                      marginLeft: 21,
+                      color: 'black',
+                      fontSize: 16,
+                      marginTop: 3,
+                    }}>
+                    Reviews
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              :
+              <></>
+            }
             <View style={{ flexDirection: 'row', marginTop: 10 }}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('MySavedScreen')}

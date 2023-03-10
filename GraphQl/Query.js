@@ -324,3 +324,40 @@ export const CHAT_LIST = ` query Query {
     success
   }
 }`
+export const REVIEWS = `
+query ListReviews($pageNumber: Int, $limit: Int, $type: Int) {
+  listReviews(pageNumber: $pageNumber, limit: $limit, type: $type) {
+    success
+    msg
+    reviews {
+      ... on UserReview {
+        type
+        reviewer {
+          _id
+          username
+          profileImg
+        }
+        rating
+        likes
+        disLikes
+        content
+        createdAt
+      }
+      ... on ServiceReview {
+        type
+        disLikes
+        likes
+        content
+        createdAt
+        rating
+        reviewer {
+          _id
+          username
+          profileImg
+        }
+      }
+    }
+    totalCount
+  }
+}
+`
