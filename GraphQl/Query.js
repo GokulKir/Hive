@@ -361,3 +361,29 @@ query ListReviews($pageNumber: Int, $limit: Int, $type: Int) {
   }
 }
 `
+export const OWN_PROJECTS = `
+query ProjectList($pageNumber: Int, $limit: Int, $status: Int) {
+  cLientOwnProjectList(pageNumber: $pageNumber, limit: $limit, status: $status) {
+    success
+    msg
+    totalCount
+    totalPages
+    projects {
+      _id
+      title
+      description
+      slug
+      priceType
+      fixedBudget
+      minBudget
+      maxBudget
+      createdAt
+      status
+      owner {
+        city
+        country
+      }
+    }
+  }
+}
+`
