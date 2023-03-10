@@ -10,7 +10,10 @@ import {
 import React, { useState, useEffect } from 'react'
 import { SERVICE_DETAILS } from '../../GraphQl/Query'
 import { useManualQuery, useQuery } from 'graphql-hooks';
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen'
 
 export default function TaskD(props) {
   const { loading, error, data } = useQuery(SERVICE_DETAILS, {
@@ -469,8 +472,57 @@ export default function TaskD(props) {
                 />
               </TouchableOpacity>
             </View>
+
+            
+ 
+
           </View>
+          
         </View>
+
+        <View style={{alignItems:'center'}}>
+
+        <View style={{width:wp('90%')  , height:hp('19%')  , marginTop:hp('4%') , borderWidth:0.6 , borderColor:'grey' , borderRadius:8 ,  flexDirection:'row'}}>
+
+          <View style={{width:70 , height:70 , backgroundColor:'#DDD' , alignItems:'center' , marginTop:hp('4%') , marginLeft:wp('5%') , borderRadius:100 }}>
+
+          </View>
+
+          <View style={{marginTop:hp('4%') , marginLeft:wp('4%')  }}>
+            <Text style={{ fontSize:17 , fontWeight:'normal' , color:'black' , fontWeight:'bold'}}>I highly recommend this seller</Text>
+            
+          <View style={{marginTop:8 , flexDirection:'row'}}>
+            <Image style={{width:wp('4%') , height:hp('2%')}} source={require('../../assets/Rate.png')}/>
+            <Text style={{marginLeft:10 , fontWeight:'bold' , fontSize:14}}>4.5</Text>
+
+            <Image style={{width:wp('4%') , height:hp('2.3%') , marginLeft:('20%')}} source={require('../../assets/Cal.png')}/>
+            <Text style={{fontSize:15 , color:'grey' , marginLeft:5}}>1 sec ago</Text>
+          </View>
+
+
+          <View style={{marginTop:hp('2%')}}>
+
+<Text>Dues aute iruretate dolor in reprehederit</Text>
+<Text> in voluptate valiten essemae.</Text>
+
+</View>
+          
+
+        
+
+        
+          
+          </View>
+
+        
+
+
+
+          
+
+</View>
+
+</View>
 
         <View style={{ height: 256 }}></View>
       </ScrollView>
