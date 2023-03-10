@@ -1,4 +1,4 @@
-import React, {useState , useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   View,
   StyleSheet,
@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import Sellers from './Sellers'
 import Service from './Service'
-import {useManualQuery , useQuery} from 'graphql-hooks'
+import { useManualQuery, useQuery } from 'graphql-hooks'
 
 const SERVIECE_LIST = `
 query GetFreelancerDetails($pageNumber: Int, $limit: Int, $category: String) {
@@ -42,91 +42,91 @@ query GetFreelancerDetails($pageNumber: Int, $limit: Int, $category: String) {
 
 `
 
-export default function MySaved ({navigation}) {
+export default function MySaved({ navigation }) {
   const [selectedTab, setselectedTab] = useState(0)
-  const [Datas , setDatas] =  useState([])
-  const {  loading, error, data } = useQuery(SERVIECE_LIST);
+  const [Datas, setDatas] = useState([])
+  const { loading, error, data } = useQuery(SERVIECE_LIST);
 
 
 
 
- useEffect(() =>{
+  useEffect(() => {
 
-  if( data?.serviceList?.services?.owner){
-      
+    if (data?.serviceList?.services?.owner) {
 
-  }
 
-  
-  if(!loading){
-   
-    setDatas(data)
-  }
-  console.log(data);
- })
+    }
 
- useEffect(() =>{
-  console.log("Servies Data>>>>>",Datas?.serviceList?.services);
-  
-    },[Datas])
+
+    if (!loading) {
+
+      setDatas(data)
+    }
+    console.log(data);
+  })
+
+  useEffect(() => {
+    console.log("Servies Data>>>>>", Datas?.serviceList?.services);
+
+  }, [Datas])
 
   return (
     <View style={styles.container}>
-        <View
+      <View
+        style={{
+          width: '100%',
+          height: 75,
+          backgroundColor: '#fff',
+          flexDirection: 'row',
+        }}>
+        <TouchableOpacity
+          onPress={() => setselectedTab(0)}
           style={{
-            width: '100%',
-            height: 75,
-            backgroundColor: '#fff',
-            flexDirection: 'row',
+            width: '50%',
+            height: 63,
+            backgroundColor: selectedTab == 0 ? '#ffffff' : '#DDDDDD',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderWidth: 0.5,
+            borderColor: selectedTab == 0 ? 'grey' : '#fff',
           }}>
-          <TouchableOpacity
-            onPress={() => setselectedTab(0)}
+          <Text
             style={{
-              width: '50%',
-              height: 63,
-              backgroundColor: selectedTab == 0 ? '#ffffff' : '#DDDDDD',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderWidth: 0.5,
-              borderColor: selectedTab == 0 ? 'grey' : '#fff',
+              fontSize: 17,
+              color: selectedTab == 0 ? 'black' : 'grey',
+              fontWeight: 'bold',
             }}>
-            <Text
-              style={{
-                fontSize: 17,
-                color: selectedTab == 0 ? 'black' : 'grey',
-                fontWeight: 'bold',
-              }}>
-             Sellers
-            </Text>
-          </TouchableOpacity>
+            Sellers
+          </Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => setselectedTab(1)}
+        <TouchableOpacity
+          onPress={() => setselectedTab(1)}
+          style={{
+            width: '50%',
+            height: 63,
+            backgroundColor: selectedTab == 1 ? '#ffffff' : '#DDDDDD',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderWidth: 0.5,
+            borderColor: selectedTab == 1 ? 'grey' : '#fff',
+          }}>
+          <Text
             style={{
-              width: '50%',
-              height: 63,
-              backgroundColor: selectedTab == 1 ? '#ffffff' : '#DDDDDD',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderWidth: 0.5,
-              borderColor: selectedTab == 1 ? 'grey' : '#fff',
+              fontSize: 17,
+              color: selectedTab == 0 ? 'black' : 'grey',
+              fontWeight: 'bold',
             }}>
-            <Text
-              style={{
-                fontSize: 17,
-                color: selectedTab == 0 ? 'black' : 'grey',
-                fontWeight: 'bold',
-              }}>
-              Service
-            </Text>
-          </TouchableOpacity>
-        </View>
+            Service
+          </Text>
+        </TouchableOpacity>
+      </View>
 
-          {selectedTab == 0 ? (
-            <Sellers />
-          ) : selectedTab == 1 ? (
-            <Service />
-          ) : null}
+      {selectedTab == 0 ? (
+        <Sellers />
+      ) : selectedTab == 1 ? (
+        <Service />
+      ) : null}
     </View>
   )
 }
