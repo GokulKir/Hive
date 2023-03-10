@@ -134,8 +134,8 @@ export default function DrawerContent({ navigation }) {
 
                 {/* // <Text style={{marginTop:15 , color:'black' , marginLeft:14 , fontSize:18 , fontWeight:'bold'}}>{user.displayName}</Text>  */}
               </TouchableOpacity>
-              <View style={{ flexDirection: 'row', marginLeft:10 }}>
-                <Switch value={state?.mode === 0 ? false : true} color={"black"} onValueChange={() => {
+              <View style={{ flexDirection: 'row', marginLeft: 10 }}>
+                <Switch value={state?.mode === 0 ? true : false} color={"black"} onValueChange={() => {
                   dispatch({ type: "SET_MODE", payload: state?.mode === 0 ? 1 : 0 });
 
                 }} style={{ marginTop: 5 }} />
@@ -144,9 +144,9 @@ export default function DrawerContent({ navigation }) {
                     marginTop: 8,
                     // color: '#1DA1F2',
                     fontSize: 13,
-                    marginLeft:4
+                    marginLeft: 4
                   }}>
-                  {state?.mode === 0 ? "Client Mode" : "Freelancer Mode"}
+                  {state?.mode === 0 ? "Freelancer Mode" : "Client Mode"}
                 </Text>
               </View>
             </View>
@@ -169,6 +169,9 @@ export default function DrawerContent({ navigation }) {
 
             <View style={{ flexDirection: 'row', marginTop: 10 }}>
               <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('Proposals',{mode:state?.mode || ""})
+                }}
                 style={{ marginLeft: 20, marginTop: 15, flexDirection: 'row' }}>
                 <Image
                   style={{ width: 18, height: 19, marginTop: 3 }}
@@ -383,7 +386,7 @@ export default function DrawerContent({ navigation }) {
               </View>
             </View>
 
-            {state?.mode === 1 ?
+            {state?.mode === 0 ?
 
               <View style={{ flexDirection: 'row', marginTop: 10 }}>
                 <TouchableOpacity

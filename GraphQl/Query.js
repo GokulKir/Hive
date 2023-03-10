@@ -266,6 +266,47 @@ query CategoryList {
   }
 }
 `
+export const  PROPSALS = `
+query ListOwnProposals($type: Int, $pageNumber: Int, $limit: Int) {
+  listOwnProposals(type: $type, pageNumber: $pageNumber, limit: $limit) {
+    msg
+    success
+    totalCount
+    proposals {
+      _id
+      project {
+        title
+        slug
+        budgetStatusLogs {
+          amount
+          message
+          createdAt
+        }
+        projectDuration {
+          value
+          unit
+        }
+        minBudget
+        maxBudget
+        priceType
+        fixedBudget
+      }
+      projectOwner {
+        profileImg
+        _id
+        city
+        country
+      }
+      time {
+        value
+        unit
+      }
+      cost
+      createdAt
+    }
+  }
+}
+`
 
 export const CHAT_LIST = ` query Query {
   chatList {

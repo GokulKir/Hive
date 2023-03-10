@@ -80,6 +80,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Categories from './Screens/Main/Categories'
 import Store from './Screens/Store'
 import { Context } from './Screens/Store'
+import Proposals from './Screens/Main/Proposals'
 
 const user = firebase.auth().currentUser
 
@@ -347,6 +348,18 @@ const DrawerScreens = (props) => {
             <BackButtonAndDrawer {...props} />
           ),
           headerTitle: props => <Text style={{ fontSize: 20, fontWeight: 'bold', left: 80 }}>Categories</Text>,
+          // headerStyle: { backgroundColor: '#fff' },
+          headerRight: () => <ProfileImage {...props} />
+        }}
+      />
+      <Stack.Screen
+        name='Proposals'
+        component={Proposals}
+        options={{
+          headerLeft: () => (
+            <BackButtonAndDrawer {...props} />
+          ),
+          headerTitle: props => <Text style={{ fontSize: 20, fontWeight: 'bold', left: 80 }}>Proposals</Text>,
           // headerStyle: { backgroundColor: '#fff' },
           headerRight: () => <ProfileImage {...props} />
         }}
