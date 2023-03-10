@@ -10,6 +10,10 @@ import {
 import React, { useState, useEffect } from 'react'
 import { SERVICE_DETAILS } from '../../GraphQl/Query'
 import { useManualQuery, useQuery } from 'graphql-hooks';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export default function TaskD(props) {
@@ -481,7 +485,12 @@ export default function TaskD(props) {
                 />
               </TouchableOpacity>
             </View>
+
+            
+ 
+
           </View>
+          
         </View>
 
         <View style={{ backgroundColor: "#fff", margin: 20, borderRadius: 5 }}>
