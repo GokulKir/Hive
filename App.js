@@ -82,6 +82,7 @@ import Store from './Screens/Store'
 import { Context } from './Screens/Store'
 import Proposals from './Screens/Main/Proposals'
 import Reviews from './Screens/Main/Reviews'
+import ManageProjects from './Screens/Main/ManageProjects'
 
 const user = firebase.auth().currentUser
 
@@ -373,6 +374,18 @@ const DrawerScreens = (props) => {
             <BackButtonAndDrawer {...props} />
           ),
           headerTitle: props => <Text style={{ fontSize: 20, fontWeight: 'bold', left: 80 }}>Reviews</Text>,
+          // headerStyle: { backgroundColor: '#fff' },
+          headerRight: () => <ProfileImage {...props} />
+        }}
+      />
+      <Stack.Screen
+        name='ManageProjects'
+        component={ManageProjects}
+        options={{
+          headerLeft: () => (
+            <BackButtonAndDrawer {...props} />
+          ),
+          headerTitle: props => <Text style={{ fontSize: 20, fontWeight: 'bold', left: 60 }}>Manage Project</Text>,
           // headerStyle: { backgroundColor: '#fff' },
           headerRight: () => <ProfileImage {...props} />
         }}
