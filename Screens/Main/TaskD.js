@@ -14,6 +14,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export default function TaskD(props) {
   const { loading, error, data } = useQuery(SERVICE_DETAILS, {
@@ -23,11 +24,23 @@ export default function TaskD(props) {
     }
   })
   const [details, setDetails] = useState([])
+  const [ratings, setRatings] = useState([])
+  const [totalCount, setTotalCount] = useState(0)
 
   useEffect(() => {
     if (data?.getServiceDetails?.details) {
-      console.log("-------------------", data?.getServiceDetails?.details);
+      console.log("-------------------", data?.getServiceDetails?.reviewStatistics);
       setDetails(data?.getServiceDetails?.details)
+    }
+    if (data?.getServiceDetails?.reviewStatistics) {
+      setRatings(data?.getServiceDetails?.reviewStatistics)
+      setTotalCount(
+        data?.getServiceDetails?.reviewStatistics?.one +
+        data?.getServiceDetails?.reviewStatistics?.two +
+        data?.getServiceDetails?.reviewStatistics?.three +
+        data?.getServiceDetails?.reviewStatistics?.four +
+        data?.getServiceDetails?.reviewStatistics?.five
+      )
     }
   }, [data])
 
@@ -41,7 +54,7 @@ export default function TaskD(props) {
           elevation: 5,
           flexDirection: 'row',
           justifyContent: 'space-between',
-          padding:10
+          padding: 10
         }}>
         <TouchableOpacity onPress={() => props.navigation.goBack()}>
           <Image
@@ -51,7 +64,7 @@ export default function TaskD(props) {
         </TouchableOpacity>
         <TouchableOpacity >
           <Image
-            style={{ width: 22, height: 22,resizeMode:"contain",right:10,top:5}}
+            style={{ width: 22, height: 22, resizeMode: "contain", right: 10, top: 5 }}
             source={require('../../assets/ShareG.png')}
           />
         </TouchableOpacity>
@@ -480,49 +493,103 @@ export default function TaskD(props) {
           
         </View>
 
-        <View style={{alignItems:'center'}}>
-
-        <View style={{width:wp('90%')  , height:hp('19%')  , marginTop:hp('4%') , borderWidth:0.6 , borderColor:'grey' , borderRadius:8 ,  flexDirection:'row'}}>
-
-          <View style={{width:70 , height:70 , backgroundColor:'#DDD' , alignItems:'center' , marginTop:hp('4%') , marginLeft:wp('5%') , borderRadius:100 }}>
-
+        <View style={{ backgroundColor: "#fff", margin: 20, borderRadius: 5 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'center', padding: 5, }}>
+            <Text>5 <Image
+              style={{ width: 12, height: 12, marginLeft: 10, marginTop: 4 }}
+              source={require('../../assets/Rate.png')}
+            /></Text>
+            <View style={{ width: "70%", height: 5, backgroundColor: "#f9f5ef", alignSelf: 'center', margin: 5 }} >
+              <View style={{ backgroundColor: "#e1c03f", width: ratings?.five / totalCount * 100 || 0, height: 5 }} />
+            </View>
+            <Text>{ratings?.five}</Text>
           </View>
 
-          <View style={{marginTop:hp('4%') , marginLeft:wp('4%')  }}>
-            <Text style={{ fontSize:17 , fontWeight:'normal' , color:'black' , fontWeight:'bold'}}>I highly recommend this seller</Text>
-            
-          <View style={{marginTop:8 , flexDirection:'row'}}>
-            <Image style={{width:wp('4%') , height:hp('2%')}} source={require('../../assets/Rate.png')}/>
-            <Text style={{marginLeft:10 , fontWeight:'bold' , fontSize:14}}>4.5</Text>
-
-            <Image style={{width:wp('4%') , height:hp('2.3%') , marginLeft:('20%')}} source={require('../../assets/Cal.png')}/>
-            <Text style={{fontSize:15 , color:'grey' , marginLeft:5}}>1 sec ago</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'center', padding: 5, }}>
+            <Text>4 <Image
+              style={{ width: 12, height: 12, marginLeft: 10, marginTop: 4 }}
+              source={require('../../assets/Rate.png')}
+            /></Text>
+            <View style={{ width: "70%", height: 5, backgroundColor: "#f9f5ef", alignSelf: 'center', margin: 5 }} >
+              <View style={{ backgroundColor: "#e1c03f", width: ratings?.four / totalCount * 100 || 0, height: 5 }} />
+            </View>
+            <Text>{ratings?.four}</Text>
           </View>
 
-
-          <View style={{marginTop:hp('2%')}}>
-
-<Text>Dues aute iruretate dolor in reprehederit</Text>
-<Text> in voluptate valiten essemae.</Text>
-
-</View>
-          
-
-        
-
-        
-          
+          <View style={{ flexDirection: 'row', justifyContent: 'center', padding: 5, }}>
+            <Text>3 <Image
+              style={{ width: 12, height: 12, marginLeft: 10, marginTop: 4 }}
+              source={require('../../assets/Rate.png')}
+            /></Text>
+            <View style={{ width: "70%", height: 5, backgroundColor: "#f9f5ef", alignSelf: 'center', margin: 5 }} >
+              <View style={{ backgroundColor: "#e1c03f", width: ratings?.three / totalCount * 100 || 0, height: 5 }} />
+            </View>
+            <Text>{ratings?.three}</Text>
           </View>
 
-        
+          <View style={{ flexDirection: 'row', justifyContent: 'center', padding: 5, }}>
+            <Text>2 <Image
+              style={{ width: 12, height: 12, marginLeft: 10, marginTop: 4 }}
+              source={require('../../assets/Rate.png')}
+            /></Text>
+            <View style={{ width: "70%", height: 5, backgroundColor: "#f9f5ef", alignSelf: 'center', margin: 5 }} >
+              <View style={{ backgroundColor: "#e1c03f", width: ratings?.two / totalCount * 100 || 0, height: 5 }} />
+            </View>
+            <Text>{ratings?.two}</Text>
+          </View>
 
+          <View style={{ flexDirection: 'row', justifyContent: 'center', padding: 5, }}>
+            <Text>1 <Image
+              style={{ width: 12, height: 12, marginLeft: 10, marginTop: 4 }}
+              source={require('../../assets/Rate.png')}
+            /></Text>
+            <View style={{ width: "70%", height: 5, backgroundColor: "#f9f5ef", alignSelf: 'center', margin: 5 }} >
+              <View style={{ backgroundColor: "#e1c03f", width: ratings?.one / totalCount * 100 || 0, height: 5 }} />
+            </View>
+            <Text>{ratings?.one}</Text>
+          </View>
 
+        </View>
 
-          
+        {
+          details?.reviews?.map((item, index) => {
+            var timestemp = new Date(item?.createdAt)
+            return (
+              <View style={{ backgroundColor: "#fff", margin: 10, borderRadius: 5, padding: 10, width: "90%", alignSelf: 'center' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                  {/* <Image
+                    style={{ width: 30, height: 30, borderRadius: 100 }}
+                    source={{
+                      // uri: `https://hive-dash.credot.dev/${item.profileImg}`,
+                      uri: 'https://hive-app.vercel.app/_next/image?url=https%3A%2F%2Fpicsum.photos%2F200&w=128&q=75',
+                    }}
+                  /> */}
+                  <Image
+                    style={{ width: 12, height: 12, marginLeft: 10, marginTop: 4 }}
+                    source={require('../../assets/Rate.png')}
+                  />
+                  <Text style={{ marginLeft: 5 }}>{item.rating}</Text>
+                  <View style={{ flexDirection: 'column', flex: 1 }}>
+                    <Text style={{ left: 10, fontWeight: "bold" }}>{item.content}</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ marginLeft: 5, fontSize: 12, marginLeft: 10, marginTop: 5 }}>{item?.reviewer?.username}</Text>
+                        <Text style={{ marginLeft: 5, fontSize: 12, marginTop: 5 }}>{new Date(timestemp).toDateString()}</Text>
+                      </View>
+                      <View style={{ flexDirection: 'row', marginTop: 5, marginRight: 20 }}>
+                        <MaterialCommunityIcons size={13} name='thumb-up' color='#bababa' style={{ marginTop: 2 }} />
+                        <Text style={{ fontSize: 12, marginRight: 20, marginLeft: 2 }}>{item.likes}</Text>
 
-</View>
-
-</View>
+                        <MaterialCommunityIcons size={13} name='thumb-down' color='#bababa' style={{ marginTop: 2 }} />
+                        <Text style={{ fontSize: 12, marginLeft: 2 }}>{item.disLikes}</Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            )
+          })
+        }
 
         <View style={{ height: 256 }}></View>
       </ScrollView>

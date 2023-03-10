@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Provider as PaperProvider } from 'react-native-paper';
-// import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
 import App from './App';
 
 
@@ -12,18 +11,7 @@ const client = new GraphQLClient({
 })
 
 
- 
 
-/*export default function Main() {
-    return (
-      <ApolloProvider client={client}>
-      <PaperProvider>
-        <App />
-      </PaperProvider>
-      </ApolloProvider>
-    );
-  }*/
-   
 
 export default function Main() {
   return (

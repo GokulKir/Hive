@@ -47,6 +47,80 @@ query CategoryFlatList($limit: Int) {
   }
 }
 `
+export const  CATEGORY_LIST_ALL = `
+query CategoryFlatList() {
+  categoryList() {
+    success
+    msg
+    totalPages
+    totalCount
+    categories {
+      name
+      icon
+    }
+  }
+}
+`
+export const  PROFILE_DETAILS = `
+query GetServiceDetails {
+  getProfileDetails {
+    success
+    msg
+    userDetails {
+      _id
+      firstName
+      lastName
+      username
+      email
+      country
+      gender
+      city
+      mobile
+      description
+      tagline
+      englishLevel
+      hourlyRate
+      languages {
+        _id
+        title
+      }
+      position
+      education {
+        _id
+        institution
+        description
+        major
+        startYear
+        endYear
+      }
+    }
+  }
+}
+`
+export const  LANGUAGES = `
+query GetFreelancerDetails {
+  listLanguages {
+    success
+    msg
+    languages {
+      _id
+      title
+    }
+  }
+}
+`
+export const  SKILLS = `
+query GetFreelancerDetails {
+  skillList {
+    success
+    msg
+    skills {
+      _id
+      title
+    }
+  }
+}
+`
 export const  FREELANCER_DETAILS = `
 query GetFreelancerDetails($getFreelancerDetailsId: ID) {
   getFreelancerDetails(id: $getFreelancerDetailsId) {
@@ -107,6 +181,15 @@ query GetFreelancerDetails($getFreelancerDetailsId: ID) {
         description
       }
     }
+    featuredServices {
+      _id
+      title
+      rating
+      price
+      images
+      slug
+      status
+    }
   }
 }
 `
@@ -132,6 +215,30 @@ query GetServiceDetails($serviceId: String) {
         lastName
       }
       serviceDetails
+      reviews {
+        reviewer {
+          _id
+          username
+          profileImg
+        }
+        reviewee {
+          _id
+          username
+          profileImg
+        }
+        rating
+        createdAt
+        content
+        likes
+        disLikes
+      }
+    }
+    reviewStatistics {
+      one
+      two
+      three
+      four
+      five
     }
   }
 }
