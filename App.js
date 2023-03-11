@@ -84,6 +84,7 @@ import { Context } from './Screens/Store'
 import Proposals from './Screens/Main/Proposals'
 import Reviews from './Screens/Main/Reviews'
 import ManageProjects from './Screens/Main/ManageProjects'
+import { ClientContext } from 'graphql-hooks'
 
 const user = firebase.auth().currentUser
 // client.setHeader('token', `${token}`)
@@ -411,7 +412,7 @@ const DrawerScreens = (props) => {
 const MyStack = ({ route, navigation }) => {
   const [state, dispatch] = useContext(Context);
   const [isLogedin, setIslogedin] = useState(true);
-
+  const client = useContext(ClientContext)
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
@@ -420,7 +421,8 @@ const MyStack = ({ route, navigation }) => {
   }, [])
 
   useEffect(() => {
-console.log("triggered");
+    console.log("triggered");
+
     AsyncStorage.getItem('userSession', (err, result) => {
       const sesData = JSON.parse(result)
       if (sesData) {
@@ -433,6 +435,10 @@ console.log("triggered");
           setIslogedin(false)
         }
       }
+    })
+    AsyncStorage.getItem('token', (err, result) => {
+      const token = JSON.parse(result)
+      client.setHeader('token', `${token}`)
     })
 
   }, [state.sessionData])
