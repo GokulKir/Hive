@@ -105,6 +105,7 @@ export default function Login({ navigation }) {
         console.log(userData)
         if (success) {
           try {
+            AsyncStorage.setItem('token', JSON.stringify(token))
             AsyncStorage.setItem('userSession', JSON.stringify(userData))
           } catch (err) {
           } finally {

@@ -279,7 +279,7 @@ import {
   TextInput,
 } from 'react-native'
 import React, {useState, useEffect, useCallback} from 'react'
-import {useManualQuery, useQuery, ClientContext} from 'graphql-hooks'
+import {useManualQuery, useQuery} from 'graphql-hooks'
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

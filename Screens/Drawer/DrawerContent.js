@@ -18,7 +18,7 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {  useMutation } from 'graphql-hooks'
+import { useMutation } from 'graphql-hooks'
 import { Context } from '../Store'
 import { Switch } from 'react-native-paper';
 
@@ -418,7 +418,7 @@ export default function DrawerContent({ navigation }) {
                   style={{ marginLeft: 20, marginTop: 10, flexDirection: 'row' }}>
                   <Image
                     style={{ width: 21, height: 23, marginTop: 2 }}
-                    source={require('../../assets/Invoice.png')}
+                    source={require('../../assets/Message.png')}
                   />
                   <Text
                     style={{
