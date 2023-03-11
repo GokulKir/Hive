@@ -27,7 +27,7 @@ import uuid from 'react-native-uuid'
 //uniq uid for user //
 
 const { height, width } = Dimensions.get('window')
-import { useManualQuery, useMutation, ClientContext } from 'graphql-hooks'
+import { useManualQuery, useMutation } from 'graphql-hooks'
 
 //Graph ql api //
 const FREELANCER_LIST = `query Categories{
@@ -81,7 +81,6 @@ export default function Signup({ navigation }) {
   const [name, setName] = useState('')
   const [id, setId] = useState('')
   const [Gemail, setGemail] = useState('')
-  const client = useContext(ClientContext)
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:

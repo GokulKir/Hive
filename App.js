@@ -85,7 +85,7 @@ import Reviews from './Screens/Main/Reviews'
 import ManageProjects from './Screens/Main/ManageProjects'
 
 const user = firebase.auth().currentUser
-
+// client.setHeader('token', `${token}`)
 const DrawerScreens = (props) => {
   const [userImage, setUserImage] = useState()
 
