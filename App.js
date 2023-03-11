@@ -82,9 +82,11 @@ import Categories from './Screens/Main/Categories'
 import Store from './Screens/Store'
 import { Context } from './Screens/Store'
 import Proposals from './Screens/Main/Proposals'
+import Reviews from './Screens/Main/Reviews'
+import ManageProjects from './Screens/Main/ManageProjects'
 
 const user = firebase.auth().currentUser
-
+// client.setHeader('token', `${token}`)
 const DrawerScreens = (props) => {
   const [userImage, setUserImage] = useState()
 
@@ -374,6 +376,30 @@ const DrawerScreens = (props) => {
             <BackButtonAndDrawer {...props} />
           ),
           headerTitle: props => <Text style={{ fontSize: 20, fontWeight: 'bold', left: 80 }}>Proposals</Text>,
+          // headerStyle: { backgroundColor: '#fff' },
+          headerRight: () => <ProfileImage {...props} />
+        }}
+      />
+      <Stack.Screen
+        name='Reviews'
+        component={Reviews}
+        options={{
+          headerLeft: () => (
+            <BackButtonAndDrawer {...props} />
+          ),
+          headerTitle: props => <Text style={{ fontSize: 20, fontWeight: 'bold', left: 80 }}>Reviews</Text>,
+          // headerStyle: { backgroundColor: '#fff' },
+          headerRight: () => <ProfileImage {...props} />
+        }}
+      />
+      <Stack.Screen
+        name='ManageProjects'
+        component={ManageProjects}
+        options={{
+          headerLeft: () => (
+            <BackButtonAndDrawer {...props} />
+          ),
+          headerTitle: props => <Text style={{ fontSize: 20, fontWeight: 'bold', left: 60 }}>Manage Project</Text>,
           // headerStyle: { backgroundColor: '#fff' },
           headerRight: () => <ProfileImage {...props} />
         }}

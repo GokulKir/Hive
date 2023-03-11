@@ -78,8 +78,8 @@ export default function Home(props) {
   const bottomSheetRef = useRef(null)
   const snapPoints = useMemo(() => ['55%', '78%'], [])
 
-  // const client = useContext(ClientContext)
-  // console.log(client);
+  const client = useContext(ClientContext)
+  console.log("-+-+_+_+_+_+_+_+_+_+_+_+_---+_+_+_+_+_+_+_-",client);
 
 
 

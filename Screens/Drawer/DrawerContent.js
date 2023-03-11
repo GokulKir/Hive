@@ -18,12 +18,11 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { ClientContext, useMutation } from 'graphql-hooks'
+import { useMutation } from 'graphql-hooks'
 import { Context } from '../Store'
 import { Switch } from 'react-native-paper';
 
 export default function DrawerContent({ navigation }) {
-  const client = useContext(ClientContext)
   const [firstname, setFirstName] = useState()
   const [userData, setUserData] = useState()
   const [userImage, setUserImage] = useState()
@@ -170,7 +169,7 @@ export default function DrawerContent({ navigation }) {
             <View style={{ flexDirection: 'row', marginTop: 10 }}>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('Proposals',{mode:state?.mode || ""})
+                  navigation.navigate('Proposals', { mode: state?.mode || "" })
                 }}
                 style={{ marginLeft: 20, marginTop: 15, flexDirection: 'row' }}>
                 <Image
@@ -228,6 +227,7 @@ export default function DrawerContent({ navigation }) {
 
             <View style={{ flexDirection: 'row', marginTop: 10 }}>
               <TouchableOpacity
+                onPress={() => navigation.navigate('ManageProjects')}
                 style={{ marginLeft: 20, marginTop: 15, flexDirection: 'row' }}>
                 <Image
                   style={{ width: 21, height: 19, marginTop: 3 }}
@@ -419,6 +419,30 @@ export default function DrawerContent({ navigation }) {
                       marginTop: 3,
                     }}>
                     Invoices
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              :
+              <></>
+            }
+            {state?.mode === 0 ?
+
+              <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Reviews')}
+                  style={{ marginLeft: 20, marginTop: 10, flexDirection: 'row' }}>
+                  <Image
+                    style={{ width: 21, height: 23, marginTop: 2 }}
+                    source={require('../../assets/Message.png')}
+                  />
+                  <Text
+                    style={{
+                      marginLeft: 21,
+                      color: 'black',
+                      fontSize: 16,
+                      marginTop: 3,
+                    }}>
+                    Reviews
                   </Text>
                 </TouchableOpacity>
               </View>
