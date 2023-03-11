@@ -32,6 +32,7 @@ import Logo6 from './Head/Logo6'
 import Logo7 from './Head/Logo7'
 import Logo8 from './Head/Logo8'
 import Logo9 from './Head/Logo9'
+import Logo10 from './Head/Logo10'
 //Drawer Screen ui
 import DrawerContent from './Screens/Drawer/DrawerContent'
 //Profile Settings ui
@@ -275,6 +276,19 @@ const DrawerScreens = (props) => {
           headerRight: () => <ProfileImage {...props} />,
         }}
       />
+     <Stack.Screen
+        name='Statement'
+        component={Statement}
+        options={{
+          headerLeft: () => <BackButtonAndDrawer {...props} />,
+          headerTitle: props => <Logo10 {...props} />,
+          // headerStyle: { backgroundColor: '#fff' },
+          headerRight: () => <ProfileImage {...props} />,
+        }}
+      />
+   
+
+
       <Stack.Screen
         name='Edit'
         component={Edit}
