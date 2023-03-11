@@ -196,6 +196,21 @@ export default function DrawerContent({ navigation }) {
               </TouchableOpacity>
             </View>
 
+
+            <View style={{ flexDirection: 'row', marginTop: 10, marginLeft: 2 }}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Statement')}
+                style={{ marginLeft: 17, marginTop: 15, flexDirection: 'row' }}>
+                <Image
+                  style={{ width: 20, height: 21, marginTop: 3 }}
+                  source={require('../../assets/statement.png')}
+                />
+                <Text style={{ marginLeft: 27, color: 'black', fontSize: 16 , marginTop:2 }}>
+                 Statement
+                </Text>
+              </TouchableOpacity>
+            </View>
+
             <View style={{ flexDirection: 'row', marginTop: 10 }}>
               <TouchableOpacity
                 onPress={() => navigation.navigate('ManageT')}
